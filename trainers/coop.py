@@ -329,8 +329,8 @@ class CustomCLIP(nn.Module):
         image_features = image_features / image_features.norm(dim=-1, keepdim=True)
         label_features = label_features / label_features.norm(dim=-1, keepdim=True)
 
-        # concat_features = torch.cat([image_features, label_features], dim=-1)
-        concat_features = image_features * label_features  # element-wise product
+        concat_features = torch.cat([image_features, label_features], dim=-1)
+        # concat_features = image_features * label_features  # element-wise product
         # concat_features = concat_features / concat_features.norm(dim=-1, keepdim=True)
 
         return concat_features
