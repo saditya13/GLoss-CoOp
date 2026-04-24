@@ -1,5 +1,5 @@
 # Results Table
-## Model: ViT-b16; Backbone: CoOp; Average across three seeds
+## Model: ViT-b16; Backbone: CoOp; Number of few shot examples: 16; Average across three seeds
 
 | Dataset        | Loss       | Acc (%) | Macro-F1 (%) | Acc Δ | Macro-F1 Δ | ECE     | ACE     | ECE Δ     | ACE Δ     |
 |----------------|-----------|---------|--------------|--------|-------------|---------|---------|------------|------------|

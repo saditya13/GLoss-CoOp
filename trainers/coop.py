@@ -1,6 +1,6 @@
 import os
 import os.path as osp
-
+import numpy as np
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
@@ -196,11 +196,20 @@ class PromptLearner(nn.Module):
         Args:
             batch_idx (int): Index of the batch for class-specific contexts. Default is 0.
         """
-        prompt_ctx = self.ctx.detach()
+        prompt_ctx = self.ctx.detach().float()
         if prompt_ctx.dim() == 3:
             prompt_ctx = prompt_ctx[batch_idx]
         
-        vocab_emb = self.vocab_embeddings.detach()
+        # --- Debug ---
+        # print(f"ctx dtype: {prompt_ctx.dtype}")
+        # print(f"ctx shape: {prompt_ctx.shape}")
+        # print(f"ctx norms: {prompt_ctx.norm(dim=-1)}")
+        # print(f"ctx has nan: {torch.isnan(prompt_ctx).any()}")
+        # print(f"ctx has inf: {torch.isinf(prompt_ctx).any()}")
+        # print(f"ctx min/max: {prompt_ctx.min():.4f} / {prompt_ctx.max():.4f}")
+        # -------------
+
+        vocab_emb = self.vocab_embeddings.detach().float()
         
         # Normalize embeddings for cosine similarity
         prompt_norm = prompt_ctx / prompt_ctx.norm(dim=-1, keepdim=True).clamp_min(1e-12)
@@ -231,6 +240,7 @@ def gaussian_similarity(emb, sigma):
 def normalize_adj(adj: torch.Tensor):
     # Symmetric normalization: D^{-1/2} A D^{-1/2}
     degrees = adj.sum(dim=1)
+    degrees = degrees.clamp(min=1e-6)
     deg_inv_sqrt = torch.pow(degrees, -0.5)
     deg_inv_sqrt[torch.isinf(deg_inv_sqrt)] = 0.0
     D_inv_sqrt = torch.diag(deg_inv_sqrt)
@@ -319,7 +329,9 @@ class CustomCLIP(nn.Module):
         image_features = image_features / image_features.norm(dim=-1, keepdim=True)
         label_features = label_features / label_features.norm(dim=-1, keepdim=True)
 
-        concat_features = torch.cat([image_features, label_features], dim=-1)
+        # concat_features = torch.cat([image_features, label_features], dim=-1)
+        concat_features = image_features * label_features  # element-wise product
+        # concat_features = concat_features / concat_features.norm(dim=-1, keepdim=True)
 
         return concat_features
 
@@ -334,12 +346,12 @@ class CoOp(TrainerX):
     
     def check_cfg(self, cfg):
         assert cfg.TRAINER.COOP.PREC in ["fp16", "fp32", "amp"]
-        assert cfg.TRAINER.COOP.LOSS_TYPE in ["cross_entropy", "gloss"]
+        assert cfg.TRAINER.COOP.LOSS_TYPE in ["cross_entropy", "gloss","scl", "ce+gloss", "ce+scl"]
 
     def compute_gloss(self, concat_features, labels, sigma, gamma):
         self.gloss_temp = nn.Parameter(torch.tensor(1.0))
         # print("Computing GLoss ...")
-        print(f"GLoss parameters: sigma={sigma}, gamma={gamma}")
+        # print(f"GLoss parameters: sigma={sigma}, gamma={gamma}")
         # print(f"concat_features shape: {concat_features.shape}")
         mask1 = torch.randperm(concat_features.size(0)) < concat_features.size(0) * gamma
         mask2 = ~mask1
@@ -378,13 +390,56 @@ class CoOp(TrainerX):
         plt.close()
 
     def after_train(self):
+        if self.cfg.TRAINER.COOP.LOSS_TYPE == "ce+gloss":
+            # print(f"[DEBUG] Collected {len(self.ce_losses)} epoch losses: {self.ce_losses}")
+            self._plot_losses()
+
         super().after_train()
-        print("\n[Final] Learned prompt vocab matches:")
-        self.model.prompt_learner.print_learned_prompts_vocab_matches()
+        # print("\n[Final] Learned prompt vocab matches:")
+        # self.model.prompt_learner.print_learned_prompts_vocab_matches()
+        
+
+    def _plot_losses(self):
+        epochs = range(1, len(self.ce_losses) + 1)
+        
+        plt.figure(figsize=(8, 5))
+        plt.plot(epochs, self.ce_losses,    label="CE Loss")
+        plt.plot(epochs, self.g_losses,     label="GLoss")
+        plt.plot(epochs, self.total_losses, label="Total Loss")
+        plt.xlabel("Epoch")
+        plt.ylabel("Loss")
+        plt.title("Loss Curves over Epochs")
+        plt.legend()
+        plt.grid(True)
+        plt.tight_layout()
+        
+        save_path = osp.join(self.output_dir, "loss_curves_over_epochs.png")
+        plt.savefig(save_path, dpi=150)
+        plt.close()
+        print(f"Loss curves saved to {save_path}")
+    
+    def after_epoch(self):
+        if self.cfg.TRAINER.COOP.LOSS_TYPE == "ce+gloss":
+            if len(self._epoch_batch_losses["ce"]) > 0:
+                self.ce_losses.append(np.mean(self._epoch_batch_losses["ce"]))
+                self.g_losses.append(np.mean(self._epoch_batch_losses["g"]))
+                self.total_losses.append(np.mean(self._epoch_batch_losses["total"]))
+                print(f"[Epoch {self.epoch}] CE: {self.ce_losses[-1]:.4f} | "
+                    f"GLoss: {self.g_losses[-1]:.4f} | "
+                    f"Total: {self.total_losses[-1]:.4f}"
+                    f"Number of batch losses: {len(self._epoch_batch_losses['ce'])}")
+                # Reset for next epoch
+                self._epoch_batch_losses = {"ce": [], "g": [], "total": []}
+
+        super().after_epoch()
 
     def build_model(self):
         cfg = self.cfg
         classnames = self.dm.dataset.classnames
+        self.ce_losses    = []
+        self.g_losses     = []
+        self.total_losses = []
+        self._epoch_batch_losses = {"ce": [], "g": [], "total": []}
 
         print(f"Loading CLIP (backbone: {cfg.MODEL.BACKBONE.NAME})")
         clip_model = load_clip_to_cpu(cfg)
@@ -428,49 +483,55 @@ class CoOp(TrainerX):
         prec = self.cfg.TRAINER.COOP.PREC
         if prec == "amp":
             with autocast():
-                if loss_type == "gloss":
-                    output = self.model(image)
-                    ce_loss = F.cross_entropy(output, label)
-                    concat_emb = self.model.forward_with_label_graph(image, label)
-                    # if self.batch_idx == 0:
-                    #     self.plot_graph(concat_emb, sigma, self.epoch)
-                    g_loss = self.compute_gloss(concat_emb, label, sigma, gamma)
-                    loss = 0.3 * ce_loss + 0.7 * g_loss
-                else:
-                    output = self.model(image)
-                    loss = F.cross_entropy(output, label)
+                output = self.model(image)
+                loss = F.cross_entropy(output, label)
             self.optim.zero_grad()
             self.scaler.scale(loss).backward()
             self.scaler.step(self.optim)
             self.scaler.update()
         else:
-            if loss_type == "gloss":
-                output = self.model(image)
-                ce_loss = F.cross_entropy(output, label)
-                concat_emb = self.model.forward_with_label_graph(image, label)
-                # if self.batch_idx == 0:
-                #     self.plot_graph(concat_emb, sigma, self.epoch)
-                g_loss = self.compute_gloss(concat_emb, label, sigma, gamma)
-                loss = 0.3 * ce_loss + 0.7 * g_loss
-                # loss = g_loss
-            elif loss_type == "scl":
-                output = self.model(image)
-                ce_loss = F.cross_entropy(output, label)
-                concat_emb = self.model.forward_with_label_graph(image, label)
-                scl_loss = SupConLoss(temperature=0.07)(concat_emb.unsqueeze(1), labels=label) 
-                loss = 0.1 * ce_loss + 0.9 * scl_loss
-            else:
+            if loss_type == "cross_entropy":
                 output = self.model(image)
                 loss = F.cross_entropy(output, label)
+
+            elif loss_type == "gloss":
+                concat_emb = self.model.forward_with_label_graph(image, label)
+                loss = self.compute_gloss(concat_emb, label, sigma, gamma)
+
+            elif loss_type == "scl":
+                concat_emb = self.model.forward_with_label_graph(image, label)
+                loss = SupConLoss(temperature=0.07)(concat_emb.unsqueeze(1), labels=label)
+
+            elif loss_type == "ce+gloss":
+                output = self.model(image)
+                ce_loss = F.cross_entropy(output, label)
+                concat_emb = self.model.forward_with_label_graph(image, label)
+                g_loss = self.compute_gloss(concat_emb, label, sigma, gamma)
+                loss = 0.3 * ce_loss + 0.7 * g_loss
+                self._epoch_batch_losses["ce"].append(ce_loss.item())
+                self._epoch_batch_losses["g"].append(g_loss.item())
+                self._epoch_batch_losses["total"].append(loss.item())
+
+            elif loss_type == "ce+scl":
+                output = self.model(image)
+                ce_loss = F.cross_entropy(output, label)
+                concat_emb = self.model.forward_with_label_graph(image, label)
+                scl_loss = SupConLoss(temperature=0.07)(concat_emb.unsqueeze(1), labels=label)
+                loss = 0.3 * ce_loss + 0.7 * scl_loss
+
+            else:
+                raise ValueError(f"Unknown loss_type: {loss_type}")
+
             self.model_backward_and_update(loss)
 
-        if loss_type == "gloss":
+        # if loss_type == "gloss":
+        #     loss_summary = {"loss": loss.item()}
+        # else: 
+        #     loss_summary = {
+        #     "loss": loss.item(),
+        #     "acc": compute_accuracy(output, label)[0].item(),
+        # }
             loss_summary = {"loss": loss.item()}
-        else: 
-            loss_summary = {
-            "loss": loss.item(),
-            "acc": compute_accuracy(output, label)[0].item(),
-        }
 
         if (self.batch_idx + 1) == self.num_batches:
             self.update_lr()

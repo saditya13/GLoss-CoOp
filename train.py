@@ -147,7 +147,7 @@ def extend_cfg(cfg):
     cfg.TRAINER.COOP.PREC = "fp16"  # fp16, fp32, amp
     cfg.TRAINER.COOP.CLASS_TOKEN_POSITION = "end"  # 'middle' or 'end' or 'front'
     cfg.TRAINER.COOP.LOSS_TYPE = "cross_entropy"  # cross_entropy or gloss
-    cfg.TRAINER.COOP.GLOSS_SIGMA = 4.5  # gaussian similarity bandwidth for GLoss
+    cfg.TRAINER.COOP.GLOSS_SIGMA = 0.225  # gaussian similarity bandwidth for GLoss
     cfg.TRAINER.COOP.GLOSS_GAMMA = 0.5  # GLoss masking ratio
 
     cfg.TRAINER.COCOOP = CN()
