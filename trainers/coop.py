@@ -458,7 +458,7 @@ class CoOp(TrainerX):
                 ce_loss = F.cross_entropy(output, label)
                 concat_emb = self.model.forward_with_label_graph(image, label)
                 scl_loss = SupConLoss(temperature=0.07)(concat_emb.unsqueeze(1), labels=label) 
-                loss = 0.3 * ce_loss + 0.7 * scl_loss
+                loss = 0.1 * ce_loss + 0.9 * scl_loss
             else:
                 output = self.model(image)
                 loss = F.cross_entropy(output, label)
