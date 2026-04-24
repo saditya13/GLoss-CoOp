@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+#custom
+Data/
+
 # Distribution / packaging
 .Python
 build/
@@ -130,4 +133,6 @@ dmypy.json
 
 # Custom
 output/
-debug.sh
+*.npy
+*.pt
+*.pth

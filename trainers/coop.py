@@ -1,5 +1,7 @@
+import os
 import os.path as osp
 
+import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
@@ -108,6 +110,9 @@ class PromptLearner(nn.Module):
         # those computed using the current class names
         self.register_buffer("token_prefix", embedding[:, :1, :])  # SOS
         self.register_buffer("token_suffix", embedding[:, 1 + n_ctx :, :])  # CLS, EOS
+        
+        # Store BPE vocabulary embeddings for end-of-training analysis
+        self.register_buffer("vocab_embeddings", clip_model.token_embedding.weight.detach().type(dtype))
 
         self.n_cls = n_cls
         self.n_ctx = n_ctx
@@ -181,6 +186,99 @@ class PromptLearner(nn.Module):
 
         return prompts
 
+    def print_learned_prompts_vocab_matches(self, batch_idx=0):
+        """
+        Compute and print the top-1 nearest BPE vocabulary token for each learned prompt token.
+        
+        Compares learned context embeddings against the original BPE vocabulary embeddings
+        to show what natural language tokens the learned prompts are most similar to.
+        
+        Args:
+            batch_idx (int): Index of the batch for class-specific contexts. Default is 0.
+        """
+        prompt_ctx = self.ctx.detach()
+        if prompt_ctx.dim() == 3:
+            prompt_ctx = prompt_ctx[batch_idx]
+        
+        vocab_emb = self.vocab_embeddings.detach()
+        
+        # Normalize embeddings for cosine similarity
+        prompt_norm = prompt_ctx / prompt_ctx.norm(dim=-1, keepdim=True).clamp_min(1e-12)
+        vocab_norm = vocab_emb / vocab_emb.norm(dim=-1, keepdim=True).clamp_min(1e-12)
+        
+        # Compute cosine similarity between each learned prompt token and all vocab tokens
+        similarities = prompt_norm @ vocab_norm.t()  # (n_ctx, vocab_size)
+        
+        # Get top-1 matches
+        top_values, top_indices = similarities.topk(1, dim=-1)
+        
+        # Print results
+        print("\n" + "="*60)
+        print("Learned Prompts - Top-1 BPE Vocabulary Matches")
+        print("="*60)
+        for idx, (sim, token_id) in enumerate(zip(top_values.squeeze(-1).tolist(), top_indices.squeeze(-1).tolist())):
+            token_text = _tokenizer.decode([token_id])
+            print(f"Prompt Token {idx}: '{token_text}' (ID: {token_id}, Similarity: {sim:.4f})")
+        print("="*60 + "\n")
+
+def gaussian_similarity(emb, sigma):
+    """Compute Gaussian kernel weights."""
+    sq_dists = torch.cdist(emb, emb, p=2) ** 2 
+    weight = torch.exp(-sq_dists / (2*(sigma**2)))
+    weight = weight - torch.diag(torch.diag(weight))
+    return weight
+
+def normalize_adj(adj: torch.Tensor):
+    # Symmetric normalization: D^{-1/2} A D^{-1/2}
+    degrees = adj.sum(dim=1)
+    deg_inv_sqrt = torch.pow(degrees, -0.5)
+    deg_inv_sqrt[torch.isinf(deg_inv_sqrt)] = 0.0
+    D_inv_sqrt = torch.diag(deg_inv_sqrt)
+    return D_inv_sqrt @ adj @ D_inv_sqrt
+
+
+def gloss_lpa(train_emb, test_emb, Ytrain, sigma, num_labels):
+    device = train_emb.device
+    emb = torch.cat((train_emb, test_emb), dim=0)
+    num_nodes = emb.shape[0]
+
+    labels = torch.cat(
+        [Ytrain, torch.zeros(test_emb.shape[0], dtype=Ytrain.dtype, device=device)],
+        dim=0,
+    )
+
+    Y = torch.zeros((num_nodes, num_labels), dtype=torch.float64, device=device)
+    for k in range(num_labels):
+        Y[labels == k, k] = 1.0
+
+    train_mask = torch.zeros(num_nodes, dtype=torch.bool, device=device)
+    train_mask[: Ytrain.shape[0]] = True
+
+    emb = emb / emb.norm(dim=1, keepdim=True)
+    if torch.isnan(emb).any() or torch.isinf(emb).any():
+        raise ValueError("NaN or inf in embeddings")
+
+    adj = gaussian_similarity(emb, sigma).to(torch.float64) 
+    adj = adj + adj.t()
+    adj_norm = normalize_adj(adj).to_dense()
+    print(f"Adjacency matrix stats: min={adj_norm.min().item():.4f}, max={adj_norm.max().item():.4f}, mean={adj_norm.mean().item():.4f}, std={adj_norm.std().item():.4f}")
+
+    Tran = adj_norm / adj_norm.sum(dim=0, keepdim=True)
+    row_sum = Tran.sum(dim=1, keepdim=True)
+    T = Tran / row_sum
+
+    N_l = train_emb.shape[0]
+    T_ul = T[N_l:, :N_l]
+    T_uu = T[N_l:, N_l:]
+
+    I = torch.eye(T_uu.shape[0], dtype=torch.float64, device=device)
+    F_UU = torch.linalg.solve(I - T_uu, T_ul.mm(Y[train_mask]))
+
+    if torch.isnan(F_UU).any() or torch.isinf(F_UU).any():
+        raise ValueError("NaN or inf in F_UU before normalization")
+
+    return F_UU
+
 
 class CustomCLIP(nn.Module):
     def __init__(self, cfg, classnames, clip_model):
@@ -192,12 +290,18 @@ class CustomCLIP(nn.Module):
         self.logit_scale = clip_model.logit_scale
         self.dtype = clip_model.dtype
 
-    def forward(self, image):
-        image_features = self.image_encoder(image.type(self.dtype))
+    def encode_image(self, image):
+        return self.image_encoder(image.type(self.dtype))
 
+    def encode_text_features(self):
         prompts = self.prompt_learner()
         tokenized_prompts = self.tokenized_prompts
         text_features = self.text_encoder(prompts, tokenized_prompts)
+        return text_features
+
+    def forward(self, image):
+        image_features = self.encode_image(image)
+        text_features = self.encode_text_features()
 
         image_features = image_features / image_features.norm(dim=-1, keepdim=True)
         text_features = text_features / text_features.norm(dim=-1, keepdim=True)
@@ -207,6 +311,18 @@ class CustomCLIP(nn.Module):
 
         return logits
 
+    def forward_with_label_graph(self, image, labels):
+        image_features = self.encode_image(image)
+        text_features = self.encode_text_features()
+        label_features = text_features[labels]
+
+        image_features = image_features / image_features.norm(dim=-1, keepdim=True)
+        label_features = label_features / label_features.norm(dim=-1, keepdim=True)
+
+        concat_features = torch.cat([image_features, label_features], dim=-1)
+
+        return concat_features
+
 
 @TRAINER_REGISTRY.register()
 class CoOp(TrainerX):
@@ -215,9 +331,56 @@ class CoOp(TrainerX):
     Learning to Prompt for Vision-Language Models
     https://arxiv.org/abs/2109.01134
     """
-
+    
     def check_cfg(self, cfg):
         assert cfg.TRAINER.COOP.PREC in ["fp16", "fp32", "amp"]
+        assert cfg.TRAINER.COOP.LOSS_TYPE in ["cross_entropy", "gloss"]
+
+    def compute_gloss(self, concat_features, labels, sigma, gamma):
+        self.gloss_temp = nn.Parameter(torch.tensor(1.0))
+        # print("Computing GLoss ...")
+        print(f"GLoss parameters: sigma={sigma}, gamma={gamma}")
+        # print(f"concat_features shape: {concat_features.shape}")
+        mask1 = torch.randperm(concat_features.size(0)) < concat_features.size(0) * gamma
+        mask2 = ~mask1
+        emb_lab_set = concat_features[mask1]
+        emb_eval_set = concat_features[mask2]
+        labels_lab_set = labels[mask1]
+        labels_eval_set = labels[mask2]
+        pred = gloss_lpa(
+            emb_lab_set,
+            emb_eval_set,
+            labels_lab_set,
+            sigma,
+            self.model.prompt_learner.n_cls,
+        )
+        pred_scaled = pred / self.gloss_temp.exp()
+        loss = F.cross_entropy(pred_scaled, labels_eval_set)
+        # loss = F.cross_entropy(pred, labels_eval_set)
+        return loss
+
+    def plot_graph(self, concat_features, sigma, epoch):
+        adj = gaussian_similarity(concat_features, sigma)
+        adj = adj + adj.t()
+        adj_norm = normalize_adj(adj).to_dense()
+
+        graph_dir = osp.join(self.output_dir, "graphs")
+        os.makedirs(graph_dir, exist_ok=True)
+
+        plt.figure(figsize=(6, 6))
+        plt.imshow(adj_norm.detach().cpu().numpy(), cmap="coolwarm", vmin=0.0, vmax=1.0)
+        plt.colorbar(fraction=0.046, pad=0.04)
+        plt.title(f"Adjacency matrix (epoch {epoch + 1})")
+        plt.xlabel("Node")
+        plt.ylabel("Node")
+        plt.tight_layout()
+        plt.savefig(osp.join(graph_dir, f"graph_epoch_{epoch + 1:03d}.png"), dpi=150)
+        plt.close()
+
+    def after_train(self):
+        super().after_train()
+        print("\n[Final] Learned prompt vocab matches:")
+        self.model.prompt_learner.print_learned_prompts_vocab_matches()
 
     def build_model(self):
         cfg = self.cfg
@@ -258,22 +421,50 @@ class CoOp(TrainerX):
 
     def forward_backward(self, batch):
         image, label = self.parse_batch_train(batch)
+        loss_type = self.cfg.TRAINER.COOP.LOSS_TYPE
+        sigma = self.cfg.TRAINER.COOP.GLOSS_SIGMA
+        gamma = self.cfg.TRAINER.COOP.GLOSS_GAMMA
         
         prec = self.cfg.TRAINER.COOP.PREC
         if prec == "amp":
             with autocast():
-                output = self.model(image)
-                loss = F.cross_entropy(output, label)
+                if loss_type == "gloss":
+                    output = self.model(image)
+                    ce_loss = F.cross_entropy(output, label)
+                    concat_emb = self.model.forward_with_label_graph(image, label)
+                    # if self.batch_idx == 0:
+                    #     self.plot_graph(concat_emb, sigma, self.epoch)
+                    g_loss = self.compute_gloss(concat_emb, label, sigma, gamma)
+                    loss = 0.3 * ce_loss + 0.7 * g_loss
+                else:
+                    output = self.model(image)
+                    loss = F.cross_entropy(output, label)
             self.optim.zero_grad()
             self.scaler.scale(loss).backward()
             self.scaler.step(self.optim)
             self.scaler.update()
         else:
-            output = self.model(image)
-            loss = F.cross_entropy(output, label)
+            if loss_type == "gloss":
+                output = self.model(image)
+                ce_loss = F.cross_entropy(output, label)
+                concat_emb = self.model.forward_with_label_graph(image, label)
+                # if self.batch_idx == 0:
+                #     self.plot_graph(concat_emb, sigma, self.epoch)
+                g_loss = self.compute_gloss(concat_emb, label, sigma, gamma)
+                loss = 0.3 * ce_loss + 0.7 * g_loss
+                # loss = g_loss
+            elif loss_type == "scl":
+                concat_emb = self.model.forward_with_label_graph(image, label)
+                loss = SupConLoss(temperature=0.07)(concat_emb.unsqueeze(1), labels=label)    
+            else:
+                output = self.model(image)
+                loss = F.cross_entropy(output, label)
             self.model_backward_and_update(loss)
 
-        loss_summary = {
+        if loss_type == "gloss":
+            loss_summary = {"loss": loss.item()}
+        else: 
+            loss_summary = {
             "loss": loss.item(),
             "acc": compute_accuracy(output, label)[0].item(),
         }
@@ -323,3 +514,84 @@ class CoOp(TrainerX):
             print("Loading weights to {} " 'from "{}" (epoch = {})'.format(name, model_path, epoch))
             # set strict=False
             self._models[name].load_state_dict(state_dict, strict=False)
+
+class SupConLoss(nn.Module):
+    """Supervised Contrastive Learning: https://arxiv.org/pdf/2004.11362.pdf."""
+    
+    def __init__(self, temperature=0.07, contrast_mode='all', base_temperature=0.07):
+        super(SupConLoss, self).__init__()
+        self.temperature = temperature
+        self.contrast_mode = contrast_mode
+        self.base_temperature = base_temperature
+
+    def forward(self, features, labels=None, mask=None):
+        """
+        Args:
+            features: hidden vector of shape [bsz, n_views, ...].
+            labels: ground truth of shape [bsz].
+            mask: contrastive mask of shape [bsz, bsz], mask_{i,j}=1 if sample j
+                has the same class as sample i. Can be asymmetric.
+        Returns:
+            A loss scalar.
+        """
+        device = torch.device('cuda')
+
+        if len(features.shape) < 3:
+            raise ValueError('`features` needs to be [bsz, n_views, ...],'
+                             'at least 3 dimensions are required')
+        if len(features.shape) > 3:
+            features = features.view(features.shape[0], features.shape[1], -1)
+
+        batch_size = features.shape[0]
+        if labels is not None and mask is not None:
+            raise ValueError('Cannot define both `labels` and `mask`')
+        elif labels is None and mask is None:
+            mask = torch.eye(batch_size, dtype=torch.float64).to(device)
+        elif labels is not None:
+            labels = labels.contiguous().view(-1, 1)
+            if labels.shape[0] != batch_size:
+                raise ValueError('Num of labels does not match num of features')
+            mask = torch.eq(labels, labels.T).float().to(device)
+        else:
+            mask = mask.float().to(device)
+
+        contrast_count = features.shape[1]
+        contrast_feature = torch.cat(torch.unbind(features, dim=1), dim=0)
+        if self.contrast_mode == 'one':
+            anchor_feature = features[:, 0]
+            anchor_count = 1
+        elif self.contrast_mode == 'all':
+            anchor_feature = contrast_feature
+            anchor_count = contrast_count
+        else:
+            raise ValueError('Unknown mode: {}'.format(self.contrast_mode))
+
+        # compute logits
+        anchor_dot_contrast = torch.div(
+            torch.matmul(anchor_feature, contrast_feature.T),
+            self.temperature)
+        # for numerical stability
+        logits_max, _ = torch.max(anchor_dot_contrast, dim=1, keepdim=True)
+        logits = anchor_dot_contrast - logits_max.detach()
+
+        # tile mask
+        mask = mask.repeat(anchor_count, contrast_count)
+        # mask-out self-contrast cases
+        logits_mask = torch.scatter(
+            torch.ones_like(mask), 1,
+            torch.arange(batch_size * anchor_count).view(-1, 1).to(device), 0
+        )
+        mask = mask * logits_mask
+        # compute log_prob
+        exp_logits = torch.exp(logits) * logits_mask
+        log_prob = logits - torch.log(exp_logits.sum(1, keepdim=True))
+
+        mask_pos_pairs = mask.sum(1)
+        mask_pos_pairs = torch.where(mask_pos_pairs < 1e-6, 1, mask_pos_pairs)
+        mean_log_prob_pos = (mask * log_prob).sum(1) / mask_pos_pairs
+
+        # loss
+        loss = - (self.temperature / self.base_temperature) * mean_log_prob_pos
+        loss = loss.view(anchor_count, batch_size).mean()
+
+        return loss

@@ -27,6 +27,56 @@ import trainers.coop
 import trainers.cocoop
 import trainers.zsclip
 
+import os
+import matplotlib.pyplot as plt
+from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
+
+
+def plot_loss_curve(output_dir):
+    tb_path = None
+    for root, dirs, files in os.walk(output_dir):
+        for file in files:
+            if file.startswith('events.out.tfevents'):
+                tb_path = os.path.join(root, file)
+                break
+        if tb_path:
+            break
+    
+    if not tb_path:
+        print("No tensorboard file found.")
+        return
+    
+    ea = EventAccumulator(tb_path)
+    ea.Reload()
+    
+    scalar_tags = ea.Tags()['scalars']
+    print("Available tags:", scalar_tags)
+    
+    epochs = []
+    losses = []
+    
+    if 'train/loss' in scalar_tags:
+        loss_events = ea.Scalars('train/loss')
+        for event in loss_events:
+            epochs.append(event.step)
+            losses.append(event.value)
+    
+    if not epochs:
+        print("No loss data found.")
+        return
+    
+    plt.figure(figsize=(8, 6))
+    plt.plot(epochs, losses, label='Training Loss')
+    plt.xlabel('Step')
+    plt.ylabel('Loss')
+    plt.title('Training Loss Curve')
+    plt.grid(True)
+    plt.legend()
+    
+    plot_path = os.path.join(output_dir, 'loss_curve.png')
+    plt.savefig(plot_path)
+    print(f"Loss curve saved to {plot_path}")
+    plt.close()
 
 def print_args(args, cfg):
     print("***************")
@@ -73,6 +123,9 @@ def reset_cfg(cfg, args):
     if args.head:
         cfg.MODEL.HEAD.NAME = args.head
 
+    if args.coop_loss_type:
+        cfg.TRAINER.COOP.LOSS_TYPE = args.coop_loss_type
+
 
 def extend_cfg(cfg):
     """
@@ -93,6 +146,9 @@ def extend_cfg(cfg):
     cfg.TRAINER.COOP.CTX_INIT = ""  # initialization words
     cfg.TRAINER.COOP.PREC = "fp16"  # fp16, fp32, amp
     cfg.TRAINER.COOP.CLASS_TOKEN_POSITION = "end"  # 'middle' or 'end' or 'front'
+    cfg.TRAINER.COOP.LOSS_TYPE = "cross_entropy"  # cross_entropy or gloss
+    cfg.TRAINER.COOP.GLOSS_SIGMA = 4.5  # gaussian similarity bandwidth for GLoss
+    cfg.TRAINER.COOP.GLOSS_GAMMA = 0.5  # GLoss masking ratio
 
     cfg.TRAINER.COCOOP = CN()
     cfg.TRAINER.COCOOP.N_CTX = 16  # number of context vectors
@@ -119,6 +175,10 @@ def setup_cfg(args):
 
     # 4. From optional input arguments
     cfg.merge_from_list(args.opts)
+
+    # Disable random shuffling for train dataloaders. #TODO Make this more flexible in the future (e.g. allow users to specify sampler types for train_x and train_u separately)
+    # cfg.DATALOADER.TRAIN_X.SAMPLER = "SequentialSampler"
+    # cfg.DATALOADER.TRAIN_U.SAMPLER = "SequentialSampler"
 
     cfg.freeze()
 
@@ -148,6 +208,7 @@ def main(args):
 
     if not args.no_train:
         trainer.train()
+        plot_loss_curve(cfg.OUTPUT_DIR)
 
 
 if __name__ == "__main__":
@@ -184,6 +245,12 @@ if __name__ == "__main__":
     parser.add_argument("--trainer", type=str, default="", help="name of trainer")
     parser.add_argument("--backbone", type=str, default="", help="name of CNN backbone")
     parser.add_argument("--head", type=str, default="", help="name of head")
+    parser.add_argument(
+        "--coop-loss-type",
+        type=str,
+        default="cross_entropy",
+        help="loss type for CoOp trainer: cross_entropy or gloss",
+    )
     parser.add_argument("--eval-only", action="store_true", help="evaluation only")
     parser.add_argument(
         "--model-dir",
