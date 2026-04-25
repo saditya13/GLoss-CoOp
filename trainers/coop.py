@@ -517,7 +517,10 @@ class CoOp(TrainerX):
                 raise ValueError(f"Unknown loss_type: {loss_type}")
 
             self.model_backward_and_update(loss)
-
+        for name, param in self.model.prompt_learner.named_parameters():
+            if param.grad is not None:
+                print(f"{name}: grad_norm = {param.grad.norm().item():.6f}") 
+        
         # if loss_type == "gloss":
         #     loss_summary = {"loss": loss.item()}
         # else: 
