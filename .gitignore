@@ -136,3 +136,7 @@ dmypy.json
 *.npy
 *.pt
 *.pth
+*.ckpt
+*.h5
+*.zip
+*.tar
