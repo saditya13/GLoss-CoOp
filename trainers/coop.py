@@ -230,67 +230,6 @@ class PromptLearner(nn.Module):
             print(f"Prompt Token {idx}: '{token_text}' (ID: {token_id}, Similarity: {sim:.4f})")
         print("="*60 + "\n")
 
-def gaussian_similarity(emb, sigma):
-    """Compute Gaussian kernel weights."""
-    sq_dists = torch.cdist(emb, emb, p=2) ** 2 
-    weight = torch.exp(-sq_dists / (2*(sigma**2)))
-    weight = weight - torch.diag(torch.diag(weight))
-    return weight
-
-def normalize_adj(adj: torch.Tensor):
-    # Symmetric normalization: D^{-1/2} A D^{-1/2}
-    degrees = adj.sum(dim=1)
-    degrees = degrees.clamp(min=1e-6)
-    deg_inv_sqrt = torch.pow(degrees, -0.5)
-    deg_inv_sqrt[torch.isinf(deg_inv_sqrt)] = 0.0
-    D_inv_sqrt = torch.diag(deg_inv_sqrt)
-    return D_inv_sqrt @ adj @ D_inv_sqrt
-
-
-def gloss_lpa(train_emb, test_emb, Ytrain, sigma, num_labels):
-    device = train_emb.device
-    emb = torch.cat((train_emb, test_emb), dim=0)
-    num_nodes = emb.shape[0]
-
-    labels = torch.cat(
-        [Ytrain, torch.zeros(test_emb.shape[0], dtype=Ytrain.dtype, device=device)],
-        dim=0,
-    )
-
-    Y = torch.zeros((num_nodes, num_labels), dtype=torch.float32, device=device)
-    for k in range(num_labels):
-        Y[labels == k, k] = 1.0
-
-    train_mask = torch.zeros(num_nodes, dtype=torch.bool, device=device)
-    train_mask[: Ytrain.shape[0]] = True
-
-    # emb = emb / emb.norm(dim=1, keepdim=True)
-    # if torch.isnan(emb).any() or torch.isinf(emb).any():
-    #     raise ValueError("NaN or inf in embeddings")
-
-    adj = gaussian_similarity(emb, sigma).to(torch.float32) 
-    adj = adj + adj.t()
-    adj_norm = normalize_adj(adj).to_dense()
-    print(f"Adjacency matrix stats: min={adj_norm.min().item():.4f}, max={adj_norm.max().item():.4f}, mean={adj_norm.mean().item():.4f}, std={adj_norm.std().item():.4f}")
-
-    # Tran = adj_norm / adj_norm.sum(dim=0, keepdim=True)
-    # row_sum = Tran.sum(dim=1, keepdim=True)
-    # T = Tran / row_sum
-
-    T = adj_norm / adj_norm.sum(dim=1, keepdim=True).clamp(min=1e-6)
-    N_l = train_emb.shape[0]
-    T_ul = T[N_l:, :N_l]
-    T_uu = T[N_l:, N_l:]
-
-    I = torch.eye(T_uu.shape[0], dtype=torch.float32, device=device)
-    F_UU = torch.linalg.solve(I - T_uu, T_ul.mm(Y[train_mask]))
-
-    if torch.isnan(F_UU).any() or torch.isinf(F_UU).any():
-        raise ValueError("NaN or inf in F_UU before normalization")
-
-    return F_UU
-
-
 class CustomCLIP(nn.Module):
     def __init__(self, cfg, classnames, clip_model):
         super().__init__()
@@ -333,26 +272,10 @@ class CustomCLIP(nn.Module):
         concat_features = torch.cat([image_features, label_features], dim=-1)
         # concat_features = image_features * label_features  # element-wise product
         concat_features = concat_features / concat_features.norm(dim=-1, keepdim=True)
-        self.plot_graph(concat_features, sigma=0.3)
+        
         return concat_features
     
-    def plot_graph(self, concat_features, sigma):
-        adj = gaussian_similarity(concat_features, sigma)
-        adj = adj + adj.t()
-        adj_norm = normalize_adj(adj).to_dense()
-
-        # graph_dir = osp.join(self.output_dir, "graphs")
-        # os.makedirs(graph_dir, exist_ok=True)
-
-        plt.figure(figsize=(6, 6))
-        plt.imshow(adj_norm.detach().cpu().numpy(), cmap="coolwarm", vmin=0.0, vmax=1.0)
-        plt.colorbar(fraction=0.046, pad=0.04)
-        plt.title(f"Adjacency matrix")
-        plt.xlabel("Node")
-        plt.ylabel("Node")
-        plt.tight_layout()
-        plt.savefig("adj_mat.png", dpi=300)
-        plt.close()
+    
 
 @TRAINER_REGISTRY.register()
 class CoOp(TrainerX):
@@ -365,28 +288,23 @@ class CoOp(TrainerX):
     def check_cfg(self, cfg):
         assert cfg.TRAINER.COOP.PREC in ["fp16", "fp32", "amp"]
         assert cfg.TRAINER.COOP.LOSS_TYPE in ["cross_entropy", "gloss","scl", "ce+gloss", "ce+scl"]
+    
+  
+    def after_epoch(self):
+        if self.cfg.TRAINER.COOP.LOSS_TYPE == "ce+gloss":
+            if len(self._epoch_batch_losses["ce"]) > 0:
+                self.ce_losses.append(np.mean(self._epoch_batch_losses["ce"]))
+                self.g_losses.append(np.mean(self._epoch_batch_losses["g"]))
+                self.total_losses.append(np.mean(self._epoch_batch_losses["total"]))
+                print(f"[Epoch {self.epoch}] CE: {self.ce_losses[-1]:.4f} | "
+                    f"GLoss: {self.g_losses[-1]:.4f} | "
+                    f"Total: {self.total_losses[-1]:.4f}"
+                    f"Number of batch losses: {len(self._epoch_batch_losses['ce'])}")
+                # Reset for next epoch
+                self._epoch_batch_losses = {"ce": [], "g": [], "total": []}
 
-    def compute_gloss(self, concat_features, labels, sigma, gamma):
-        # self.gloss_temp = nn.Parameter(torch.tensor(1.0))
-        # print("Computing GLoss ...")
-        # print(f"GLoss parameters: sigma={sigma}, gamma={gamma}")
-        # print(f"concat_features shape: {concat_features.shape}")
-        mask1 = torch.randperm(concat_features.size(0)) < concat_features.size(0) * gamma
-        mask2 = ~mask1
-        emb_lab_set = concat_features[mask1]
-        emb_eval_set = concat_features[mask2]
-        labels_lab_set = labels[mask1]
-        labels_eval_set = labels[mask2]
-        pred = gloss_lpa(
-            emb_lab_set,
-            emb_eval_set,
-            labels_lab_set,
-            sigma,
-            self.model.prompt_learner.n_cls,
-        )
-        loss = F.cross_entropy(pred, labels_eval_set)
-        return loss
-
+        super().after_epoch()
+    
     def after_train(self):
         if self.cfg.TRAINER.COOP.LOSS_TYPE == "ce+gloss":
             # print(f"[DEBUG] Collected {len(self.ce_losses)} epoch losses: {self.ce_losses}")
@@ -415,22 +333,100 @@ class CoOp(TrainerX):
         plt.savefig(save_path, dpi=150)
         plt.close()
         print(f"Loss curves saved to {save_path}")
+
+    def gaussian_similarity(self, emb, sigma):
+        """Compute Gaussian kernel weights."""
+        sq_dists = torch.cdist(emb, emb, p=2) ** 2 
+        weight = torch.exp(-sq_dists / (2*(sigma**2)))
+        weight = weight - torch.diag(torch.diag(weight))
+        return weight
+
+    def normalize_adj(self, adj: torch.Tensor):
+        # Symmetric normalization: D^{-1/2} A D^{-1/2}
+        degrees = adj.sum(dim=1)
+        degrees = degrees.clamp(min=1e-6)
+        deg_inv_sqrt = torch.pow(degrees, -0.5)
+        deg_inv_sqrt[torch.isinf(deg_inv_sqrt)] = 0.0
+        D_inv_sqrt = torch.diag(deg_inv_sqrt)
+        return D_inv_sqrt @ adj @ D_inv_sqrt
+
+    def plot_graph(self, adj):
+        graph_dir = osp.join(self.output_dir, "graphs")
+        os.makedirs(graph_dir, exist_ok=True)
+
+        plt.figure(figsize=(6, 6))
+        plt.imshow(adj.detach().cpu().numpy(), cmap="coolwarm", vmin=0.0, vmax=1.0)
+        plt.colorbar(fraction=0.046, pad=0.04)
+        plt.title(f"Adjacency matrix")
+        plt.xlabel("Node")
+        plt.ylabel("Node")
+        plt.tight_layout()
+        plt.savefig(osp.join(graph_dir, "adj_mat.png"), dpi=300)
+        plt.close()
+
+    def gloss_lpa(self, train_emb, test_emb, Ytrain, sigma, num_labels):
+        device = train_emb.device
+        emb = torch.cat((train_emb, test_emb), dim=0)
+        num_nodes = emb.shape[0]
+
+        labels = torch.cat(
+            [Ytrain, torch.zeros(test_emb.shape[0], dtype=Ytrain.dtype, device=device)],
+            dim=0,
+        )
+
+        Y = torch.zeros((num_nodes, num_labels), dtype=torch.float32, device=device)
+        for k in range(num_labels):
+            Y[labels == k, k] = 1.0
+
+        train_mask = torch.zeros(num_nodes, dtype=torch.bool, device=device)
+        train_mask[: Ytrain.shape[0]] = True
+
+        # emb = emb / emb.norm(dim=1, keepdim=True)
+        # if torch.isnan(emb).any() or torch.isinf(emb).any():
+        #     raise ValueError("NaN or inf in embeddings")
+
+        adj = self.gaussian_similarity(emb, sigma).to(torch.float32) 
+        self.plot_graph(adj)
+        adj = adj + adj.t()
+        adj_norm = self.normalize_adj(adj).to_dense()
+        print(f"Adjacency matrix stats: min={adj_norm.min().item():.4f}, max={adj_norm.max().item():.4f}, mean={adj_norm.mean().item():.4f}, std={adj_norm.std().item():.4f}")
+
+        # Tran = adj_norm / adj_norm.sum(dim=0, keepdim=True)
+        # row_sum = Tran.sum(dim=1, keepdim=True)
+        # T = Tran / row_sum
+
+        T = adj_norm / adj_norm.sum(dim=1, keepdim=True).clamp(min=1e-6)
+        N_l = train_emb.shape[0]
+        T_ul = T[N_l:, :N_l]
+        T_uu = T[N_l:, N_l:]
+
+        I = torch.eye(T_uu.shape[0], dtype=torch.float32, device=device)
+        F_UU = torch.linalg.solve(I - T_uu, T_ul.mm(Y[train_mask]))
+
+        if torch.isnan(F_UU).any() or torch.isinf(F_UU).any():
+            raise ValueError("NaN or inf in F_UU before normalization")
+
+        return F_UU
+    def compute_gloss(self, concat_features, labels, sigma, gamma):
+        # self.gloss_temp = nn.Parameter(torch.tensor(1.0))
+        # print("Computing GLoss ...")
+        # print(f"GLoss parameters: sigma={sigma}, gamma={gamma}")
+        # print(f"concat_features shape: {concat_features.shape}")
+        mask1 = torch.randperm(concat_features.size(0)) < concat_features.size(0) * gamma
+        mask2 = ~mask1
+        emb_lab_set = concat_features[mask1]
+        emb_eval_set = concat_features[mask2]
+        labels_lab_set = labels[mask1]
+        labels_eval_set = labels[mask2]
+        pred = self.gloss_lpa(
+            emb_lab_set,
+            emb_eval_set,
+            labels_lab_set,
+            sigma,
+            self.model.prompt_learner.n_cls)
+        loss = F.cross_entropy(pred, labels_eval_set)
+        return loss
     
-    def after_epoch(self):
-        if self.cfg.TRAINER.COOP.LOSS_TYPE == "ce+gloss":
-            if len(self._epoch_batch_losses["ce"]) > 0:
-                self.ce_losses.append(np.mean(self._epoch_batch_losses["ce"]))
-                self.g_losses.append(np.mean(self._epoch_batch_losses["g"]))
-                self.total_losses.append(np.mean(self._epoch_batch_losses["total"]))
-                print(f"[Epoch {self.epoch}] CE: {self.ce_losses[-1]:.4f} | "
-                    f"GLoss: {self.g_losses[-1]:.4f} | "
-                    f"Total: {self.total_losses[-1]:.4f}"
-                    f"Number of batch losses: {len(self._epoch_batch_losses['ce'])}")
-                # Reset for next epoch
-                self._epoch_batch_losses = {"ce": [], "g": [], "total": []}
-
-        super().after_epoch()
-
     def build_model(self):
         cfg = self.cfg
         classnames = self.dm.dataset.classnames
