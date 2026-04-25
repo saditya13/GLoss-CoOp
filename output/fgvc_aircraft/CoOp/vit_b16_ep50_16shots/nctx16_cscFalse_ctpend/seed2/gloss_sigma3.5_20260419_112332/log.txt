@@ -1,0 +1,1630 @@
+***************
+** Arguments **
+***************
+backbone: 
+config_file: configs/trainers/CoOp/vit_b16_ep50.yaml
+coop_loss_type: gloss
+dataset_config_file: configs/datasets/fgvc_aircraft.yaml
+eval_only: False
+head: 
+load_epoch: None
+model_dir: 
+no_train: False
+opts: ['TRAINER.COOP.N_CTX', '16', 'TRAINER.COOP.CSC', 'False', 'TRAINER.COOP.CLASS_TOKEN_POSITION', 'end', 'TRAINER.COOP.GLOSS_SIGMA', '3.5', 'DATASET.NUM_SHOTS', '16']
+output_dir: output/fgvc_aircraft/CoOp/vit_b16_ep50_16shots/nctx16_cscFalse_ctpend/seed2/gloss_sigma3.5_20260419_112332
+resume: 
+root: /home/aditya/tcacode/TCA
+seed: 2
+source_domains: None
+target_domains: None
+trainer: CoOp
+transforms: None
+************
+** Config **
+************
+DATALOADER:
+  K_TRANSFORMS: 1
+  NUM_WORKERS: 8
+  RETURN_IMG0: False
+  TEST:
+    BATCH_SIZE: 100
+    SAMPLER: SequentialSampler
+  TRAIN_U:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAME_AS_X: True
+    SAMPLER: SequentialSampler
+  TRAIN_X:
+    BATCH_SIZE: 128
+    N_DOMAIN: 0
+    N_INS: 16
+    SAMPLER: SequentialSampler
+DATASET:
+  ALL_AS_UNLABELED: False
+  CIFAR_C_LEVEL: 1
+  CIFAR_C_TYPE: 
+  NAME: FGVCAircraft
+  NUM_LABELED: -1
+  NUM_SHOTS: 16
+  ROOT: /home/aditya/tcacode/TCA
+  SOURCE_DOMAINS: ()
+  STL10_FOLD: -1
+  SUBSAMPLE_CLASSES: all
+  TARGET_DOMAINS: ()
+  VAL_PERCENT: 0.1
+INPUT:
+  COLORJITTER_B: 0.4
+  COLORJITTER_C: 0.4
+  COLORJITTER_H: 0.1
+  COLORJITTER_S: 0.4
+  CROP_PADDING: 4
+  CUTOUT_LEN: 16
+  CUTOUT_N: 1
+  GB_K: 21
+  GB_P: 0.5
+  GN_MEAN: 0.0
+  GN_STD: 0.15
+  INTERPOLATION: bicubic
+  NO_TRANSFORM: False
+  PIXEL_MEAN: [0.48145466, 0.4578275, 0.40821073]
+  PIXEL_STD: [0.26862954, 0.26130258, 0.27577711]
+  RANDAUGMENT_M: 10
+  RANDAUGMENT_N: 2
+  RGS_P: 0.2
+  RRCROP_SCALE: (0.08, 1.0)
+  SIZE: (224, 224)
+  TRANSFORMS: ('random_resized_crop', 'random_flip', 'normalize')
+MODEL:
+  BACKBONE:
+    NAME: ViT-B/16
+    PRETRAINED: True
+  HEAD:
+    ACTIVATION: relu
+    BN: True
+    DROPOUT: 0.0
+    HIDDEN_LAYERS: ()
+    NAME: 
+  INIT_WEIGHTS: 
+OPTIM:
+  ADAM_BETA1: 0.9
+  ADAM_BETA2: 0.999
+  BASE_LR_MULT: 0.1
+  GAMMA: 0.1
+  LR: 0.002
+  LR_SCHEDULER: cosine
+  MAX_EPOCH: 50
+  MOMENTUM: 0.9
+  NAME: sgd
+  NEW_LAYERS: ()
+  RMSPROP_ALPHA: 0.99
+  SGD_DAMPNING: 0
+  SGD_NESTEROV: False
+  STAGED_LR: False
+  STEPSIZE: (-1,)
+  WARMUP_CONS_LR: 1e-05
+  WARMUP_EPOCH: 1
+  WARMUP_MIN_LR: 1e-05
+  WARMUP_RECOUNT: True
+  WARMUP_TYPE: constant
+  WEIGHT_DECAY: 0.0005
+OUTPUT_DIR: output/fgvc_aircraft/CoOp/vit_b16_ep50_16shots/nctx16_cscFalse_ctpend/seed2/gloss_sigma3.5_20260419_112332
+RESUME: 
+SEED: 2
+TEST:
+  COMPUTE_CMAT: False
+  EVALUATOR: Classification
+  FINAL_MODEL: last_step
+  NO_TEST: False
+  PER_CLASS_RESULT: False
+  SPLIT: test
+TRAIN:
+  CHECKPOINT_FREQ: 0
+  COUNT_ITER: train_x
+  PRINT_FREQ: 5
+TRAINER:
+  CDAC:
+    CLASS_LR_MULTI: 10
+    P_THRESH: 0.95
+    RAMPUP_COEF: 30
+    RAMPUP_ITRS: 1000
+    STRONG_TRANSFORMS: ()
+    TOPK_MATCH: 5
+  COCOOP:
+    CTX_INIT: 
+    N_CTX: 16
+    PREC: fp16
+  COOP:
+    CLASS_TOKEN_POSITION: end
+    CSC: False
+    CTX_INIT: 
+    GLOSS_GAMMA: 0.5
+    GLOSS_SIGMA: 3.5
+    LOSS_TYPE: gloss
+    N_CTX: 16
+    PREC: fp16
+  CROSSGRAD:
+    ALPHA_D: 0.5
+    ALPHA_F: 0.5
+    EPS_D: 1.0
+    EPS_F: 1.0
+  DAEL:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DAELDG:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DDAIG:
+    ALPHA: 0.5
+    CLAMP: False
+    CLAMP_MAX: 1.0
+    CLAMP_MIN: -1.0
+    G_ARCH: 
+    LMDA: 0.3
+    WARMUP: 0
+  DOMAINMIX:
+    ALPHA: 1.0
+    BETA: 1.0
+    TYPE: crossdomain
+  ENTMIN:
+    LMDA: 0.001
+  FIXMATCH:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 1.0
+  M3SDA:
+    LMDA: 0.5
+    N_STEP_F: 4
+  MCD:
+    N_STEP_F: 4
+  MEANTEACHER:
+    EMA_ALPHA: 0.999
+    RAMPUP: 5
+    WEIGHT_U: 1.0
+  MIXMATCH:
+    MIXUP_BETA: 0.75
+    RAMPUP: 20000
+    TEMP: 2.0
+    WEIGHT_U: 100.0
+  MME:
+    LMDA: 0.1
+  NAME: CoOp
+  SE:
+    CONF_THRE: 0.95
+    EMA_ALPHA: 0.999
+    RAMPUP: 300
+USE_CUDA: True
+VERBOSE: True
+VERSION: 1
+Collecting env info ...
+** System info **
+PyTorch version: 2.0.0
+Is debug build: False
+CUDA used to build PyTorch: 11.8
+ROCM used to build PyTorch: N/A
+
+OS: Ubuntu 24.04.1 LTS (x86_64)
+GCC version: (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Clang version: Could not collect
+CMake version: Could not collect
+Libc version: glibc-2.39
+
+Python version: 3.10.10 (main, Mar 21 2023, 18:45:11) [GCC 11.2.0] (64-bit runtime)
+Python platform: Linux-6.11.0-1027-oem-x86_64-with-glibc2.39
+Is CUDA available: True
+CUDA runtime version: 13.1.80
+CUDA_MODULE_LOADING set to: LAZY
+GPU models and configuration: GPU 0: NVIDIA A100 80GB PCIe
+Nvidia driver version: 580.126.09
+cuDNN version: Could not collect
+HIP runtime version: N/A
+MIOpen runtime version: N/A
+Is XNNPACK available: True
+
+CPU:
+Architecture:                         x86_64
+CPU op-mode(s):                       32-bit, 64-bit
+Address sizes:                        46 bits physical, 57 bits virtual
+Byte Order:                           Little Endian
+CPU(s):                               16
+On-line CPU(s) list:                  0-15
+Vendor ID:                            GenuineIntel
+Model name:                           Intel(R) Xeon(R) Silver 4309Y CPU @ 2.80GHz
+CPU family:                           6
+Model:                                106
+Thread(s) per core:                   2
+Core(s) per socket:                   8
+Socket(s):                            1
+Stepping:                             6
+CPU(s) scaling MHz:                   62%
+CPU max MHz:                          3600.0000
+CPU min MHz:                          800.0000
+BogoMIPS:                             5600.00
+Flags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3 ssbd mba ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb intel_pt avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local split_lock_detect wbnoinvd dtherm ida arat pln pts hwp hwp_act_window hwp_pkg_req vnmi avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq la57 rdpid fsrm md_clear pconfig flush_l1d arch_capabilities
+Virtualization:                       VT-x
+L1d cache:                            384 KiB (8 instances)
+L1i cache:                            256 KiB (8 instances)
+L2 cache:                             10 MiB (8 instances)
+L3 cache:                             12 MiB (1 instance)
+NUMA node(s):                         1
+NUMA node0 CPU(s):                    0-15
+Vulnerability Gather data sampling:   Mitigation; Microcode
+Vulnerability Itlb multihit:          Not affected
+Vulnerability L1tf:                   Not affected
+Vulnerability Mds:                    Not affected
+Vulnerability Meltdown:               Not affected
+Vulnerability Mmio stale data:        Mitigation; Clear CPU buffers; SMT vulnerable
+Vulnerability Reg file data sampling: Not affected
+Vulnerability Retbleed:               Not affected
+Vulnerability Spec rstack overflow:   Not affected
+Vulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop
+Vulnerability Srbds:                  Not affected
+Vulnerability Tsx async abort:        Not affected
+
+Versions of relevant libraries:
+[pip3] numpy==1.23.5
+[pip3] torch==2.0.0
+[pip3] torchaudio==2.0.0
+[pip3] torchvision==0.15.0
+[conda] blas                      1.0                         mkl  
+[conda] ffmpeg                    4.3                  hf484d3e_0    pytorch
+[conda] mkl                       2021.4.0           h06a4308_640  
+[conda] mkl-service               2.4.0           py310h7f8727e_0  
+[conda] mkl_fft                   1.3.1           py310hd6ae3a3_0  
+[conda] mkl_random                1.2.2           py310h00e6091_0  
+[conda] numpy                     1.23.5          py310hd5efca6_0  
+[conda] numpy-base                1.23.5          py310h8e6c178_0  
+[conda] pytorch                   2.0.0           py3.10_cuda11.8_cudnn8.7.0_0    pytorch
+[conda] pytorch-cuda              11.8                 h7e8668a_6    pytorch
+[conda] pytorch-mutex             1.0                        cuda    pytorch
+[conda] torchaudio                2.0.0               py310_cu118    pytorch
+[conda] torchtriton               2.0.0                     py310    pytorch
+[conda] torchvision               0.15.0              py310_cu118    pytorch
+        Pillow (9.4.0)
+
+Loading trainer: CoOp
+Loading dataset: FGVCAircraft
+Loading preprocessed few-shot data from /home/aditya/tcacode/TCA/fgvc_aircraft/split_fewshot/shot_16-seed_2.pkl
+Building transform_train
++ random resized crop (size=(224, 224), scale=(0.08, 1.0))
++ random flip
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+Building transform_test
++ resize the smaller edge to 224
++ 224x224 center crop
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+---------  ------------
+Dataset    FGVCAircraft
+# classes  100
+# train_x  1,600
+# val      400
+# test     3,333
+---------  ------------
+Loading CLIP (backbone: ViT-B/16)
+Building custom CLIP
+Initializing a generic context
+Initial context: "X X X X X X X X X X X X X X X X"
+Number of context words (tokens): 16
+Turning off gradients in both the image and the text encoder
+Loading evaluator: Classification
+No checkpoint found, train from scratch
+Initialize tensorboard (log_dir=output/fgvc_aircraft/CoOp/vit_b16_ep50_16shots/nctx16_cscFalse_ctpend/seed2/gloss_sigma3.5_20260419_112332/tensorboard)
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [1/50] batch [5/12] time 0.682 (1.755) data 0.000 (0.901) loss 4.9897 (4.9150) lr 1.0000e-05 eta 0:17:24
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [1/50] batch [10/12] time 0.618 (1.193) data 0.000 (0.450) loss 4.5324 (4.8130) lr 1.0000e-05 eta 0:11:43
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+epoch [2/50] batch [5/12] time 0.591 (1.475) data 0.000 (0.853) loss 4.6527 (4.5374) lr 2.0000e-03 eta 0:14:19
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [2/50] batch [10/12] time 0.645 (1.054) data 0.001 (0.427) loss 4.4659 (4.5382) lr 2.0000e-03 eta 0:10:09
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [3/50] batch [5/12] time 0.545 (1.382) data 0.000 (0.807) loss 4.4951 (4.5599) lr 1.9980e-03 eta 0:13:08
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [3/50] batch [10/12] time 0.668 (1.003) data 0.000 (0.403) loss 4.5085 (4.5681) lr 1.9980e-03 eta 0:09:27
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+epoch [4/50] batch [5/12] time 0.651 (1.381) data 0.000 (0.777) loss 4.5801 (4.5949) lr 1.9921e-03 eta 0:12:51
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [4/50] batch [10/12] time 0.623 (1.004) data 0.000 (0.388) loss 4.5320 (4.5769) lr 1.9921e-03 eta 0:09:16
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+epoch [5/50] batch [5/12] time 0.507 (1.337) data 0.001 (0.755) loss 4.5532 (4.5261) lr 1.9823e-03 eta 0:12:11
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [5/50] batch [10/12] time 0.647 (0.986) data 0.000 (0.378) loss 4.4999 (4.5297) lr 1.9823e-03 eta 0:08:54
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [6/50] batch [5/12] time 0.507 (1.299) data 0.000 (0.720) loss 4.5456 (4.5350) lr 1.9686e-03 eta 0:11:34
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [6/50] batch [10/12] time 0.676 (0.967) data 0.000 (0.360) loss 4.4929 (4.5282) lr 1.9686e-03 eta 0:08:32
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+epoch [7/50] batch [5/12] time 0.515 (1.343) data 0.000 (0.761) loss 4.5417 (4.5274) lr 1.9511e-03 eta 0:11:42
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [7/50] batch [10/12] time 0.524 (0.971) data 0.000 (0.381) loss 4.4987 (4.5246) lr 1.9511e-03 eta 0:08:22
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [8/50] batch [5/12] time 0.631 (1.334) data 0.001 (0.757) loss 4.5383 (4.5214) lr 1.9298e-03 eta 0:11:21
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [8/50] batch [10/12] time 0.633 (0.971) data 0.000 (0.379) loss 4.4839 (4.5182) lr 1.9298e-03 eta 0:08:11
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+epoch [9/50] batch [5/12] time 0.477 (1.309) data 0.000 (0.751) loss 4.5369 (4.5194) lr 1.9048e-03 eta 0:10:53
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [9/50] batch [10/12] time 0.633 (0.969) data 0.000 (0.376) loss 4.4804 (4.5146) lr 1.9048e-03 eta 0:07:58
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [10/50] batch [5/12] time 0.580 (1.385) data 0.001 (0.798) loss 4.5314 (4.5091) lr 1.8763e-03 eta 0:11:14
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+epoch [10/50] batch [10/12] time 0.577 (1.007) data 0.000 (0.399) loss 4.4887 (4.5080) lr 1.8763e-03 eta 0:08:05
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [11/50] batch [5/12] time 0.487 (1.279) data 0.000 (0.677) loss 4.5294 (4.5094) lr 1.8443e-03 eta 0:10:07
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [11/50] batch [10/12] time 0.555 (0.946) data 0.000 (0.338) loss 4.4764 (4.5066) lr 1.8443e-03 eta 0:07:24
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [12/50] batch [5/12] time 0.603 (1.403) data 0.000 (0.806) loss 4.5296 (4.4989) lr 1.8090e-03 eta 0:10:49
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [12/50] batch [10/12] time 0.677 (1.008) data 0.000 (0.403) loss 4.4648 (4.4976) lr 1.8090e-03 eta 0:07:41
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [13/50] batch [5/12] time 0.620 (1.389) data 0.000 (0.790) loss 4.5187 (4.4944) lr 1.7705e-03 eta 0:10:26
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [13/50] batch [10/12] time 0.617 (1.007) data 0.000 (0.395) loss 4.4748 (4.4951) lr 1.7705e-03 eta 0:07:29
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [14/50] batch [5/12] time 0.678 (1.443) data 0.000 (0.808) loss 4.5199 (4.4849) lr 1.7290e-03 eta 0:10:33
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [14/50] batch [10/12] time 0.569 (1.021) data 0.000 (0.404) loss 4.4693 (4.4858) lr 1.7290e-03 eta 0:07:22
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [15/50] batch [5/12] time 0.560 (1.281) data 0.000 (0.713) loss 4.5165 (4.4736) lr 1.6845e-03 eta 0:09:06
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [15/50] batch [10/12] time 0.593 (0.945) data 0.000 (0.357) loss 4.4505 (4.4743) lr 1.6845e-03 eta 0:06:38
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [16/50] batch [5/12] time 0.497 (1.336) data 0.000 (0.764) loss 4.5144 (4.4799) lr 1.6374e-03 eta 0:09:14
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [16/50] batch [10/12] time 0.516 (0.963) data 0.000 (0.382) loss 4.4590 (4.4731) lr 1.6374e-03 eta 0:06:34
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [17/50] batch [5/12] time 0.508 (1.357) data 0.000 (0.784) loss 4.5117 (4.4579) lr 1.5878e-03 eta 0:09:06
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [17/50] batch [10/12] time 0.514 (0.972) data 0.000 (0.392) loss 4.4516 (4.4593) lr 1.5878e-03 eta 0:06:26
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [18/50] batch [5/12] time 0.502 (1.202) data 0.000 (0.643) loss 4.5037 (4.4467) lr 1.5358e-03 eta 0:07:50
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [18/50] batch [10/12] time 0.646 (0.911) data 0.000 (0.322) loss 4.4507 (4.4451) lr 1.5358e-03 eta 0:05:51
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [19/50] batch [5/12] time 0.568 (1.341) data 0.000 (0.787) loss 4.4861 (4.4348) lr 1.4818e-03 eta 0:08:28
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [19/50] batch [10/12] time 0.551 (0.970) data 0.000 (0.394) loss 4.4380 (4.4361) lr 1.4818e-03 eta 0:06:02
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [20/50] batch [5/12] time 0.461 (1.857) data 0.001 (1.189) loss 4.4739 (4.4329) lr 1.4258e-03 eta 0:11:21
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [20/50] batch [10/12] time 0.712 (1.228) data 0.080 (0.635) loss 4.4592 (4.4355) lr 1.4258e-03 eta 0:07:24
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [21/50] batch [5/12] time 0.641 (1.595) data 0.000 (1.033) loss 4.4608 (4.4064) lr 1.3681e-03 eta 0:09:26
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [21/50] batch [10/12] time 0.600 (1.095) data 0.001 (0.517) loss 4.4193 (4.4123) lr 1.3681e-03 eta 0:06:23
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [22/50] batch [5/12] time 0.500 (1.315) data 0.000 (0.733) loss 4.4476 (4.4334) lr 1.3090e-03 eta 0:07:31
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [22/50] batch [10/12] time 0.621 (0.970) data 0.000 (0.367) loss 4.4032 (4.4235) lr 1.3090e-03 eta 0:05:28
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [23/50] batch [5/12] time 0.662 (1.410) data 0.001 (0.799) loss 4.4073 (4.3859) lr 1.2487e-03 eta 0:07:46
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [23/50] batch [10/12] time 0.602 (1.005) data 0.000 (0.400) loss 4.4096 (4.3911) lr 1.2487e-03 eta 0:05:27
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [24/50] batch [5/12] time 0.502 (1.319) data 0.000 (0.738) loss 4.4156 (4.3993) lr 1.1874e-03 eta 0:07:00
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [24/50] batch [10/12] time 0.649 (0.976) data 0.000 (0.369) loss 4.3783 (4.3956) lr 1.1874e-03 eta 0:05:06
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [25/50] batch [5/12] time 0.547 (1.364) data 0.000 (0.774) loss 4.3864 (4.4031) lr 1.1253e-03 eta 0:06:58
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [25/50] batch [10/12] time 0.661 (0.992) data 0.000 (0.387) loss 4.3948 (4.3947) lr 1.1253e-03 eta 0:04:59
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [26/50] batch [5/12] time 0.665 (1.384) data 0.000 (0.799) loss 4.4021 (4.3741) lr 1.0628e-03 eta 0:06:48
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [26/50] batch [10/12] time 0.548 (0.990) data 0.000 (0.400) loss 4.3789 (4.3752) lr 1.0628e-03 eta 0:04:46
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [27/50] batch [5/12] time 0.476 (1.362) data 0.000 (0.836) loss 4.3687 (4.3777) lr 1.0000e-03 eta 0:06:25
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [27/50] batch [10/12] time 0.586 (0.962) data 0.000 (0.418) loss 4.3130 (4.3597) lr 1.0000e-03 eta 0:04:27
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [28/50] batch [5/12] time 0.508 (1.323) data 0.000 (0.748) loss 4.3645 (4.3680) lr 9.3721e-04 eta 0:05:58
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [28/50] batch [10/12] time 0.654 (0.982) data 0.000 (0.374) loss 4.3020 (4.3475) lr 9.3721e-04 eta 0:04:21
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [29/50] batch [5/12] time 0.583 (1.390) data 0.000 (0.809) loss 4.3443 (4.3753) lr 8.7467e-04 eta 0:06:00
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [29/50] batch [10/12] time 0.672 (1.009) data 0.000 (0.405) loss 4.2776 (4.3413) lr 8.7467e-04 eta 0:04:16
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [30/50] batch [5/12] time 0.583 (1.356) data 0.000 (0.760) loss 4.3378 (4.3484) lr 8.1262e-04 eta 0:05:34
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [30/50] batch [10/12] time 0.678 (0.990) data 0.000 (0.380) loss 4.2847 (4.3269) lr 8.1262e-04 eta 0:03:59
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [31/50] batch [5/12] time 0.514 (1.305) data 0.000 (0.704) loss 4.3592 (4.3668) lr 7.5131e-04 eta 0:05:06
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [31/50] batch [10/12] time 0.641 (0.970) data 0.000 (0.352) loss 4.2638 (4.3324) lr 7.5131e-04 eta 0:03:43
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [32/50] batch [5/12] time 0.559 (1.351) data 0.000 (0.772) loss 4.3356 (4.3580) lr 6.9098e-04 eta 0:05:01
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [32/50] batch [10/12] time 0.671 (0.991) data 0.000 (0.386) loss 4.2320 (4.3217) lr 6.9098e-04 eta 0:03:35
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [33/50] batch [5/12] time 0.677 (1.414) data 0.000 (0.789) loss 4.3211 (4.3225) lr 6.3188e-04 eta 0:04:58
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [33/50] batch [10/12] time 0.588 (1.009) data 0.000 (0.395) loss 4.2413 (4.3043) lr 6.3188e-04 eta 0:03:27
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [34/50] batch [5/12] time 0.512 (1.292) data 0.000 (0.664) loss 4.3413 (4.3768) lr 5.7422e-04 eta 0:04:17
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [34/50] batch [10/12] time 0.672 (0.966) data 0.000 (0.332) loss 4.2276 (4.3246) lr 5.7422e-04 eta 0:03:07
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [35/50] batch [5/12] time 0.639 (1.421) data 0.000 (0.759) loss 4.3073 (4.3258) lr 5.1825e-04 eta 0:04:25
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [35/50] batch [10/12] time 0.569 (1.020) data 0.001 (0.380) loss 4.1754 (4.2825) lr 5.1825e-04 eta 0:03:05
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [36/50] batch [5/12] time 0.642 (1.406) data 0.000 (0.811) loss 4.2849 (4.3330) lr 4.6417e-04 eta 0:04:06
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [36/50] batch [10/12] time 0.638 (1.011) data 0.000 (0.405) loss 4.1803 (4.2827) lr 4.6417e-04 eta 0:02:51
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [37/50] batch [5/12] time 0.666 (1.365) data 0.000 (0.778) loss 4.2919 (4.3384) lr 4.1221e-04 eta 0:03:42
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [37/50] batch [10/12] time 0.599 (0.992) data 0.001 (0.389) loss 4.2135 (4.2842) lr 4.1221e-04 eta 0:02:36
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [38/50] batch [5/12] time 0.516 (1.315) data 0.000 (0.741) loss 4.2912 (4.3158) lr 3.6258e-04 eta 0:03:18
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [38/50] batch [10/12] time 0.640 (0.975) data 0.000 (0.371) loss 4.1756 (4.2664) lr 3.6258e-04 eta 0:02:22
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [39/50] batch [5/12] time 0.650 (1.418) data 0.000 (0.828) loss 4.2928 (4.3316) lr 3.1545e-04 eta 0:03:17
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [39/50] batch [10/12] time 0.643 (1.015) data 0.001 (0.414) loss 4.1340 (4.2667) lr 3.1545e-04 eta 0:02:15
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [40/50] batch [5/12] time 0.511 (1.345) data 0.000 (0.774) loss 4.2866 (4.3135) lr 2.7103e-04 eta 0:02:50
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [40/50] batch [10/12] time 0.621 (0.984) data 0.000 (0.387) loss 4.1199 (4.2562) lr 2.7103e-04 eta 0:02:00
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [41/50] batch [5/12] time 0.516 (1.345) data 0.000 (0.755) loss 4.2750 (4.3166) lr 2.2949e-04 eta 0:02:34
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [41/50] batch [10/12] time 0.606 (0.993) data 0.000 (0.378) loss 4.1602 (4.2588) lr 2.2949e-04 eta 0:01:49
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [42/50] batch [5/12] time 0.572 (1.379) data 0.000 (0.765) loss 4.2717 (4.3080) lr 1.9098e-04 eta 0:02:22
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [42/50] batch [10/12] time 0.675 (1.003) data 0.000 (0.382) loss 4.1358 (4.2503) lr 1.9098e-04 eta 0:01:38
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [43/50] batch [5/12] time 0.593 (1.350) data 0.000 (0.750) loss 4.2632 (4.3150) lr 1.5567e-04 eta 0:02:02
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [43/50] batch [10/12] time 0.669 (0.986) data 0.000 (0.375) loss 4.1406 (4.2533) lr 1.5567e-04 eta 0:01:24
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [44/50] batch [5/12] time 0.640 (1.414) data 0.000 (0.798) loss 4.2618 (4.3021) lr 1.2369e-04 eta 0:01:51
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [44/50] batch [10/12] time 0.612 (1.013) data 0.000 (0.399) loss 4.0948 (4.2430) lr 1.2369e-04 eta 0:01:14
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [45/50] batch [5/12] time 0.512 (1.358) data 0.000 (0.736) loss 4.2697 (4.3049) lr 9.5173e-05 eta 0:01:30
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [45/50] batch [10/12] time 0.637 (0.997) data 0.000 (0.368) loss 4.1180 (4.2395) lr 9.5173e-05 eta 0:01:01
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [46/50] batch [5/12] time 0.601 (1.377) data 0.000 (0.768) loss 4.2663 (4.3116) lr 7.0224e-05 eta 0:01:15
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [46/50] batch [10/12] time 0.678 (0.998) data 0.000 (0.384) loss 4.1034 (4.2410) lr 7.0224e-05 eta 0:00:49
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [47/50] batch [5/12] time 0.679 (1.438) data 0.000 (0.785) loss 4.2538 (4.2996) lr 4.8943e-05 eta 0:01:01
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [47/50] batch [10/12] time 0.651 (1.038) data 0.000 (0.393) loss 4.1004 (4.2312) lr 4.8943e-05 eta 0:00:39
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [48/50] batch [5/12] time 0.513 (1.298) data 0.000 (0.709) loss 4.2470 (4.2991) lr 3.1417e-05 eta 0:00:40
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [48/50] batch [10/12] time 0.642 (0.968) data 0.000 (0.355) loss 4.1197 (4.2364) lr 3.1417e-05 eta 0:00:25
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [49/50] batch [5/12] time 0.673 (1.446) data 0.000 (0.818) loss 4.2655 (4.2985) lr 1.7713e-05 eta 0:00:27
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [49/50] batch [10/12] time 0.617 (1.034) data 0.000 (0.409) loss 4.1085 (4.2364) lr 1.7713e-05 eta 0:00:14
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0079, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [50/50] batch [5/12] time 0.654 (1.398) data 0.000 (0.810) loss 4.2723 (4.2991) lr 7.8853e-06 eta 0:00:09
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+epoch [50/50] batch [10/12] time 0.613 (1.012) data 0.000 (0.405) loss 4.0830 (4.2326) lr 7.8853e-06 eta 0:00:02
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+GLoss parameters: sigma=3.5, gamma=0.5
+Adjacency matrix stats: min=0.0000, max=0.0080, mean=0.0078, std=0.0007
+Checkpoint saved to output/fgvc_aircraft/CoOp/vit_b16_ep50_16shots/nctx16_cscFalse_ctpend/seed2/gloss_sigma3.5_20260419_112332/prompt_learner/model.pth.tar-50
+Finish training
+Deploy the last-epoch model
+Evaluate on the *test* set
+=> result
+* total: 3,333
+* correct: 344
+* accuracy: 10.3%
+* error: 89.7%
+* macro_f1: 7.4%
+Elapsed: 0:09:43
+Available tags: ['train/loss', 'train/lr', 'test/accuracy', 'test/error_rate', 'test/macro_f1']
+Loss curve saved to output/fgvc_aircraft/CoOp/vit_b16_ep50_16shots/nctx16_cscFalse_ctpend/seed2/gloss_sigma3.5_20260419_112332/loss_curve.png
