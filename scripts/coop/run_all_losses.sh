@@ -32,6 +32,15 @@ do
     echo "--- Running cross_entropy ---"
     bash ./scripts/coop/main.sh ${DATASET} ${CFG} ${CTP} ${NCTX} ${SHOTS} ${CSC} cross_entropy
 
+    echo "--- Running SCL ---"
+    bash ./scripts/coop/main.sh ${DATASET} ${CFG} ${CTP} ${NCTX} ${SHOTS} ${CSC} scl 
+
+    echo "--- Running gloss (sigma=${SIGMA}) ---"
+    bash ./scripts/coop/main.sh ${DATASET} ${CFG} ${CTP} ${NCTX} ${SHOTS} ${CSC} ce+gloss ${SIGMA}
+    
+    echo "--- Running gloss ---"
+    bash ./scripts/coop/main.sh ${DATASET} ${CFG} ${CTP} ${NCTX} ${SHOTS} ${CSC} ce+scl
+
     echo "--- Running gloss (sigma=${SIGMA}) ---"
     bash ./scripts/coop/main.sh ${DATASET} ${CFG} ${CTP} ${NCTX} ${SHOTS} ${CSC} gloss ${SIGMA}
 done

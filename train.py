@@ -176,9 +176,8 @@ def setup_cfg(args):
     # 4. From optional input arguments
     cfg.merge_from_list(args.opts)
 
-    # Disable random shuffling for train dataloaders. #TODO Make this more flexible in the future (e.g. allow users to specify sampler types for train_x and train_u separately)
-    # cfg.DATALOADER.TRAIN_X.SAMPLER = "SequentialSampler"
-    # cfg.DATALOADER.TRAIN_U.SAMPLER = "SequentialSampler"
+    # Disable random shuffling for train dataloaders. #TODO 
+    cfg.DATALOADER.TRAIN_X.SAMPLER = "SequentialSampler"
 
     cfg.freeze()
 
