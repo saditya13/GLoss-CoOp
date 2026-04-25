@@ -1,0 +1,646 @@
+***************
+** Arguments **
+***************
+backbone: 
+config_file: configs/trainers/CoOp/vit_b16_ep50_ctxv1.yaml
+coop_loss_type: gloss
+dataset_config_file: configs/datasets/caltech101.yaml
+eval_only: False
+head: 
+load_epoch: None
+model_dir: 
+no_train: False
+opts: ['TRAINER.COOP.N_CTX', '4', 'TRAINER.COOP.CSC', 'False', 'TRAINER.COOP.CLASS_TOKEN_POSITION', 'end', 'DATASET.NUM_SHOTS', '16']
+output_dir: output/caltech101/CoOp/vit_b16_ep50_ctxv1_16shots/nctx4_cscFalse_ctpend/seed1/gloss_20260425_184705
+resume: 
+root: /home/aditya/CoOp/Data
+seed: 1
+source_domains: None
+target_domains: None
+trainer: CoOp
+transforms: None
+************
+** Config **
+************
+DATALOADER:
+  K_TRANSFORMS: 1
+  NUM_WORKERS: 8
+  RETURN_IMG0: False
+  TEST:
+    BATCH_SIZE: 100
+    SAMPLER: SequentialSampler
+  TRAIN_U:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAME_AS_X: True
+    SAMPLER: RandomSampler
+  TRAIN_X:
+    BATCH_SIZE: 512
+    N_DOMAIN: 0
+    N_INS: 16
+    SAMPLER: SequentialSampler
+DATASET:
+  ALL_AS_UNLABELED: False
+  CIFAR_C_LEVEL: 1
+  CIFAR_C_TYPE: 
+  NAME: Caltech101
+  NUM_LABELED: -1
+  NUM_SHOTS: 16
+  ROOT: /home/aditya/CoOp/Data
+  SOURCE_DOMAINS: ()
+  STL10_FOLD: -1
+  SUBSAMPLE_CLASSES: all
+  TARGET_DOMAINS: ()
+  VAL_PERCENT: 0.1
+INPUT:
+  COLORJITTER_B: 0.4
+  COLORJITTER_C: 0.4
+  COLORJITTER_H: 0.1
+  COLORJITTER_S: 0.4
+  CROP_PADDING: 4
+  CUTOUT_LEN: 16
+  CUTOUT_N: 1
+  GB_K: 21
+  GB_P: 0.5
+  GN_MEAN: 0.0
+  GN_STD: 0.15
+  INTERPOLATION: bicubic
+  NO_TRANSFORM: False
+  PIXEL_MEAN: [0.48145466, 0.4578275, 0.40821073]
+  PIXEL_STD: [0.26862954, 0.26130258, 0.27577711]
+  RANDAUGMENT_M: 10
+  RANDAUGMENT_N: 2
+  RGS_P: 0.2
+  RRCROP_SCALE: (0.08, 1.0)
+  SIZE: (224, 224)
+  TRANSFORMS: ('random_resized_crop', 'random_flip', 'normalize')
+MODEL:
+  BACKBONE:
+    NAME: ViT-B/16
+    PRETRAINED: True
+  HEAD:
+    ACTIVATION: relu
+    BN: True
+    DROPOUT: 0.0
+    HIDDEN_LAYERS: ()
+    NAME: 
+  INIT_WEIGHTS: 
+OPTIM:
+  ADAM_BETA1: 0.9
+  ADAM_BETA2: 0.999
+  BASE_LR_MULT: 0.1
+  GAMMA: 0.1
+  LR: 0.1
+  LR_SCHEDULER: cosine
+  MAX_EPOCH: 50
+  MOMENTUM: 0.9
+  NAME: sgd
+  NEW_LAYERS: ()
+  RMSPROP_ALPHA: 0.99
+  SGD_DAMPNING: 0
+  SGD_NESTEROV: False
+  STAGED_LR: False
+  STEPSIZE: (-1,)
+  WARMUP_CONS_LR: 1e-05
+  WARMUP_EPOCH: 1
+  WARMUP_MIN_LR: 1e-05
+  WARMUP_RECOUNT: True
+  WARMUP_TYPE: constant
+  WEIGHT_DECAY: 0.0005
+OUTPUT_DIR: output/caltech101/CoOp/vit_b16_ep50_ctxv1_16shots/nctx4_cscFalse_ctpend/seed1/gloss_20260425_184705
+RESUME: 
+SEED: 1
+TEST:
+  COMPUTE_CMAT: False
+  EVALUATOR: Classification
+  FINAL_MODEL: last_step
+  NO_TEST: False
+  PER_CLASS_RESULT: False
+  SPLIT: test
+TRAIN:
+  CHECKPOINT_FREQ: 0
+  COUNT_ITER: train_x
+  PRINT_FREQ: 5
+TRAINER:
+  CDAC:
+    CLASS_LR_MULTI: 10
+    P_THRESH: 0.95
+    RAMPUP_COEF: 30
+    RAMPUP_ITRS: 1000
+    STRONG_TRANSFORMS: ()
+    TOPK_MATCH: 5
+  COCOOP:
+    CTX_INIT: 
+    N_CTX: 16
+    PREC: fp16
+  COOP:
+    CLASS_TOKEN_POSITION: end
+    CSC: False
+    CTX_INIT: a photo of a
+    GLOSS_GAMMA: 0.5
+    GLOSS_SIGMA: 0.3
+    LOSS_TYPE: gloss
+    N_CTX: 4
+    PREC: fp16
+  CROSSGRAD:
+    ALPHA_D: 0.5
+    ALPHA_F: 0.5
+    EPS_D: 1.0
+    EPS_F: 1.0
+  DAEL:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DAELDG:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DDAIG:
+    ALPHA: 0.5
+    CLAMP: False
+    CLAMP_MAX: 1.0
+    CLAMP_MIN: -1.0
+    G_ARCH: 
+    LMDA: 0.3
+    WARMUP: 0
+  DOMAINMIX:
+    ALPHA: 1.0
+    BETA: 1.0
+    TYPE: crossdomain
+  ENTMIN:
+    LMDA: 0.001
+  FIXMATCH:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 1.0
+  M3SDA:
+    LMDA: 0.5
+    N_STEP_F: 4
+  MCD:
+    N_STEP_F: 4
+  MEANTEACHER:
+    EMA_ALPHA: 0.999
+    RAMPUP: 5
+    WEIGHT_U: 1.0
+  MIXMATCH:
+    MIXUP_BETA: 0.75
+    RAMPUP: 20000
+    TEMP: 2.0
+    WEIGHT_U: 100.0
+  MME:
+    LMDA: 0.1
+  NAME: CoOp
+  SE:
+    CONF_THRE: 0.95
+    EMA_ALPHA: 0.999
+    RAMPUP: 300
+USE_CUDA: True
+VERBOSE: True
+VERSION: 1
+Collecting env info ...
+** System info **
+PyTorch version: 2.4.1
+Is debug build: False
+CUDA used to build PyTorch: 12.4
+ROCM used to build PyTorch: N/A
+
+OS: Ubuntu 24.04.1 LTS (x86_64)
+GCC version: (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Clang version: Could not collect
+CMake version: Could not collect
+Libc version: glibc-2.39
+
+Python version: 3.8.20 (default, Oct  3 2024, 15:24:27)  [GCC 11.2.0] (64-bit runtime)
+Python platform: Linux-6.11.0-1027-oem-x86_64-with-glibc2.17
+Is CUDA available: True
+CUDA runtime version: 13.2.51
+CUDA_MODULE_LOADING set to: LAZY
+GPU models and configuration: GPU 0: NVIDIA A100 80GB PCIe
+Nvidia driver version: 580.126.09
+cuDNN version: Could not collect
+HIP runtime version: N/A
+MIOpen runtime version: N/A
+Is XNNPACK available: True
+
+CPU:
+Architecture:                         x86_64
+CPU op-mode(s):                       32-bit, 64-bit
+Address sizes:                        46 bits physical, 57 bits virtual
+Byte Order:                           Little Endian
+CPU(s):                               16
+On-line CPU(s) list:                  0-15
+Vendor ID:                            GenuineIntel
+Model name:                           Intel(R) Xeon(R) Silver 4309Y CPU @ 2.80GHz
+CPU family:                           6
+Model:                                106
+Thread(s) per core:                   2
+Core(s) per socket:                   8
+Socket(s):                            1
+Stepping:                             6
+CPU(s) scaling MHz:                   43%
+CPU max MHz:                          3600.0000
+CPU min MHz:                          800.0000
+BogoMIPS:                             5600.00
+Flags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3 ssbd mba ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb intel_pt avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local split_lock_detect wbnoinvd dtherm ida arat pln pts hwp hwp_act_window hwp_pkg_req vnmi avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq la57 rdpid fsrm md_clear pconfig flush_l1d arch_capabilities
+Virtualization:                       VT-x
+L1d cache:                            384 KiB (8 instances)
+L1i cache:                            256 KiB (8 instances)
+L2 cache:                             10 MiB (8 instances)
+L3 cache:                             12 MiB (1 instance)
+NUMA node(s):                         1
+NUMA node0 CPU(s):                    0-15
+Vulnerability Gather data sampling:   Mitigation; Microcode
+Vulnerability Itlb multihit:          Not affected
+Vulnerability L1tf:                   Not affected
+Vulnerability Mds:                    Not affected
+Vulnerability Meltdown:               Not affected
+Vulnerability Mmio stale data:        Mitigation; Clear CPU buffers; SMT vulnerable
+Vulnerability Reg file data sampling: Not affected
+Vulnerability Retbleed:               Not affected
+Vulnerability Spec rstack overflow:   Not affected
+Vulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop
+Vulnerability Srbds:                  Not affected
+Vulnerability Tsx async abort:        Not affected
+
+Versions of relevant libraries:
+[pip3] flake8==3.7.9
+[pip3] numpy==1.24.3
+[pip3] torch==2.4.1
+[pip3] torchvision==0.20.0
+[pip3] triton==3.0.0
+[conda] blas                      1.0                         mkl  
+[conda] cudatoolkit               10.2.89              hfd86e86_1  
+[conda] libjpeg-turbo             2.0.0                h9bf148f_0    pytorch
+[conda] mkl                       2023.1.0         h213fc3f_46344  
+[conda] mkl-service               2.4.0            py38h5eee18b_1  
+[conda] mkl_fft                   1.3.8            py38h5eee18b_0  
+[conda] mkl_random                1.2.4            py38hdb19cb5_0  
+[conda] numpy                     1.24.3           py38hf6e8229_1  
+[conda] numpy-base                1.24.3           py38h060ed82_1  
+[conda] pytorch                   2.4.1           py3.8_cuda12.4_cudnn9.1.0_0    pytorch
+[conda] pytorch-cuda              12.4                 hc786d27_7    pytorch
+[conda] pytorch-mutex             1.0                        cuda    pytorch
+[conda] torchtriton               3.0.0                      py38    pytorch
+[conda] torchvision               0.20.0               py38_cu124    pytorch
+        Pillow (10.4.0)
+
+Loading trainer: CoOp
+Loading dataset: Caltech101
+Reading split from /home/aditya/CoOp/Data/caltech101/split_zhou_Caltech101.json
+Loading preprocessed few-shot data from /home/aditya/CoOp/Data/caltech101/split_fewshot/shot_16-seed_1.pkl
+Building transform_train
++ random resized crop (size=(224, 224), scale=(0.08, 1.0))
++ random flip
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+Building transform_test
++ resize the smaller edge to 224
++ 224x224 center crop
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+---------  ----------
+Dataset    Caltech101
+# classes  100
+# train_x  1,600
+# val      400
+# test     2,465
+---------  ----------
+Loading CLIP (backbone: ViT-B/16)
+Building custom CLIP
+Initial context: "a photo of a"
+Number of context words (tokens): 4
+Turning off gradients in both the image and the text encoder
+Loading evaluator: Classification
+No checkpoint found, train from scratch
+Initialize tensorboard (log_dir=output/caltech101/CoOp/vit_b16_ep50_ctxv1_16shots/nctx4_cscFalse_ctpend/seed1/gloss_20260425_184705/tensorboard)
+Adjacency matrix stats: min=0.0000, max=0.0413, mean=0.0019, std=0.0034
+epoch [1/50] batch [1/3] time 6.997 (6.997) data 2.654 (2.654) loss 4.4183 (4.4183) lr 1.0000e-05 eta 0:17:22
+Adjacency matrix stats: min=0.0000, max=0.0669, mean=0.0019, std=0.0050
+epoch [1/50] batch [2/3] time 1.088 (4.042) data 0.000 (1.327) loss 4.3212 (4.3697) lr 1.0000e-05 eta 0:09:58
+Adjacency matrix stats: min=0.0000, max=0.0649, mean=0.0019, std=0.0048
+epoch [1/50] batch [3/3] time 1.039 (3.041) data 0.000 (0.885) loss 4.3275 (4.3556) lr 1.0000e-01 eta 0:07:27
+Adjacency matrix stats: min=0.0000, max=0.0430, mean=0.0019, std=0.0034
+epoch [2/50] batch [1/3] time 3.277 (3.277) data 2.044 (2.044) loss 4.4167 (4.4167) lr 1.0000e-01 eta 0:07:58
+Adjacency matrix stats: min=0.0000, max=0.0578, mean=0.0019, std=0.0035
+epoch [2/50] batch [2/3] time 0.973 (2.125) data 0.000 (1.022) loss 4.4109 (4.4138) lr 1.0000e-01 eta 0:05:08
+Adjacency matrix stats: min=0.0000, max=0.0686, mean=0.0019, std=0.0054
+epoch [2/50] batch [3/3] time 0.849 (1.699) data 0.000 (0.681) loss 4.2843 (4.3707) lr 9.9901e-02 eta 0:04:04
+Adjacency matrix stats: min=0.0000, max=0.0761, mean=0.0019, std=0.0078
+epoch [3/50] batch [1/3] time 3.054 (3.054) data 2.143 (2.143) loss 4.0793 (4.0793) lr 9.9901e-02 eta 0:07:16
+Adjacency matrix stats: min=0.0000, max=0.0842, mean=0.0019, std=0.0095
+epoch [3/50] batch [2/3] time 0.841 (1.947) data 0.000 (1.071) loss 3.8994 (3.9894) lr 9.9901e-02 eta 0:04:36
+Adjacency matrix stats: min=0.0000, max=0.0897, mean=0.0020, std=0.0101
+epoch [3/50] batch [3/3] time 0.765 (1.553) data 0.000 (0.714) loss 3.8128 (3.9305) lr 9.9606e-02 eta 0:03:38
+Adjacency matrix stats: min=0.0000, max=0.0882, mean=0.0019, std=0.0094
+epoch [4/50] batch [1/3] time 2.694 (2.694) data 1.816 (1.816) loss 3.8950 (3.8950) lr 9.9606e-02 eta 0:06:17
+Adjacency matrix stats: min=0.0000, max=0.1023, mean=0.0019, std=0.0101
+epoch [4/50] batch [2/3] time 0.813 (1.754) data 0.000 (0.908) loss 3.8046 (3.8498) lr 9.9606e-02 eta 0:04:03
+Adjacency matrix stats: min=0.0000, max=0.0932, mean=0.0019, std=0.0105
+epoch [4/50] batch [3/3] time 0.718 (1.408) data 0.000 (0.605) loss 3.7583 (3.8193) lr 9.9114e-02 eta 0:03:14
+Adjacency matrix stats: min=0.0000, max=0.0929, mean=0.0019, std=0.0099
+epoch [5/50] batch [1/3] time 2.959 (2.959) data 2.212 (2.212) loss 3.8538 (3.8538) lr 9.9114e-02 eta 0:06:45
+Adjacency matrix stats: min=0.0000, max=0.0920, mean=0.0019, std=0.0103
+epoch [5/50] batch [2/3] time 0.715 (1.837) data 0.000 (1.106) loss 3.7815 (3.8177) lr 9.9114e-02 eta 0:04:09
+Adjacency matrix stats: min=0.0000, max=0.0997, mean=0.0019, std=0.0107
+epoch [5/50] batch [3/3] time 0.714 (1.463) data 0.000 (0.737) loss 3.7332 (3.7895) lr 9.8429e-02 eta 0:03:17
+Adjacency matrix stats: min=0.0000, max=0.1015, mean=0.0019, std=0.0101
+epoch [6/50] batch [1/3] time 2.885 (2.885) data 2.144 (2.144) loss 3.8105 (3.8105) lr 9.8429e-02 eta 0:06:26
+Adjacency matrix stats: min=0.0000, max=0.0929, mean=0.0019, std=0.0104
+epoch [6/50] batch [2/3] time 0.717 (1.801) data 0.001 (1.072) loss 3.7725 (3.7915) lr 9.8429e-02 eta 0:03:59
+Adjacency matrix stats: min=0.0000, max=0.0968, mean=0.0019, std=0.0108
+epoch [6/50] batch [3/3] time 0.712 (1.438) data 0.000 (0.715) loss 3.7218 (3.7683) lr 9.7553e-02 eta 0:03:09
+Adjacency matrix stats: min=0.0000, max=0.1063, mean=0.0019, std=0.0102
+epoch [7/50] batch [1/3] time 2.908 (2.908) data 2.087 (2.087) loss 3.8064 (3.8064) lr 9.7553e-02 eta 0:06:20
+Adjacency matrix stats: min=0.0000, max=0.0970, mean=0.0019, std=0.0105
+epoch [7/50] batch [2/3] time 0.716 (1.812) data 0.001 (1.044) loss 3.7460 (3.7762) lr 9.7553e-02 eta 0:03:55
+Adjacency matrix stats: min=0.0000, max=0.1024, mean=0.0019, std=0.0108
+epoch [7/50] batch [3/3] time 0.874 (1.499) data 0.000 (0.696) loss 3.7114 (3.7546) lr 9.6489e-02 eta 0:03:13
+Adjacency matrix stats: min=0.0000, max=0.0963, mean=0.0019, std=0.0103
+epoch [8/50] batch [1/3] time 2.596 (2.596) data 1.850 (1.850) loss 3.7832 (3.7832) lr 9.6489e-02 eta 0:05:32
+Adjacency matrix stats: min=0.0000, max=0.0966, mean=0.0019, std=0.0105
+epoch [8/50] batch [2/3] time 0.711 (1.653) data 0.001 (0.925) loss 3.7490 (3.7661) lr 9.6489e-02 eta 0:03:29
+Adjacency matrix stats: min=0.0000, max=0.1046, mean=0.0019, std=0.0109
+epoch [8/50] batch [3/3] time 0.707 (1.338) data 0.000 (0.617) loss 3.6954 (3.7425) lr 9.5241e-02 eta 0:02:48
+Adjacency matrix stats: min=0.0000, max=0.1064, mean=0.0019, std=0.0104
+epoch [9/50] batch [1/3] time 2.725 (2.725) data 1.988 (1.988) loss 3.7697 (3.7697) lr 9.5241e-02 eta 0:05:40
+Adjacency matrix stats: min=0.0000, max=0.0991, mean=0.0019, std=0.0106
+epoch [9/50] batch [2/3] time 0.710 (1.718) data 0.000 (0.994) loss 3.7329 (3.7513) lr 9.5241e-02 eta 0:03:32
+Adjacency matrix stats: min=0.0000, max=0.1094, mean=0.0019, std=0.0109
+epoch [9/50] batch [3/3] time 0.709 (1.381) data 0.000 (0.663) loss 3.6914 (3.7313) lr 9.3815e-02 eta 0:02:49
+Adjacency matrix stats: min=0.0000, max=0.0952, mean=0.0019, std=0.0104
+epoch [10/50] batch [1/3] time 2.671 (2.671) data 1.887 (1.887) loss 3.7576 (3.7576) lr 9.3815e-02 eta 0:05:25
+Adjacency matrix stats: min=0.0000, max=0.0909, mean=0.0019, std=0.0107
+epoch [10/50] batch [2/3] time 0.708 (1.689) data 0.000 (0.944) loss 3.7114 (3.7345) lr 9.3815e-02 eta 0:03:24
+Adjacency matrix stats: min=0.0000, max=0.1071, mean=0.0019, std=0.0109
+epoch [10/50] batch [3/3] time 0.706 (1.361) data 0.000 (0.629) loss 3.6889 (3.7193) lr 9.2216e-02 eta 0:02:43
+Adjacency matrix stats: min=0.0000, max=0.1026, mean=0.0019, std=0.0105
+epoch [11/50] batch [1/3] time 2.675 (2.675) data 1.835 (1.835) loss 3.7460 (3.7460) lr 9.2216e-02 eta 0:05:18
+Adjacency matrix stats: min=0.0000, max=0.0970, mean=0.0019, std=0.0107
+epoch [11/50] batch [2/3] time 0.709 (1.692) data 0.000 (0.918) loss 3.7360 (3.7410) lr 9.2216e-02 eta 0:03:19
+Adjacency matrix stats: min=0.0000, max=0.0956, mean=0.0019, std=0.0109
+epoch [11/50] batch [3/3] time 0.706 (1.364) data 0.000 (0.612) loss 3.6831 (3.7217) lr 9.0451e-02 eta 0:02:39
+Adjacency matrix stats: min=0.0000, max=0.0958, mean=0.0019, std=0.0105
+epoch [12/50] batch [1/3] time 2.704 (2.704) data 1.850 (1.850) loss 3.7399 (3.7399) lr 9.0451e-02 eta 0:05:13
+Adjacency matrix stats: min=0.0000, max=0.1060, mean=0.0019, std=0.0108
+epoch [12/50] batch [2/3] time 0.848 (1.776) data 0.000 (0.925) loss 3.7143 (3.7271) lr 9.0451e-02 eta 0:03:24
+Adjacency matrix stats: min=0.0000, max=0.0964, mean=0.0019, std=0.0110
+epoch [12/50] batch [3/3] time 0.824 (1.459) data 0.000 (0.617) loss 3.6845 (3.7129) lr 8.8526e-02 eta 0:02:46
+Adjacency matrix stats: min=0.0000, max=0.1014, mean=0.0019, std=0.0106
+epoch [13/50] batch [1/3] time 2.970 (2.970) data 2.109 (2.109) loss 3.7369 (3.7369) lr 8.8526e-02 eta 0:05:35
+Adjacency matrix stats: min=0.0000, max=0.0975, mean=0.0019, std=0.0108
+epoch [13/50] batch [2/3] time 0.973 (1.972) data 0.000 (1.054) loss 3.7164 (3.7267) lr 8.8526e-02 eta 0:03:40
+Adjacency matrix stats: min=0.0000, max=0.0972, mean=0.0019, std=0.0110
+epoch [13/50] batch [3/3] time 0.710 (1.551) data 0.000 (0.703) loss 3.6794 (3.7109) lr 8.6448e-02 eta 0:02:52
+Adjacency matrix stats: min=0.0000, max=0.1138, mean=0.0019, std=0.0106
+epoch [14/50] batch [1/3] time 2.818 (2.818) data 2.087 (2.087) loss 3.7408 (3.7408) lr 8.6448e-02 eta 0:05:09
+Adjacency matrix stats: min=0.0000, max=0.0960, mean=0.0019, std=0.0108
+epoch [14/50] batch [2/3] time 0.707 (1.762) data 0.000 (1.043) loss 3.7029 (3.7218) lr 8.6448e-02 eta 0:03:12
+Adjacency matrix stats: min=0.0000, max=0.0941, mean=0.0019, std=0.0110
+epoch [14/50] batch [3/3] time 0.707 (1.411) data 0.000 (0.696) loss 3.6785 (3.7074) lr 8.4227e-02 eta 0:02:32
+Adjacency matrix stats: min=0.0000, max=0.0978, mean=0.0019, std=0.0106
+epoch [15/50] batch [1/3] time 2.843 (2.843) data 2.105 (2.105) loss 3.7325 (3.7325) lr 8.4227e-02 eta 0:05:04
+Adjacency matrix stats: min=0.0000, max=0.1034, mean=0.0019, std=0.0109
+epoch [15/50] batch [2/3] time 0.709 (1.776) data 0.000 (1.052) loss 3.6893 (3.7109) lr 8.4227e-02 eta 0:03:08
+Adjacency matrix stats: min=0.0000, max=0.1020, mean=0.0019, std=0.0110
+epoch [15/50] batch [3/3] time 0.709 (1.421) data 0.000 (0.702) loss 3.6780 (3.6999) lr 8.1871e-02 eta 0:02:29
+Adjacency matrix stats: min=0.0000, max=0.0999, mean=0.0019, std=0.0107
+epoch [16/50] batch [1/3] time 2.599 (2.599) data 1.839 (1.839) loss 3.7161 (3.7161) lr 8.1871e-02 eta 0:04:30
+Adjacency matrix stats: min=0.0000, max=0.0977, mean=0.0019, std=0.0109
+epoch [16/50] batch [2/3] time 0.706 (1.653) data 0.000 (0.920) loss 3.6864 (3.7012) lr 8.1871e-02 eta 0:02:50
+Adjacency matrix stats: min=0.0000, max=0.1168, mean=0.0019, std=0.0110
+epoch [16/50] batch [3/3] time 0.711 (1.339) data 0.000 (0.613) loss 3.6729 (3.6918) lr 7.9389e-02 eta 0:02:16
+Adjacency matrix stats: min=0.0000, max=0.1009, mean=0.0019, std=0.0107
+epoch [17/50] batch [1/3] time 2.604 (2.604) data 1.854 (1.854) loss 3.7128 (3.7128) lr 7.9389e-02 eta 0:04:22
+Adjacency matrix stats: min=0.0000, max=0.0971, mean=0.0019, std=0.0109
+epoch [17/50] batch [2/3] time 0.708 (1.656) data 0.000 (0.927) loss 3.7010 (3.7069) lr 7.9389e-02 eta 0:02:45
+Adjacency matrix stats: min=0.0000, max=0.0969, mean=0.0019, std=0.0110
+epoch [17/50] batch [3/3] time 0.709 (1.340) data 0.000 (0.618) loss 3.6732 (3.6956) lr 7.6791e-02 eta 0:02:12
+Adjacency matrix stats: min=0.0000, max=0.1085, mean=0.0019, std=0.0107
+epoch [18/50] batch [1/3] time 3.048 (3.048) data 2.317 (2.317) loss 3.7260 (3.7260) lr 7.6791e-02 eta 0:04:58
+Adjacency matrix stats: min=0.0000, max=0.0937, mean=0.0019, std=0.0109
+epoch [18/50] batch [2/3] time 0.870 (1.959) data 0.000 (1.158) loss 3.6949 (3.7104) lr 7.6791e-02 eta 0:03:09
+Adjacency matrix stats: min=0.0000, max=0.1045, mean=0.0019, std=0.0110
+epoch [18/50] batch [3/3] time 0.705 (1.541) data 0.000 (0.772) loss 3.6705 (3.6971) lr 7.4088e-02 eta 0:02:27
+Adjacency matrix stats: min=0.0000, max=0.1002, mean=0.0019, std=0.0108
+epoch [19/50] batch [1/3] time 2.937 (2.937) data 2.203 (2.203) loss 3.7087 (3.7087) lr 7.4088e-02 eta 0:04:38
+Adjacency matrix stats: min=0.0000, max=0.1029, mean=0.0019, std=0.0109
+epoch [19/50] batch [2/3] time 0.709 (1.823) data 0.000 (1.101) loss 3.6839 (3.6963) lr 7.4088e-02 eta 0:02:51
+Adjacency matrix stats: min=0.0000, max=0.1021, mean=0.0019, std=0.0110
+epoch [19/50] batch [3/3] time 0.709 (1.451) data 0.000 (0.734) loss 3.6745 (3.6890) lr 7.1289e-02 eta 0:02:14
+Adjacency matrix stats: min=0.0000, max=0.1003, mean=0.0019, std=0.0108
+epoch [20/50] batch [1/3] time 2.599 (2.599) data 1.813 (1.813) loss 3.7079 (3.7079) lr 7.1289e-02 eta 0:03:59
+Adjacency matrix stats: min=0.0000, max=0.0934, mean=0.0019, std=0.0109
+epoch [20/50] batch [2/3] time 0.706 (1.653) data 0.000 (0.907) loss 3.6817 (3.6948) lr 7.1289e-02 eta 0:02:30
+Adjacency matrix stats: min=0.0000, max=0.1114, mean=0.0019, std=0.0110
+epoch [20/50] batch [3/3] time 0.706 (1.337) data 0.000 (0.604) loss 3.6710 (3.6869) lr 6.8406e-02 eta 0:02:00
+Adjacency matrix stats: min=0.0000, max=0.0996, mean=0.0019, std=0.0108
+epoch [21/50] batch [1/3] time 2.997 (2.997) data 2.148 (2.148) loss 3.7082 (3.7082) lr 6.8406e-02 eta 0:04:26
+Adjacency matrix stats: min=0.0000, max=0.0949, mean=0.0019, std=0.0110
+epoch [21/50] batch [2/3] time 0.765 (1.881) data 0.001 (1.074) loss 3.6829 (3.6955) lr 6.8406e-02 eta 0:02:45
+Adjacency matrix stats: min=0.0000, max=0.1103, mean=0.0019, std=0.0111
+epoch [21/50] batch [3/3] time 0.708 (1.490) data 0.001 (0.716) loss 3.6649 (3.6853) lr 6.5451e-02 eta 0:02:09
+Adjacency matrix stats: min=0.0000, max=0.1163, mean=0.0019, std=0.0108
+epoch [22/50] batch [1/3] time 2.738 (2.738) data 1.875 (1.875) loss 3.7010 (3.7010) lr 6.5451e-02 eta 0:03:55
+Adjacency matrix stats: min=0.0000, max=0.0982, mean=0.0019, std=0.0110
+epoch [22/50] batch [2/3] time 0.812 (1.775) data 0.000 (0.938) loss 3.6767 (3.6889) lr 6.5451e-02 eta 0:02:30
+Adjacency matrix stats: min=0.0000, max=0.1065, mean=0.0019, std=0.0111
+epoch [22/50] batch [3/3] time 0.778 (1.443) data 0.000 (0.625) loss 3.6676 (3.6818) lr 6.2434e-02 eta 0:02:01
+Adjacency matrix stats: min=0.0000, max=0.1022, mean=0.0019, std=0.0108
+epoch [23/50] batch [1/3] time 2.601 (2.601) data 1.850 (1.850) loss 3.7059 (3.7059) lr 6.2434e-02 eta 0:03:35
+Adjacency matrix stats: min=0.0000, max=0.0992, mean=0.0019, std=0.0110
+epoch [23/50] batch [2/3] time 0.719 (1.660) data 0.000 (0.925) loss 3.6819 (3.6939) lr 6.2434e-02 eta 0:02:16
+Adjacency matrix stats: min=0.0000, max=0.1055, mean=0.0019, std=0.0111
+epoch [23/50] batch [3/3] time 0.718 (1.346) data 0.000 (0.617) loss 3.6698 (3.6859) lr 5.9369e-02 eta 0:01:49
+Adjacency matrix stats: min=0.0000, max=0.1047, mean=0.0019, std=0.0109
+epoch [24/50] batch [1/3] time 3.032 (3.032) data 2.129 (2.129) loss 3.7038 (3.7038) lr 5.9369e-02 eta 0:04:02
+Adjacency matrix stats: min=0.0000, max=0.0938, mean=0.0019, std=0.0110
+epoch [24/50] batch [2/3] time 0.704 (1.868) data 0.000 (1.065) loss 3.6774 (3.6906) lr 5.9369e-02 eta 0:02:27
+Adjacency matrix stats: min=0.0000, max=0.0999, mean=0.0019, std=0.0111
+epoch [24/50] batch [3/3] time 0.703 (1.480) data 0.000 (0.710) loss 3.6629 (3.6814) lr 5.6267e-02 eta 0:01:55
+Adjacency matrix stats: min=0.0000, max=0.1126, mean=0.0019, std=0.0109
+epoch [25/50] batch [1/3] time 2.762 (2.762) data 1.897 (1.897) loss 3.6943 (3.6943) lr 5.6267e-02 eta 0:03:32
+Adjacency matrix stats: min=0.0000, max=0.1014, mean=0.0019, std=0.0110
+epoch [25/50] batch [2/3] time 0.781 (1.772) data 0.000 (0.949) loss 3.6756 (3.6850) lr 5.6267e-02 eta 0:02:14
+Adjacency matrix stats: min=0.0000, max=0.0980, mean=0.0019, std=0.0111
+epoch [25/50] batch [3/3] time 0.702 (1.415) data 0.000 (0.632) loss 3.6630 (3.6776) lr 5.3140e-02 eta 0:01:46
+Adjacency matrix stats: min=0.0000, max=0.1043, mean=0.0019, std=0.0109
+epoch [26/50] batch [1/3] time 2.858 (2.858) data 2.118 (2.118) loss 3.6932 (3.6932) lr 5.3140e-02 eta 0:03:31
+Adjacency matrix stats: min=0.0000, max=0.0986, mean=0.0019, std=0.0110
+epoch [26/50] batch [2/3] time 0.707 (1.783) data 0.000 (1.059) loss 3.6769 (3.6850) lr 5.3140e-02 eta 0:02:10
+Adjacency matrix stats: min=0.0000, max=0.1066, mean=0.0019, std=0.0111
+epoch [26/50] batch [3/3] time 0.704 (1.423) data 0.000 (0.706) loss 3.6647 (3.6782) lr 5.0000e-02 eta 0:01:42
+Adjacency matrix stats: min=0.0000, max=0.1045, mean=0.0019, std=0.0109
+epoch [27/50] batch [1/3] time 2.949 (2.949) data 2.098 (2.098) loss 3.6900 (3.6900) lr 5.0000e-02 eta 0:03:29
+Adjacency matrix stats: min=0.0000, max=0.0959, mean=0.0019, std=0.0110
+epoch [27/50] batch [2/3] time 0.751 (1.850) data 0.000 (1.049) loss 3.6742 (3.6821) lr 5.0000e-02 eta 0:02:09
+Adjacency matrix stats: min=0.0000, max=0.1007, mean=0.0019, std=0.0111
+epoch [27/50] batch [3/3] time 0.709 (1.470) data 0.000 (0.699) loss 3.6644 (3.6762) lr 4.6860e-02 eta 0:01:41
+Adjacency matrix stats: min=0.0000, max=0.1009, mean=0.0019, std=0.0109
+epoch [28/50] batch [1/3] time 2.880 (2.880) data 2.144 (2.144) loss 3.6847 (3.6847) lr 4.6860e-02 eta 0:03:15
+Adjacency matrix stats: min=0.0000, max=0.1109, mean=0.0019, std=0.0110
+epoch [28/50] batch [2/3] time 0.711 (1.796) data 0.000 (1.072) loss 3.6789 (3.6818) lr 4.6860e-02 eta 0:02:00
+Adjacency matrix stats: min=0.0000, max=0.0988, mean=0.0019, std=0.0111
+epoch [28/50] batch [3/3] time 0.709 (1.433) data 0.000 (0.715) loss 3.6608 (3.6748) lr 4.3733e-02 eta 0:01:34
+Adjacency matrix stats: min=0.0000, max=0.1026, mean=0.0019, std=0.0109
+epoch [29/50] batch [1/3] time 2.843 (2.843) data 2.113 (2.113) loss 3.6818 (3.6818) lr 4.3733e-02 eta 0:03:04
+Adjacency matrix stats: min=0.0000, max=0.1004, mean=0.0019, std=0.0110
+epoch [29/50] batch [2/3] time 0.709 (1.776) data 0.000 (1.057) loss 3.6727 (3.6772) lr 4.3733e-02 eta 0:01:53
+Adjacency matrix stats: min=0.0000, max=0.1081, mean=0.0019, std=0.0111
+epoch [29/50] batch [3/3] time 0.888 (1.480) data 0.000 (0.705) loss 3.6592 (3.6712) lr 4.0631e-02 eta 0:01:33
+Adjacency matrix stats: min=0.0000, max=0.1092, mean=0.0019, std=0.0109
+epoch [30/50] batch [1/3] time 2.681 (2.681) data 1.939 (1.939) loss 3.6831 (3.6831) lr 4.0631e-02 eta 0:02:46
+Adjacency matrix stats: min=0.0000, max=0.1057, mean=0.0019, std=0.0110
+epoch [30/50] batch [2/3] time 0.709 (1.695) data 0.000 (0.970) loss 3.6750 (3.6790) lr 4.0631e-02 eta 0:01:43
+Adjacency matrix stats: min=0.0000, max=0.1053, mean=0.0019, std=0.0111
+epoch [30/50] batch [3/3] time 0.708 (1.366) data 0.000 (0.647) loss 3.6602 (3.6728) lr 3.7566e-02 eta 0:01:21
+Adjacency matrix stats: min=0.0000, max=0.1044, mean=0.0019, std=0.0109
+epoch [31/50] batch [1/3] time 2.591 (2.591) data 1.853 (1.853) loss 3.6864 (3.6864) lr 3.7566e-02 eta 0:02:32
+Adjacency matrix stats: min=0.0000, max=0.0929, mean=0.0019, std=0.0110
+epoch [31/50] batch [2/3] time 0.706 (1.648) data 0.000 (0.927) loss 3.6692 (3.6778) lr 3.7566e-02 eta 0:01:35
+Adjacency matrix stats: min=0.0000, max=0.1141, mean=0.0019, std=0.0111
+epoch [31/50] batch [3/3] time 0.703 (1.333) data 0.000 (0.618) loss 3.6610 (3.6722) lr 3.4549e-02 eta 0:01:15
+Adjacency matrix stats: min=0.0000, max=0.1042, mean=0.0019, std=0.0110
+epoch [32/50] batch [1/3] time 2.777 (2.777) data 2.042 (2.042) loss 3.6779 (3.6779) lr 3.4549e-02 eta 0:02:35
+Adjacency matrix stats: min=0.0000, max=0.0951, mean=0.0019, std=0.0110
+epoch [32/50] batch [2/3] time 0.703 (1.740) data 0.000 (1.021) loss 3.6730 (3.6754) lr 3.4549e-02 eta 0:01:35
+Adjacency matrix stats: min=0.0000, max=0.0990, mean=0.0019, std=0.0111
+epoch [32/50] batch [3/3] time 0.706 (1.395) data 0.000 (0.681) loss 3.6634 (3.6714) lr 3.1594e-02 eta 0:01:15
+Adjacency matrix stats: min=0.0000, max=0.0997, mean=0.0019, std=0.0110
+epoch [33/50] batch [1/3] time 2.576 (2.576) data 1.837 (1.837) loss 3.6793 (3.6793) lr 3.1594e-02 eta 0:02:16
+Adjacency matrix stats: min=0.0000, max=0.1094, mean=0.0019, std=0.0110
+epoch [33/50] batch [2/3] time 0.704 (1.640) data 0.000 (0.919) loss 3.6690 (3.6742) lr 3.1594e-02 eta 0:01:25
+Adjacency matrix stats: min=0.0000, max=0.0991, mean=0.0019, std=0.0111
+epoch [33/50] batch [3/3] time 0.701 (1.327) data 0.000 (0.612) loss 3.6597 (3.6693) lr 2.8711e-02 eta 0:01:07
+Adjacency matrix stats: min=0.0000, max=0.1051, mean=0.0019, std=0.0110
+epoch [34/50] batch [1/3] time 2.682 (2.682) data 1.824 (1.824) loss 3.6770 (3.6770) lr 2.8711e-02 eta 0:02:14
+Adjacency matrix stats: min=0.0000, max=0.0957, mean=0.0019, std=0.0110
+epoch [34/50] batch [2/3] time 0.813 (1.748) data 0.000 (0.912) loss 3.6706 (3.6738) lr 2.8711e-02 eta 0:01:25
+Adjacency matrix stats: min=0.0000, max=0.0959, mean=0.0019, std=0.0111
+epoch [34/50] batch [3/3] time 0.741 (1.412) data 0.000 (0.608) loss 3.6586 (3.6687) lr 2.5912e-02 eta 0:01:07
+Adjacency matrix stats: min=0.0000, max=0.1157, mean=0.0019, std=0.0110
+epoch [35/50] batch [1/3] time 2.806 (2.806) data 1.917 (1.917) loss 3.6748 (3.6748) lr 2.5912e-02 eta 0:02:11
+Adjacency matrix stats: min=0.0000, max=0.0983, mean=0.0019, std=0.0110
+epoch [35/50] batch [2/3] time 1.023 (1.915) data 0.000 (0.958) loss 3.6686 (3.6717) lr 2.5912e-02 eta 0:01:28
+Adjacency matrix stats: min=0.0000, max=0.1028, mean=0.0019, std=0.0111
+epoch [35/50] batch [3/3] time 0.788 (1.539) data 0.000 (0.639) loss 3.6597 (3.6677) lr 2.3209e-02 eta 0:01:09
+Adjacency matrix stats: min=0.0000, max=0.1017, mean=0.0019, std=0.0110
+epoch [36/50] batch [1/3] time 2.635 (2.635) data 1.893 (1.893) loss 3.6791 (3.6791) lr 2.3209e-02 eta 0:01:55
+Adjacency matrix stats: min=0.0000, max=0.1002, mean=0.0019, std=0.0110
+epoch [36/50] batch [2/3] time 0.707 (1.671) data 0.001 (0.947) loss 3.6735 (3.6763) lr 2.3209e-02 eta 0:01:11
+Adjacency matrix stats: min=0.0000, max=0.1039, mean=0.0019, std=0.0111
+epoch [36/50] batch [3/3] time 0.707 (1.350) data 0.000 (0.631) loss 3.6623 (3.6716) lr 2.0611e-02 eta 0:00:56
+Adjacency matrix stats: min=0.0000, max=0.1112, mean=0.0019, std=0.0110
+epoch [37/50] batch [1/3] time 2.690 (2.690) data 1.944 (1.944) loss 3.6754 (3.6754) lr 2.0611e-02 eta 0:01:50
+Adjacency matrix stats: min=0.0000, max=0.1013, mean=0.0019, std=0.0110
+epoch [37/50] batch [2/3] time 0.710 (1.700) data 0.000 (0.972) loss 3.6692 (3.6723) lr 2.0611e-02 eta 0:01:07
+Adjacency matrix stats: min=0.0000, max=0.0980, mean=0.0019, std=0.0111
+epoch [37/50] batch [3/3] time 0.703 (1.367) data 0.000 (0.648) loss 3.6592 (3.6680) lr 1.8129e-02 eta 0:00:53
+Adjacency matrix stats: min=0.0000, max=0.1048, mean=0.0019, std=0.0110
+epoch [38/50] batch [1/3] time 2.617 (2.617) data 1.859 (1.859) loss 3.6761 (3.6761) lr 1.8129e-02 eta 0:01:39
+Adjacency matrix stats: min=0.0000, max=0.0986, mean=0.0019, std=0.0110
+epoch [38/50] batch [2/3] time 0.701 (1.659) data 0.000 (0.930) loss 3.6694 (3.6727) lr 1.8129e-02 eta 0:01:01
+Adjacency matrix stats: min=0.0000, max=0.0952, mean=0.0019, std=0.0111
+epoch [38/50] batch [3/3] time 0.705 (1.341) data 0.000 (0.620) loss 3.6605 (3.6687) lr 1.5773e-02 eta 0:00:48
+Adjacency matrix stats: min=0.0000, max=0.0977, mean=0.0019, std=0.0110
+epoch [39/50] batch [1/3] time 2.570 (2.570) data 1.819 (1.819) loss 3.6747 (3.6747) lr 1.5773e-02 eta 0:01:29
+Adjacency matrix stats: min=0.0000, max=0.0932, mean=0.0019, std=0.0110
+epoch [39/50] batch [2/3] time 0.704 (1.637) data 0.000 (0.909) loss 3.6708 (3.6728) lr 1.5773e-02 eta 0:00:55
+Adjacency matrix stats: min=0.0000, max=0.1123, mean=0.0019, std=0.0111
+epoch [39/50] batch [3/3] time 0.706 (1.327) data 0.000 (0.606) loss 3.6589 (3.6682) lr 1.3552e-02 eta 0:00:43
+Adjacency matrix stats: min=0.0000, max=0.1037, mean=0.0019, std=0.0110
+epoch [40/50] batch [1/3] time 2.591 (2.591) data 1.851 (1.851) loss 3.6752 (3.6752) lr 1.3552e-02 eta 0:01:22
+Adjacency matrix stats: min=0.0000, max=0.1025, mean=0.0019, std=0.0110
+epoch [40/50] batch [2/3] time 0.723 (1.657) data 0.000 (0.925) loss 3.6741 (3.6746) lr 1.3552e-02 eta 0:00:51
+Adjacency matrix stats: min=0.0000, max=0.0956, mean=0.0019, std=0.0111
+epoch [40/50] batch [3/3] time 0.711 (1.342) data 0.000 (0.617) loss 3.6593 (3.6695) lr 1.1474e-02 eta 0:00:40
+Adjacency matrix stats: min=0.0000, max=0.1085, mean=0.0019, std=0.0110
+epoch [41/50] batch [1/3] time 3.091 (3.091) data 2.049 (2.049) loss 3.6735 (3.6735) lr 1.1474e-02 eta 0:01:29
+Adjacency matrix stats: min=0.0000, max=0.0994, mean=0.0019, std=0.0110
+epoch [41/50] batch [2/3] time 0.832 (1.961) data 0.000 (1.025) loss 3.6702 (3.6719) lr 1.1474e-02 eta 0:00:54
+Adjacency matrix stats: min=0.0000, max=0.1060, mean=0.0019, std=0.0111
+epoch [41/50] batch [3/3] time 0.712 (1.545) data 0.000 (0.683) loss 3.6591 (3.6676) lr 9.5492e-03 eta 0:00:41
+Adjacency matrix stats: min=0.0000, max=0.1057, mean=0.0019, std=0.0110
+epoch [42/50] batch [1/3] time 2.883 (2.883) data 2.041 (2.041) loss 3.6755 (3.6755) lr 9.5492e-03 eta 0:01:14
+Adjacency matrix stats: min=0.0000, max=0.1012, mean=0.0019, std=0.0110
+epoch [42/50] batch [2/3] time 0.816 (1.849) data 0.000 (1.021) loss 3.6677 (3.6716) lr 9.5492e-03 eta 0:00:46
+Adjacency matrix stats: min=0.0000, max=0.1155, mean=0.0019, std=0.0111
+epoch [42/50] batch [3/3] time 0.773 (1.491) data 0.000 (0.681) loss 3.6577 (3.6670) lr 7.7836e-03 eta 0:00:35
+Adjacency matrix stats: min=0.0000, max=0.1066, mean=0.0019, std=0.0110
+epoch [43/50] batch [1/3] time 2.882 (2.882) data 2.140 (2.140) loss 3.6745 (3.6745) lr 7.7836e-03 eta 0:01:06
+Adjacency matrix stats: min=0.0000, max=0.0928, mean=0.0019, std=0.0110
+epoch [43/50] batch [2/3] time 0.713 (1.797) data 0.000 (1.070) loss 3.6734 (3.6740) lr 7.7836e-03 eta 0:00:39
+Adjacency matrix stats: min=0.0000, max=0.0921, mean=0.0019, std=0.0111
+epoch [43/50] batch [3/3] time 0.713 (1.436) data 0.000 (0.714) loss 3.6566 (3.6682) lr 6.1847e-03 eta 0:00:30
+Adjacency matrix stats: min=0.0000, max=0.1012, mean=0.0019, std=0.0110
+epoch [44/50] batch [1/3] time 2.590 (2.590) data 1.837 (1.837) loss 3.6732 (3.6732) lr 6.1847e-03 eta 0:00:51
+Adjacency matrix stats: min=0.0000, max=0.0962, mean=0.0019, std=0.0110
+epoch [44/50] batch [2/3] time 0.720 (1.655) data 0.001 (0.919) loss 3.6724 (3.6728) lr 6.1847e-03 eta 0:00:31
+Adjacency matrix stats: min=0.0000, max=0.1063, mean=0.0019, std=0.0111
+epoch [44/50] batch [3/3] time 0.720 (1.343) data 0.000 (0.613) loss 3.6567 (3.6674) lr 4.7586e-03 eta 0:00:24
+Adjacency matrix stats: min=0.0000, max=0.1101, mean=0.0019, std=0.0110
+epoch [45/50] batch [1/3] time 2.628 (2.628) data 1.878 (1.878) loss 3.6739 (3.6739) lr 4.7586e-03 eta 0:00:44
+Adjacency matrix stats: min=0.0000, max=0.1035, mean=0.0019, std=0.0110
+epoch [45/50] batch [2/3] time 0.725 (1.677) data 0.000 (0.939) loss 3.6692 (3.6716) lr 4.7586e-03 eta 0:00:26
+Adjacency matrix stats: min=0.0000, max=0.1058, mean=0.0019, std=0.0111
+epoch [45/50] batch [3/3] time 0.723 (1.359) data 0.000 (0.626) loss 3.6579 (3.6670) lr 3.5112e-03 eta 0:00:20
+Adjacency matrix stats: min=0.0000, max=0.1156, mean=0.0019, std=0.0110
+epoch [46/50] batch [1/3] time 2.585 (2.585) data 1.827 (1.827) loss 3.6724 (3.6724) lr 3.5112e-03 eta 0:00:36
+Adjacency matrix stats: min=0.0000, max=0.0964, mean=0.0019, std=0.0110
+epoch [46/50] batch [2/3] time 0.719 (1.652) data 0.000 (0.914) loss 3.6688 (3.6706) lr 3.5112e-03 eta 0:00:21
+Adjacency matrix stats: min=0.0000, max=0.1101, mean=0.0019, std=0.0111
+epoch [46/50] batch [3/3] time 0.724 (1.342) data 0.000 (0.609) loss 3.6586 (3.6666) lr 2.4472e-03 eta 0:00:16
+Adjacency matrix stats: min=0.0000, max=0.1039, mean=0.0019, std=0.0110
+epoch [47/50] batch [1/3] time 2.823 (2.823) data 1.873 (1.873) loss 3.6750 (3.6750) lr 2.4472e-03 eta 0:00:31
+Adjacency matrix stats: min=0.0000, max=0.1029, mean=0.0019, std=0.0110
+epoch [47/50] batch [2/3] time 0.714 (1.768) data 0.000 (0.936) loss 3.6713 (3.6732) lr 2.4472e-03 eta 0:00:17
+Adjacency matrix stats: min=0.0000, max=0.1036, mean=0.0019, std=0.0111
+epoch [47/50] batch [3/3] time 0.709 (1.415) data 0.000 (0.624) loss 3.6586 (3.6683) lr 1.5708e-03 eta 0:00:12
+Adjacency matrix stats: min=0.0000, max=0.1156, mean=0.0019, std=0.0110
+epoch [48/50] batch [1/3] time 3.028 (3.028) data 2.174 (2.174) loss 3.6685 (3.6685) lr 1.5708e-03 eta 0:00:24
+Adjacency matrix stats: min=0.0000, max=0.0959, mean=0.0019, std=0.0110
+epoch [48/50] batch [2/3] time 0.814 (1.921) data 0.000 (1.087) loss 3.6712 (3.6698) lr 1.5708e-03 eta 0:00:13
+Adjacency matrix stats: min=0.0000, max=0.1126, mean=0.0019, std=0.0111
+epoch [48/50] batch [3/3] time 0.802 (1.548) data 0.000 (0.725) loss 3.6587 (3.6661) lr 8.8564e-04 eta 0:00:09
+Adjacency matrix stats: min=0.0000, max=0.1079, mean=0.0019, std=0.0110
+epoch [49/50] batch [1/3] time 2.858 (2.858) data 1.993 (1.993) loss 3.6726 (3.6726) lr 8.8564e-04 eta 0:00:14
+Adjacency matrix stats: min=0.0000, max=0.1014, mean=0.0019, std=0.0110
+epoch [49/50] batch [2/3] time 0.829 (1.844) data 0.000 (0.996) loss 3.6701 (3.6713) lr 8.8564e-04 eta 0:00:07
+Adjacency matrix stats: min=0.0000, max=0.0994, mean=0.0019, std=0.0111
+epoch [49/50] batch [3/3] time 0.841 (1.509) data 0.000 (0.664) loss 3.6576 (3.6667) lr 3.9426e-04 eta 0:00:04
+Adjacency matrix stats: min=0.0000, max=0.1182, mean=0.0019, std=0.0110
+epoch [50/50] batch [1/3] time 2.974 (2.974) data 2.127 (2.127) loss 3.6740 (3.6740) lr 3.9426e-04 eta 0:00:05
+Adjacency matrix stats: min=0.0000, max=0.1009, mean=0.0019, std=0.0110
+epoch [50/50] batch [2/3] time 0.790 (1.882) data 0.001 (1.064) loss 3.6696 (3.6718) lr 3.9426e-04 eta 0:00:01
+Adjacency matrix stats: min=0.0000, max=0.1019, mean=0.0019, std=0.0111
+epoch [50/50] batch [3/3] time 0.707 (1.490) data 0.000 (0.709) loss 3.6578 (3.6671) lr 9.8664e-05 eta 0:00:00
+Checkpoint saved to output/caltech101/CoOp/vit_b16_ep50_ctxv1_16shots/nctx4_cscFalse_ctpend/seed1/gloss_20260425_184705/prompt_learner/model.pth.tar-50
+Finish training
+Deploy the last-epoch model
+Evaluate on the *test* set
+=> result
+* total: 2,465
+* correct: 1,509
+* accuracy: 61.2%
+* error: 38.8%
+* macro_f1: 67.7%
+* ECE: 16.00
+* ACE: 16.01
+Elapsed: 0:03:48
+Ended
+
+[Final] Learned prompt vocab matches:
+
+============================================================
+Learned Prompts - Top-1 BPE Vocabulary Matches
+============================================================
+Prompt Token 0: 'who ' (ID: 822, Similarity: 0.2630)
+Prompt Token 1: 'skymap ' (ID: 41734, Similarity: 0.2292)
+Prompt Token 2: 'distur' (ID: 11732, Similarity: 0.2404)
+Prompt Token 3: 'hill ' (ID: 2682, Similarity: 0.2002)
+============================================================
+
+Available tags: ['train/loss', 'train/lr', 'test/accuracy', 'test/error_rate', 'test/macro_f1', 'test/ece', 'test/ace']
+Loss curve saved to output/caltech101/CoOp/vit_b16_ep50_ctxv1_16shots/nctx4_cscFalse_ctpend/seed1/gloss_20260425_184705/loss_curve.png

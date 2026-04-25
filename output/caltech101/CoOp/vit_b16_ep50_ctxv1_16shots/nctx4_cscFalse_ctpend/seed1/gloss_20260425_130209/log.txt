@@ -1,0 +1,476 @@
+***************
+** Arguments **
+***************
+backbone: 
+config_file: configs/trainers/CoOp/vit_b16_ep50_ctxv1.yaml
+coop_loss_type: gloss
+dataset_config_file: configs/datasets/caltech101.yaml
+eval_only: False
+head: 
+load_epoch: None
+model_dir: 
+no_train: False
+opts: ['TRAINER.COOP.N_CTX', '4', 'TRAINER.COOP.CSC', 'False', 'TRAINER.COOP.CLASS_TOKEN_POSITION', 'end', 'DATASET.NUM_SHOTS', '16']
+output_dir: output/caltech101/CoOp/vit_b16_ep50_ctxv1_16shots/nctx4_cscFalse_ctpend/seed1/gloss_20260425_130209
+resume: 
+root: /home/aditya/CoOp/Data
+seed: 1
+source_domains: None
+target_domains: None
+trainer: CoOp
+transforms: None
+************
+** Config **
+************
+DATALOADER:
+  K_TRANSFORMS: 1
+  NUM_WORKERS: 8
+  RETURN_IMG0: False
+  TEST:
+    BATCH_SIZE: 100
+    SAMPLER: SequentialSampler
+  TRAIN_U:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAME_AS_X: True
+    SAMPLER: RandomSampler
+  TRAIN_X:
+    BATCH_SIZE: 128
+    N_DOMAIN: 0
+    N_INS: 16
+    SAMPLER: SequentialSampler
+DATASET:
+  ALL_AS_UNLABELED: False
+  CIFAR_C_LEVEL: 1
+  CIFAR_C_TYPE: 
+  NAME: Caltech101
+  NUM_LABELED: -1
+  NUM_SHOTS: 16
+  ROOT: /home/aditya/CoOp/Data
+  SOURCE_DOMAINS: ()
+  STL10_FOLD: -1
+  SUBSAMPLE_CLASSES: all
+  TARGET_DOMAINS: ()
+  VAL_PERCENT: 0.1
+INPUT:
+  COLORJITTER_B: 0.4
+  COLORJITTER_C: 0.4
+  COLORJITTER_H: 0.1
+  COLORJITTER_S: 0.4
+  CROP_PADDING: 4
+  CUTOUT_LEN: 16
+  CUTOUT_N: 1
+  GB_K: 21
+  GB_P: 0.5
+  GN_MEAN: 0.0
+  GN_STD: 0.15
+  INTERPOLATION: bicubic
+  NO_TRANSFORM: False
+  PIXEL_MEAN: [0.48145466, 0.4578275, 0.40821073]
+  PIXEL_STD: [0.26862954, 0.26130258, 0.27577711]
+  RANDAUGMENT_M: 10
+  RANDAUGMENT_N: 2
+  RGS_P: 0.2
+  RRCROP_SCALE: (0.08, 1.0)
+  SIZE: (224, 224)
+  TRANSFORMS: ('random_resized_crop', 'random_flip', 'normalize')
+MODEL:
+  BACKBONE:
+    NAME: ViT-B/16
+    PRETRAINED: True
+  HEAD:
+    ACTIVATION: relu
+    BN: True
+    DROPOUT: 0.0
+    HIDDEN_LAYERS: ()
+    NAME: 
+  INIT_WEIGHTS: 
+OPTIM:
+  ADAM_BETA1: 0.9
+  ADAM_BETA2: 0.999
+  BASE_LR_MULT: 0.1
+  GAMMA: 0.1
+  LR: 0.1
+  LR_SCHEDULER: cosine
+  MAX_EPOCH: 5
+  MOMENTUM: 0.9
+  NAME: sgd
+  NEW_LAYERS: ()
+  RMSPROP_ALPHA: 0.99
+  SGD_DAMPNING: 0
+  SGD_NESTEROV: False
+  STAGED_LR: False
+  STEPSIZE: (-1,)
+  WARMUP_CONS_LR: 1e-05
+  WARMUP_EPOCH: 1
+  WARMUP_MIN_LR: 1e-05
+  WARMUP_RECOUNT: True
+  WARMUP_TYPE: constant
+  WEIGHT_DECAY: 0.0005
+OUTPUT_DIR: output/caltech101/CoOp/vit_b16_ep50_ctxv1_16shots/nctx4_cscFalse_ctpend/seed1/gloss_20260425_130209
+RESUME: 
+SEED: 1
+TEST:
+  COMPUTE_CMAT: False
+  EVALUATOR: Classification
+  FINAL_MODEL: last_step
+  NO_TEST: False
+  PER_CLASS_RESULT: False
+  SPLIT: test
+TRAIN:
+  CHECKPOINT_FREQ: 0
+  COUNT_ITER: train_x
+  PRINT_FREQ: 5
+TRAINER:
+  CDAC:
+    CLASS_LR_MULTI: 10
+    P_THRESH: 0.95
+    RAMPUP_COEF: 30
+    RAMPUP_ITRS: 1000
+    STRONG_TRANSFORMS: ()
+    TOPK_MATCH: 5
+  COCOOP:
+    CTX_INIT: 
+    N_CTX: 16
+    PREC: fp16
+  COOP:
+    CLASS_TOKEN_POSITION: end
+    CSC: False
+    CTX_INIT: a photo of a
+    GLOSS_GAMMA: 0.5
+    GLOSS_SIGMA: 0.3
+    LOSS_TYPE: gloss
+    N_CTX: 4
+    PREC: fp16
+  CROSSGRAD:
+    ALPHA_D: 0.5
+    ALPHA_F: 0.5
+    EPS_D: 1.0
+    EPS_F: 1.0
+  DAEL:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DAELDG:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DDAIG:
+    ALPHA: 0.5
+    CLAMP: False
+    CLAMP_MAX: 1.0
+    CLAMP_MIN: -1.0
+    G_ARCH: 
+    LMDA: 0.3
+    WARMUP: 0
+  DOMAINMIX:
+    ALPHA: 1.0
+    BETA: 1.0
+    TYPE: crossdomain
+  ENTMIN:
+    LMDA: 0.001
+  FIXMATCH:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 1.0
+  M3SDA:
+    LMDA: 0.5
+    N_STEP_F: 4
+  MCD:
+    N_STEP_F: 4
+  MEANTEACHER:
+    EMA_ALPHA: 0.999
+    RAMPUP: 5
+    WEIGHT_U: 1.0
+  MIXMATCH:
+    MIXUP_BETA: 0.75
+    RAMPUP: 20000
+    TEMP: 2.0
+    WEIGHT_U: 100.0
+  MME:
+    LMDA: 0.1
+  NAME: CoOp
+  SE:
+    CONF_THRE: 0.95
+    EMA_ALPHA: 0.999
+    RAMPUP: 300
+USE_CUDA: True
+VERBOSE: True
+VERSION: 1
+Collecting env info ...
+** System info **
+PyTorch version: 2.4.1
+Is debug build: False
+CUDA used to build PyTorch: 12.4
+ROCM used to build PyTorch: N/A
+
+OS: Ubuntu 24.04.1 LTS (x86_64)
+GCC version: (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Clang version: Could not collect
+CMake version: Could not collect
+Libc version: glibc-2.39
+
+Python version: 3.8.20 (default, Oct  3 2024, 15:24:27)  [GCC 11.2.0] (64-bit runtime)
+Python platform: Linux-6.11.0-1027-oem-x86_64-with-glibc2.17
+Is CUDA available: True
+CUDA runtime version: 13.2.51
+CUDA_MODULE_LOADING set to: LAZY
+GPU models and configuration: GPU 0: NVIDIA A100 80GB PCIe
+Nvidia driver version: 580.126.09
+cuDNN version: Could not collect
+HIP runtime version: N/A
+MIOpen runtime version: N/A
+Is XNNPACK available: True
+
+CPU:
+Architecture:                         x86_64
+CPU op-mode(s):                       32-bit, 64-bit
+Address sizes:                        46 bits physical, 57 bits virtual
+Byte Order:                           Little Endian
+CPU(s):                               16
+On-line CPU(s) list:                  0-15
+Vendor ID:                            GenuineIntel
+Model name:                           Intel(R) Xeon(R) Silver 4309Y CPU @ 2.80GHz
+CPU family:                           6
+Model:                                106
+Thread(s) per core:                   2
+Core(s) per socket:                   8
+Socket(s):                            1
+Stepping:                             6
+CPU(s) scaling MHz:                   43%
+CPU max MHz:                          3600.0000
+CPU min MHz:                          800.0000
+BogoMIPS:                             5600.00
+Flags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3 ssbd mba ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb intel_pt avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local split_lock_detect wbnoinvd dtherm ida arat pln pts hwp hwp_act_window hwp_pkg_req vnmi avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq la57 rdpid fsrm md_clear pconfig flush_l1d arch_capabilities
+Virtualization:                       VT-x
+L1d cache:                            384 KiB (8 instances)
+L1i cache:                            256 KiB (8 instances)
+L2 cache:                             10 MiB (8 instances)
+L3 cache:                             12 MiB (1 instance)
+NUMA node(s):                         1
+NUMA node0 CPU(s):                    0-15
+Vulnerability Gather data sampling:   Mitigation; Microcode
+Vulnerability Itlb multihit:          Not affected
+Vulnerability L1tf:                   Not affected
+Vulnerability Mds:                    Not affected
+Vulnerability Meltdown:               Not affected
+Vulnerability Mmio stale data:        Mitigation; Clear CPU buffers; SMT vulnerable
+Vulnerability Reg file data sampling: Not affected
+Vulnerability Retbleed:               Not affected
+Vulnerability Spec rstack overflow:   Not affected
+Vulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop
+Vulnerability Srbds:                  Not affected
+Vulnerability Tsx async abort:        Not affected
+
+Versions of relevant libraries:
+[pip3] flake8==3.7.9
+[pip3] numpy==1.24.3
+[pip3] torch==2.4.1
+[pip3] torchvision==0.20.0
+[pip3] triton==3.0.0
+[conda] blas                      1.0                         mkl  
+[conda] cudatoolkit               10.2.89              hfd86e86_1  
+[conda] libjpeg-turbo             2.0.0                h9bf148f_0    pytorch
+[conda] mkl                       2023.1.0         h213fc3f_46344  
+[conda] mkl-service               2.4.0            py38h5eee18b_1  
+[conda] mkl_fft                   1.3.8            py38h5eee18b_0  
+[conda] mkl_random                1.2.4            py38hdb19cb5_0  
+[conda] numpy                     1.24.3           py38hf6e8229_1  
+[conda] numpy-base                1.24.3           py38h060ed82_1  
+[conda] pytorch                   2.4.1           py3.8_cuda12.4_cudnn9.1.0_0    pytorch
+[conda] pytorch-cuda              12.4                 hc786d27_7    pytorch
+[conda] pytorch-mutex             1.0                        cuda    pytorch
+[conda] torchtriton               3.0.0                      py38    pytorch
+[conda] torchvision               0.20.0               py38_cu124    pytorch
+        Pillow (10.4.0)
+
+Loading trainer: CoOp
+Loading dataset: Caltech101
+Reading split from /home/aditya/CoOp/Data/caltech101/split_zhou_Caltech101.json
+Loading preprocessed few-shot data from /home/aditya/CoOp/Data/caltech101/split_fewshot/shot_16-seed_1.pkl
+Building transform_train
++ random resized crop (size=(224, 224), scale=(0.08, 1.0))
++ random flip
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+Building transform_test
++ resize the smaller edge to 224
++ 224x224 center crop
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+---------  ----------
+Dataset    Caltech101
+# classes  100
+# train_x  1,600
+# val      400
+# test     2,465
+---------  ----------
+Loading CLIP (backbone: ViT-B/16)
+Building custom CLIP
+Initial context: "a photo of a"
+Number of context words (tokens): 4
+Turning off gradients in both the image and the text encoder
+Loading evaluator: Classification
+No checkpoint found, train from scratch
+Initialize tensorboard (log_dir=output/caltech101/CoOp/vit_b16_ep50_ctxv1_16shots/nctx4_cscFalse_ctpend/seed1/gloss_20260425_130209/tensorboard)
+Adjacency matrix stats: min=0.0000, max=0.0698, mean=0.0078, std=0.0140
+ctx: grad_norm = 3.078125
+Adjacency matrix stats: min=0.0000, max=0.0600, mean=0.0078, std=0.0124
+ctx: grad_norm = 2.738281
+Adjacency matrix stats: min=0.0000, max=0.0679, mean=0.0078, std=0.0118
+ctx: grad_norm = 2.220703
+Adjacency matrix stats: min=0.0000, max=0.0773, mean=0.0078, std=0.0133
+ctx: grad_norm = 3.037109
+Adjacency matrix stats: min=0.0000, max=0.0669, mean=0.0078, std=0.0146
+ctx: grad_norm = 2.929688
+epoch [1/5] batch [5/12] time 0.438 (0.894) data 0.000 (0.259) loss 4.0545 (4.1192) lr 1.0000e-05 eta 0:00:49
+Adjacency matrix stats: min=0.0000, max=0.0826, mean=0.0078, std=0.0168
+ctx: grad_norm = 2.423828
+Adjacency matrix stats: min=0.0000, max=0.0840, mean=0.0078, std=0.0165
+ctx: grad_norm = 3.429688
+Adjacency matrix stats: min=0.0000, max=0.0728, mean=0.0078, std=0.0164
+ctx: grad_norm = 3.214844
+Adjacency matrix stats: min=0.0000, max=0.0804, mean=0.0078, std=0.0163
+ctx: grad_norm = 2.597656
+Adjacency matrix stats: min=0.0000, max=0.0720, mean=0.0078, std=0.0144
+ctx: grad_norm = 3.322266
+epoch [1/5] batch [10/12] time 0.439 (0.664) data 0.000 (0.130) loss 4.0520 (4.0505) lr 1.0000e-05 eta 0:00:33
+Adjacency matrix stats: min=0.0000, max=0.0727, mean=0.0078, std=0.0161
+ctx: grad_norm = 3.890625
+Adjacency matrix stats: min=0.0000, max=0.0781, mean=0.0078, std=0.0154
+ctx: grad_norm = 3.250000
+Adjacency matrix stats: min=0.0000, max=0.0670, mean=0.0078, std=0.0139
+ctx: grad_norm = 2.998047
+Adjacency matrix stats: min=0.0000, max=0.0222, mean=0.0078, std=0.0029
+ctx: grad_norm = 0.609375
+Adjacency matrix stats: min=0.0000, max=0.0228, mean=0.0078, std=0.0030
+ctx: grad_norm = 0.435059
+Adjacency matrix stats: min=0.0000, max=0.0592, mean=0.0077, std=0.0092
+ctx: grad_norm = 1.484375
+Adjacency matrix stats: min=0.0000, max=0.0702, mean=0.0078, std=0.0140
+ctx: grad_norm = 0.845703
+epoch [2/5] batch [5/12] time 0.509 (0.694) data 0.000 (0.164) loss 4.0927 (4.2644) lr 1.0000e-01 eta 0:00:29
+Adjacency matrix stats: min=0.0000, max=0.0729, mean=0.0078, std=0.0132
+ctx: grad_norm = 0.558594
+Adjacency matrix stats: min=0.0000, max=0.0750, mean=0.0078, std=0.0135
+ctx: grad_norm = 0.618652
+Adjacency matrix stats: min=0.0000, max=0.0745, mean=0.0078, std=0.0169
+ctx: grad_norm = 0.410645
+Adjacency matrix stats: min=0.0000, max=0.0825, mean=0.0078, std=0.0169
+ctx: grad_norm = 0.384766
+Adjacency matrix stats: min=0.0000, max=0.0842, mean=0.0078, std=0.0177
+ctx: grad_norm = 0.282227
+epoch [2/5] batch [10/12] time 0.433 (0.594) data 0.000 (0.082) loss 3.8875 (4.1311) lr 1.0000e-01 eta 0:00:22
+Adjacency matrix stats: min=0.0000, max=0.0859, mean=0.0078, std=0.0189
+ctx: grad_norm = 0.226318
+Adjacency matrix stats: min=0.0000, max=0.0825, mean=0.0078, std=0.0192
+ctx: grad_norm = 0.188110
+Adjacency matrix stats: min=0.0000, max=0.0869, mean=0.0078, std=0.0177
+ctx: grad_norm = 0.272705
+Adjacency matrix stats: min=0.0000, max=0.0784, mean=0.0078, std=0.0171
+ctx: grad_norm = 0.267822
+Adjacency matrix stats: min=0.0000, max=0.0815, mean=0.0078, std=0.0164
+ctx: grad_norm = 0.240601
+Adjacency matrix stats: min=0.0000, max=0.0904, mean=0.0078, std=0.0180
+ctx: grad_norm = 0.112793
+Adjacency matrix stats: min=0.0000, max=0.0828, mean=0.0078, std=0.0193
+ctx: grad_norm = 0.115417
+epoch [3/5] batch [5/12] time 0.506 (0.722) data 0.000 (0.208) loss 3.7870 (3.8919) lr 9.0451e-02 eta 0:00:22
+Adjacency matrix stats: min=0.0000, max=0.0848, mean=0.0078, std=0.0179
+ctx: grad_norm = 0.130737
+Adjacency matrix stats: min=0.0000, max=0.0921, mean=0.0078, std=0.0199
+ctx: grad_norm = 0.110840
+Adjacency matrix stats: min=0.0000, max=0.0855, mean=0.0078, std=0.0200
+ctx: grad_norm = 0.091797
+Adjacency matrix stats: min=0.0000, max=0.0894, mean=0.0078, std=0.0198
+ctx: grad_norm = 0.082825
+Adjacency matrix stats: min=0.0000, max=0.0866, mean=0.0078, std=0.0200
+ctx: grad_norm = 0.088623
+epoch [3/5] batch [10/12] time 0.630 (0.627) data 0.000 (0.104) loss 3.7395 (3.8340) lr 9.0451e-02 eta 0:00:16
+Adjacency matrix stats: min=0.0000, max=0.0951, mean=0.0078, std=0.0204
+ctx: grad_norm = 0.064148
+Adjacency matrix stats: min=0.0000, max=0.1057, mean=0.0078, std=0.0206
+ctx: grad_norm = 0.064697
+Adjacency matrix stats: min=0.0000, max=0.0950, mean=0.0078, std=0.0200
+ctx: grad_norm = 0.098938
+Adjacency matrix stats: min=0.0000, max=0.0856, mean=0.0078, std=0.0195
+ctx: grad_norm = 0.119873
+Adjacency matrix stats: min=0.0000, max=0.0911, mean=0.0078, std=0.0186
+ctx: grad_norm = 0.189941
+Adjacency matrix stats: min=0.0000, max=0.0871, mean=0.0078, std=0.0188
+ctx: grad_norm = 0.088562
+Adjacency matrix stats: min=0.0000, max=0.0825, mean=0.0078, std=0.0202
+ctx: grad_norm = 0.070251
+epoch [4/5] batch [5/12] time 0.509 (0.715) data 0.000 (0.188) loss 3.7313 (3.7838) lr 6.5451e-02 eta 0:00:13
+Adjacency matrix stats: min=0.0000, max=0.0872, mean=0.0078, std=0.0187
+ctx: grad_norm = 0.116699
+Adjacency matrix stats: min=0.0000, max=0.0934, mean=0.0078, std=0.0205
+ctx: grad_norm = 0.059845
+Adjacency matrix stats: min=0.0000, max=0.0990, mean=0.0078, std=0.0205
+ctx: grad_norm = 0.052399
+Adjacency matrix stats: min=0.0000, max=0.0927, mean=0.0078, std=0.0203
+ctx: grad_norm = 0.068726
+Adjacency matrix stats: min=0.0000, max=0.0909, mean=0.0078, std=0.0205
+ctx: grad_norm = 0.069092
+epoch [4/5] batch [10/12] time 0.436 (0.581) data 0.000 (0.094) loss 3.7144 (3.7624) lr 6.5451e-02 eta 0:00:08
+Adjacency matrix stats: min=0.0000, max=0.0892, mean=0.0078, std=0.0207
+ctx: grad_norm = 0.042847
+Adjacency matrix stats: min=0.0000, max=0.1002, mean=0.0078, std=0.0208
+ctx: grad_norm = 0.044189
+Adjacency matrix stats: min=0.0000, max=0.1066, mean=0.0078, std=0.0205
+ctx: grad_norm = 0.111938
+Adjacency matrix stats: min=0.0000, max=0.0876, mean=0.0078, std=0.0201
+ctx: grad_norm = 0.096619
+Adjacency matrix stats: min=0.0000, max=0.0829, mean=0.0078, std=0.0193
+ctx: grad_norm = 0.146362
+Adjacency matrix stats: min=0.0000, max=0.0896, mean=0.0078, std=0.0191
+ctx: grad_norm = 0.084290
+Adjacency matrix stats: min=0.0000, max=0.0943, mean=0.0078, std=0.0204
+ctx: grad_norm = 0.052429
+epoch [5/5] batch [5/12] time 0.432 (0.746) data 0.000 (0.208) loss 3.7043 (3.7721) lr 3.4549e-02 eta 0:00:05
+Adjacency matrix stats: min=0.0000, max=0.0889, mean=0.0078, std=0.0191
+ctx: grad_norm = 0.110901
+Adjacency matrix stats: min=0.0000, max=0.0969, mean=0.0078, std=0.0207
+ctx: grad_norm = 0.047363
+Adjacency matrix stats: min=0.0000, max=0.1048, mean=0.0078, std=0.0207
+ctx: grad_norm = 0.045074
+Adjacency matrix stats: min=0.0000, max=0.0882, mean=0.0078, std=0.0204
+ctx: grad_norm = 0.048096
+Adjacency matrix stats: min=0.0000, max=0.0978, mean=0.0078, std=0.0207
+ctx: grad_norm = 0.049591
+epoch [5/5] batch [10/12] time 0.434 (0.590) data 0.001 (0.104) loss 3.6904 (3.7419) lr 3.4549e-02 eta 0:00:01
+Adjacency matrix stats: min=0.0000, max=0.1001, mean=0.0078, std=0.0208
+ctx: grad_norm = 0.043365
+Adjacency matrix stats: min=0.0000, max=0.0976, mean=0.0078, std=0.0209
+ctx: grad_norm = 0.036316
+Checkpoint saved to output/caltech101/CoOp/vit_b16_ep50_ctxv1_16shots/nctx4_cscFalse_ctpend/seed1/gloss_20260425_130209/prompt_learner/model.pth.tar-5
+Finish training
+Deploy the last-epoch model
+Evaluate on the *test* set
+=> result
+* total: 2,465
+* correct: 2,111
+* accuracy: 85.6%
+* error: 14.4%
+* macro_f1: 84.6%
+* ECE: 2.45
+* ACE: 2.03
+Elapsed: 0:00:38
+Ended
+
+[Final] Learned prompt vocab matches:
+
+============================================================
+Learned Prompts - Top-1 BPE Vocabulary Matches
+============================================================
+Prompt Token 0: 'trees ' (ID: 4682, Similarity: 0.2136)
+Prompt Token 1: 'passenger ' (ID: 12311, Similarity: 0.2490)
+Prompt Token 2: 'preparing ' (ID: 7365, Similarity: 0.2229)
+Prompt Token 3: 'filming ' (ID: 6866, Similarity: 0.2104)
+============================================================
+
+Available tags: ['train/loss', 'train/lr', 'test/accuracy', 'test/error_rate', 'test/macro_f1', 'test/ece', 'test/ace']
+Loss curve saved to output/caltech101/CoOp/vit_b16_ep50_ctxv1_16shots/nctx4_cscFalse_ctpend/seed1/gloss_20260425_130209/loss_curve.png

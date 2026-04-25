@@ -269,12 +269,16 @@ class CustomCLIP(nn.Module):
         image_features = image_features / image_features.norm(dim=-1, keepdim=True)
         label_features = label_features / label_features.norm(dim=-1, keepdim=True)
 
-        concat_features = torch.cat([image_features, label_features], dim=-1)
-        # concat_features = image_features * label_features  # element-wise product
+        # concat_features = torch.cat([image_features, label_features], dim=-1)
+        # # concat_features = image_features * label_features  # element-wise product
+        # concat_features = concat_features / concat_features.norm(dim=-1, keepdim=True)
+
+        alpha = 1.0  # tunable — amplifies prompt's influence on graph
+        concat_features = torch.cat([image_features, alpha * label_features], dim=-1)
         concat_features = concat_features / concat_features.norm(dim=-1, keepdim=True)
         
         return concat_features
-    
+
     
 
 @TRAINER_REGISTRY.register()
@@ -311,8 +315,8 @@ class CoOp(TrainerX):
             self._plot_losses()
 
         super().after_train()
-        # print("\n[Final] Learned prompt vocab matches:")
-        # self.model.prompt_learner.print_learned_prompts_vocab_matches()
+        print("\n[Final] Learned prompt vocab matches:")
+        self.model.prompt_learner.print_learned_prompts_vocab_matches()
         
 
     def _plot_losses(self):
@@ -517,9 +521,9 @@ class CoOp(TrainerX):
                 raise ValueError(f"Unknown loss_type: {loss_type}")
 
             self.model_backward_and_update(loss)
-        for name, param in self.model.prompt_learner.named_parameters():
-            if param.grad is not None:
-                print(f"{name}: grad_norm = {param.grad.norm().item():.6f}") 
+        # for name, param in self.model.prompt_learner.named_parameters():
+        #     if param.grad is not None:
+        #         print(f"{name}: grad_norm = {param.grad.norm().item():.6f}") 
         
         # if loss_type == "gloss":
         #     loss_summary = {"loss": loss.item()}

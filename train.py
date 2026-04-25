@@ -156,6 +156,7 @@ def extend_cfg(cfg):
     cfg.TRAINER.COCOOP.PREC = "fp16"  # fp16, fp32, amp
 
     cfg.DATASET.SUBSAMPLE_CLASSES = "all"  # all, base or new
+    cfg.TEST.FINAL_MODEL = "best_val"  # last or best  #TODO: add "best_val" option to select the model with best validation performance for testing
 
 
 def setup_cfg(args):
@@ -177,7 +178,7 @@ def setup_cfg(args):
     cfg.merge_from_list(args.opts)
 
     # Disable random shuffling for train dataloaders. #TODO 
-    cfg.DATALOADER.TRAIN_X.SAMPLER = "SequentialSampler"
+    # cfg.DATALOADER.TRAIN_X.SAMPLER = "SequentialSampler"
 
     cfg.freeze()
 
