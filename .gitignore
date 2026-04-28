@@ -140,3 +140,4 @@ dmypy.json
 *.h5
 *.zip
 *.tar
+*.tar-50
