@@ -1,0 +1,912 @@
+***************
+** Arguments **
+***************
+backbone: 
+config_file: configs/trainers/CoOp/vit_b16_ep200.yaml
+coop_loss_type: scl
+dataset_config_file: configs/datasets/food101.yaml
+eval_only: False
+head: 
+load_epoch: None
+model_dir: 
+no_train: False
+opts: ['TRAINER.COOP.N_CTX', '16', 'TRAINER.COOP.CSC', 'False', 'TRAINER.COOP.CLASS_TOKEN_POSITION', 'end', 'DATASET.NUM_SHOTS', '16']
+output_dir: output/food101/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/scl_20260426_003051
+resume: 
+root: /home/aditya/CoOp/Data
+seed: 3
+source_domains: None
+target_domains: None
+trainer: CoOp
+transforms: None
+************
+** Config **
+************
+DATALOADER:
+  K_TRANSFORMS: 1
+  NUM_WORKERS: 8
+  RETURN_IMG0: False
+  TEST:
+    BATCH_SIZE: 100
+    SAMPLER: SequentialSampler
+  TRAIN_U:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAME_AS_X: True
+    SAMPLER: RandomSampler
+  TRAIN_X:
+    BATCH_SIZE: 128
+    N_DOMAIN: 0
+    N_INS: 16
+    SAMPLER: RandomSampler
+DATASET:
+  ALL_AS_UNLABELED: False
+  CIFAR_C_LEVEL: 1
+  CIFAR_C_TYPE: 
+  NAME: Food101
+  NUM_LABELED: -1
+  NUM_SHOTS: 16
+  ROOT: /home/aditya/CoOp/Data
+  SOURCE_DOMAINS: ()
+  STL10_FOLD: -1
+  SUBSAMPLE_CLASSES: all
+  TARGET_DOMAINS: ()
+  VAL_PERCENT: 0.1
+INPUT:
+  COLORJITTER_B: 0.4
+  COLORJITTER_C: 0.4
+  COLORJITTER_H: 0.1
+  COLORJITTER_S: 0.4
+  CROP_PADDING: 4
+  CUTOUT_LEN: 16
+  CUTOUT_N: 1
+  GB_K: 21
+  GB_P: 0.5
+  GN_MEAN: 0.0
+  GN_STD: 0.15
+  INTERPOLATION: bicubic
+  NO_TRANSFORM: False
+  PIXEL_MEAN: [0.48145466, 0.4578275, 0.40821073]
+  PIXEL_STD: [0.26862954, 0.26130258, 0.27577711]
+  RANDAUGMENT_M: 10
+  RANDAUGMENT_N: 2
+  RGS_P: 0.2
+  RRCROP_SCALE: (0.08, 1.0)
+  SIZE: (224, 224)
+  TRANSFORMS: ('random_resized_crop', 'random_flip', 'normalize')
+MODEL:
+  BACKBONE:
+    NAME: ViT-B/16
+    PRETRAINED: True
+  HEAD:
+    ACTIVATION: relu
+    BN: True
+    DROPOUT: 0.0
+    HIDDEN_LAYERS: ()
+    NAME: 
+  INIT_WEIGHTS: 
+OPTIM:
+  ADAM_BETA1: 0.9
+  ADAM_BETA2: 0.999
+  BASE_LR_MULT: 0.1
+  GAMMA: 0.1
+  LR: 0.1
+  LR_SCHEDULER: cosine
+  MAX_EPOCH: 50
+  MOMENTUM: 0.9
+  NAME: sgd
+  NEW_LAYERS: ()
+  RMSPROP_ALPHA: 0.99
+  SGD_DAMPNING: 0
+  SGD_NESTEROV: False
+  STAGED_LR: False
+  STEPSIZE: (-1,)
+  WARMUP_CONS_LR: 1e-05
+  WARMUP_EPOCH: 1
+  WARMUP_MIN_LR: 1e-05
+  WARMUP_RECOUNT: True
+  WARMUP_TYPE: constant
+  WEIGHT_DECAY: 0.0005
+OUTPUT_DIR: output/food101/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/scl_20260426_003051
+RESUME: 
+SEED: 3
+TEST:
+  COMPUTE_CMAT: False
+  EVALUATOR: Classification
+  FINAL_MODEL: best_val
+  NO_TEST: False
+  PER_CLASS_RESULT: False
+  SPLIT: test
+TRAIN:
+  CHECKPOINT_FREQ: 0
+  COUNT_ITER: train_x
+  PRINT_FREQ: 5
+TRAINER:
+  CDAC:
+    CLASS_LR_MULTI: 10
+    P_THRESH: 0.95
+    RAMPUP_COEF: 30
+    RAMPUP_ITRS: 1000
+    STRONG_TRANSFORMS: ()
+    TOPK_MATCH: 5
+  COCOOP:
+    CTX_INIT: 
+    N_CTX: 16
+    PREC: fp16
+  COOP:
+    CLASS_TOKEN_POSITION: end
+    CSC: False
+    CTX_INIT: 
+    GLOSS_GAMMA: 0.5
+    GLOSS_SIGMA: 0.3
+    LOSS_TYPE: scl
+    N_CTX: 16
+    PREC: fp16
+  CROSSGRAD:
+    ALPHA_D: 0.5
+    ALPHA_F: 0.5
+    EPS_D: 1.0
+    EPS_F: 1.0
+  DAEL:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DAELDG:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DDAIG:
+    ALPHA: 0.5
+    CLAMP: False
+    CLAMP_MAX: 1.0
+    CLAMP_MIN: -1.0
+    G_ARCH: 
+    LMDA: 0.3
+    WARMUP: 0
+  DOMAINMIX:
+    ALPHA: 1.0
+    BETA: 1.0
+    TYPE: crossdomain
+  ENTMIN:
+    LMDA: 0.001
+  FIXMATCH:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 1.0
+  M3SDA:
+    LMDA: 0.5
+    N_STEP_F: 4
+  MCD:
+    N_STEP_F: 4
+  MEANTEACHER:
+    EMA_ALPHA: 0.999
+    RAMPUP: 5
+    WEIGHT_U: 1.0
+  MIXMATCH:
+    MIXUP_BETA: 0.75
+    RAMPUP: 20000
+    TEMP: 2.0
+    WEIGHT_U: 100.0
+  MME:
+    LMDA: 0.1
+  NAME: CoOp
+  SE:
+    CONF_THRE: 0.95
+    EMA_ALPHA: 0.999
+    RAMPUP: 300
+USE_CUDA: True
+VERBOSE: True
+VERSION: 1
+Collecting env info ...
+** System info **
+PyTorch version: 2.4.1
+Is debug build: False
+CUDA used to build PyTorch: 12.4
+ROCM used to build PyTorch: N/A
+
+OS: Ubuntu 24.04.1 LTS (x86_64)
+GCC version: (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Clang version: Could not collect
+CMake version: Could not collect
+Libc version: glibc-2.39
+
+Python version: 3.8.20 (default, Oct  3 2024, 15:24:27)  [GCC 11.2.0] (64-bit runtime)
+Python platform: Linux-6.11.0-1027-oem-x86_64-with-glibc2.17
+Is CUDA available: True
+CUDA runtime version: 13.2.51
+CUDA_MODULE_LOADING set to: LAZY
+GPU models and configuration: GPU 0: NVIDIA A100 80GB PCIe
+Nvidia driver version: 580.126.09
+cuDNN version: Could not collect
+HIP runtime version: N/A
+MIOpen runtime version: N/A
+Is XNNPACK available: True
+
+CPU:
+Architecture:                         x86_64
+CPU op-mode(s):                       32-bit, 64-bit
+Address sizes:                        46 bits physical, 57 bits virtual
+Byte Order:                           Little Endian
+CPU(s):                               16
+On-line CPU(s) list:                  0-15
+Vendor ID:                            GenuineIntel
+Model name:                           Intel(R) Xeon(R) Silver 4309Y CPU @ 2.80GHz
+CPU family:                           6
+Model:                                106
+Thread(s) per core:                   2
+Core(s) per socket:                   8
+Socket(s):                            1
+Stepping:                             6
+CPU(s) scaling MHz:                   50%
+CPU max MHz:                          3600.0000
+CPU min MHz:                          800.0000
+BogoMIPS:                             5600.00
+Flags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3 ssbd mba ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb intel_pt avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local split_lock_detect wbnoinvd dtherm ida arat pln pts hwp hwp_act_window hwp_pkg_req vnmi avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq la57 rdpid fsrm md_clear pconfig flush_l1d arch_capabilities
+Virtualization:                       VT-x
+L1d cache:                            384 KiB (8 instances)
+L1i cache:                            256 KiB (8 instances)
+L2 cache:                             10 MiB (8 instances)
+L3 cache:                             12 MiB (1 instance)
+NUMA node(s):                         1
+NUMA node0 CPU(s):                    0-15
+Vulnerability Gather data sampling:   Mitigation; Microcode
+Vulnerability Itlb multihit:          Not affected
+Vulnerability L1tf:                   Not affected
+Vulnerability Mds:                    Not affected
+Vulnerability Meltdown:               Not affected
+Vulnerability Mmio stale data:        Mitigation; Clear CPU buffers; SMT vulnerable
+Vulnerability Reg file data sampling: Not affected
+Vulnerability Retbleed:               Not affected
+Vulnerability Spec rstack overflow:   Not affected
+Vulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop
+Vulnerability Srbds:                  Not affected
+Vulnerability Tsx async abort:        Not affected
+
+Versions of relevant libraries:
+[pip3] flake8==3.7.9
+[pip3] numpy==1.24.3
+[pip3] torch==2.4.1
+[pip3] torchvision==0.20.0
+[pip3] triton==3.0.0
+[conda] blas                      1.0                         mkl  
+[conda] cudatoolkit               10.2.89              hfd86e86_1  
+[conda] libjpeg-turbo             2.0.0                h9bf148f_0    pytorch
+[conda] mkl                       2023.1.0         h213fc3f_46344  
+[conda] mkl-service               2.4.0            py38h5eee18b_1  
+[conda] mkl_fft                   1.3.8            py38h5eee18b_0  
+[conda] mkl_random                1.2.4            py38hdb19cb5_0  
+[conda] numpy                     1.24.3           py38hf6e8229_1  
+[conda] numpy-base                1.24.3           py38h060ed82_1  
+[conda] pytorch                   2.4.1           py3.8_cuda12.4_cudnn9.1.0_0    pytorch
+[conda] pytorch-cuda              12.4                 hc786d27_7    pytorch
+[conda] pytorch-mutex             1.0                        cuda    pytorch
+[conda] torchtriton               3.0.0                      py38    pytorch
+[conda] torchvision               0.20.0               py38_cu124    pytorch
+        Pillow (10.4.0)
+
+Loading trainer: CoOp
+Loading dataset: Food101
+Reading split from /home/aditya/CoOp/Data/food101/split_zhou_Food101.json
+Loading preprocessed few-shot data from /home/aditya/CoOp/Data/food101/split_fewshot/shot_16-seed_3.pkl
+Building transform_train
++ random resized crop (size=(224, 224), scale=(0.08, 1.0))
++ random flip
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+Building transform_test
++ resize the smaller edge to 224
++ 224x224 center crop
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+---------  -------
+Dataset    Food101
+# classes  101
+# train_x  1,616
+# val      404
+# test     30,300
+---------  -------
+Loading CLIP (backbone: ViT-B/16)
+Building custom CLIP
+Initializing a generic context
+Initial context: "X X X X X X X X X X X X X X X X"
+Number of context words (tokens): 16
+Turning off gradients in both the image and the text encoder
+Loading evaluator: Classification
+No checkpoint found, train from scratch
+Initialize tensorboard (log_dir=output/food101/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/scl_20260426_003051/tensorboard)
+epoch [1/50] batch [5/12] time 0.111 (0.663) data 0.000 (0.310) loss 3.0297 (2.7239) lr 1.0000e-05 eta 0:06:34
+epoch [1/50] batch [10/12] time 0.111 (0.387) data 0.000 (0.155) loss 2.6271 (2.7153) lr 1.0000e-05 eta 0:03:48
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 204
+* accuracy: 50.5%
+* error: 49.5%
+* macro_f1: 45.4%
+* ECE: 12.64
+* ACE: 11.81
+Checkpoint saved to output/food101/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/scl_20260426_003051/prompt_learner/model-best.pth.tar
+epoch [2/50] batch [5/12] time 0.108 (0.419) data 0.000 (0.309) loss 1.6917 (2.0221) lr 1.0000e-01 eta 0:04:04
+epoch [2/50] batch [10/12] time 0.109 (0.264) data 0.000 (0.154) loss 1.1385 (1.6615) lr 1.0000e-01 eta 0:02:32
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 267
+* accuracy: 66.1%
+* error: 33.9%
+* macro_f1: 61.4%
+* ECE: 11.18
+* ACE: 11.66
+Checkpoint saved to output/food101/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/scl_20260426_003051/prompt_learner/model-best.pth.tar
+epoch [3/50] batch [5/12] time 0.109 (0.382) data 0.000 (0.270) loss 0.8776 (0.9531) lr 9.9901e-02 eta 0:03:38
+epoch [3/50] batch [10/12] time 0.106 (0.246) data 0.000 (0.135) loss 0.8593 (0.9095) lr 9.9901e-02 eta 0:02:19
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 250
+* accuracy: 61.9%
+* error: 38.1%
+* macro_f1: 56.5%
+* ECE: 15.13
+* ACE: 15.56
+epoch [4/50] batch [5/12] time 0.108 (0.420) data 0.000 (0.309) loss 0.8313 (0.8072) lr 9.9606e-02 eta 0:03:54
+epoch [4/50] batch [10/12] time 0.112 (0.266) data 0.001 (0.155) loss 0.6332 (0.7631) lr 9.9606e-02 eta 0:02:27
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 239
+* accuracy: 59.2%
+* error: 40.8%
+* macro_f1: 53.0%
+* ECE: 18.41
+* ACE: 18.02
+epoch [5/50] batch [5/12] time 0.115 (0.405) data 0.000 (0.290) loss 0.6751 (0.6803) lr 9.9114e-02 eta 0:03:41
+epoch [5/50] batch [10/12] time 0.111 (0.259) data 0.001 (0.145) loss 0.5797 (0.6473) lr 9.9114e-02 eta 0:02:20
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 233
+* accuracy: 57.7%
+* error: 42.3%
+* macro_f1: 50.9%
+* ECE: 19.42
+* ACE: 19.75
+epoch [6/50] batch [5/12] time 0.109 (0.383) data 0.000 (0.273) loss 0.5705 (0.6067) lr 9.8429e-02 eta 0:03:24
+epoch [6/50] batch [10/12] time 0.109 (0.248) data 0.000 (0.137) loss 0.5900 (0.6079) lr 9.8429e-02 eta 0:02:11
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 229
+* accuracy: 56.7%
+* error: 43.3%
+* macro_f1: 49.7%
+* ECE: 20.49
+* ACE: 20.49
+epoch [7/50] batch [5/12] time 0.115 (0.392) data 0.000 (0.280) loss 0.6221 (0.5786) lr 9.7553e-02 eta 0:03:25
+epoch [7/50] batch [10/12] time 0.107 (0.252) data 0.000 (0.140) loss 0.5253 (0.5403) lr 9.7553e-02 eta 0:02:10
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 229
+* accuracy: 56.7%
+* error: 43.3%
+* macro_f1: 49.5%
+* ECE: 20.76
+* ACE: 20.76
+epoch [8/50] batch [5/12] time 0.114 (0.399) data 0.000 (0.289) loss 0.5665 (0.5589) lr 9.6489e-02 eta 0:03:23
+epoch [8/50] batch [10/12] time 0.112 (0.255) data 0.000 (0.144) loss 0.6143 (0.5533) lr 9.6489e-02 eta 0:02:08
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 231
+* accuracy: 57.2%
+* error: 42.8%
+* macro_f1: 50.9%
+* ECE: 20.61
+* ACE: 20.67
+epoch [9/50] batch [5/12] time 0.114 (0.379) data 0.000 (0.265) loss 0.4337 (0.5363) lr 9.5241e-02 eta 0:03:08
+epoch [9/50] batch [10/12] time 0.112 (0.246) data 0.000 (0.133) loss 0.5657 (0.5312) lr 9.5241e-02 eta 0:02:01
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 228
+* accuracy: 56.4%
+* error: 43.6%
+* macro_f1: 50.0%
+* ECE: 21.31
+* ACE: 21.31
+epoch [10/50] batch [5/12] time 0.109 (0.372) data 0.000 (0.263) loss 0.4849 (0.4540) lr 9.3815e-02 eta 0:03:01
+epoch [10/50] batch [10/12] time 0.110 (0.241) data 0.000 (0.132) loss 0.5169 (0.4965) lr 9.3815e-02 eta 0:01:56
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 224
+* accuracy: 55.4%
+* error: 44.6%
+* macro_f1: 49.2%
+* ECE: 22.28
+* ACE: 22.28
+epoch [11/50] batch [5/12] time 0.113 (0.415) data 0.000 (0.303) loss 0.4652 (0.4493) lr 9.2216e-02 eta 0:03:17
+epoch [11/50] batch [10/12] time 0.111 (0.262) data 0.000 (0.152) loss 0.4754 (0.4841) lr 9.2216e-02 eta 0:02:03
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 223
+* accuracy: 55.2%
+* error: 44.8%
+* macro_f1: 48.9%
+* ECE: 22.66
+* ACE: 22.72
+epoch [12/50] batch [5/12] time 0.108 (0.399) data 0.000 (0.288) loss 0.5166 (0.5184) lr 9.0451e-02 eta 0:03:04
+epoch [12/50] batch [10/12] time 0.111 (0.254) data 0.000 (0.144) loss 0.4625 (0.4860) lr 9.0451e-02 eta 0:01:56
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 222
+* accuracy: 55.0%
+* error: 45.0%
+* macro_f1: 48.6%
+* ECE: 22.98
+* ACE: 22.98
+epoch [13/50] batch [5/12] time 0.109 (0.420) data 0.000 (0.311) loss 0.4410 (0.5094) lr 8.8526e-02 eta 0:03:09
+epoch [13/50] batch [10/12] time 0.109 (0.265) data 0.000 (0.155) loss 0.5139 (0.5108) lr 8.8526e-02 eta 0:01:58
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 221
+* accuracy: 54.7%
+* error: 45.3%
+* macro_f1: 48.2%
+* ECE: 23.24
+* ACE: 23.24
+epoch [14/50] batch [5/12] time 0.109 (0.382) data 0.000 (0.272) loss 0.4657 (0.4340) lr 8.6448e-02 eta 0:02:47
+epoch [14/50] batch [10/12] time 0.114 (0.248) data 0.000 (0.136) loss 0.4405 (0.4298) lr 8.6448e-02 eta 0:01:47
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 223
+* accuracy: 55.2%
+* error: 44.8%
+* macro_f1: 48.8%
+* ECE: 22.97
+* ACE: 22.66
+epoch [15/50] batch [5/12] time 0.111 (0.406) data 0.000 (0.296) loss 0.4831 (0.4865) lr 8.4227e-02 eta 0:02:53
+epoch [15/50] batch [10/12] time 0.114 (0.260) data 0.000 (0.148) loss 0.4669 (0.4731) lr 8.4227e-02 eta 0:01:49
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 220
+* accuracy: 54.5%
+* error: 45.5%
+* macro_f1: 48.3%
+* ECE: 23.45
+* ACE: 23.14
+epoch [16/50] batch [5/12] time 0.108 (0.389) data 0.000 (0.280) loss 0.4563 (0.4427) lr 8.1871e-02 eta 0:02:41
+epoch [16/50] batch [10/12] time 0.109 (0.249) data 0.000 (0.140) loss 0.3481 (0.4264) lr 8.1871e-02 eta 0:01:42
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 216
+* accuracy: 53.5%
+* error: 46.5%
+* macro_f1: 47.1%
+* ECE: 23.57
+* ACE: 23.58
+epoch [17/50] batch [5/12] time 0.114 (0.403) data 0.000 (0.288) loss 0.3931 (0.4747) lr 7.9389e-02 eta 0:02:42
+epoch [17/50] batch [10/12] time 0.108 (0.257) data 0.000 (0.144) loss 0.3552 (0.4408) lr 7.9389e-02 eta 0:01:42
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 215
+* accuracy: 53.2%
+* error: 46.8%
+* macro_f1: 46.8%
+* ECE: 23.04
+* ACE: 23.05
+epoch [18/50] batch [5/12] time 0.111 (0.380) data 0.000 (0.269) loss 0.4612 (0.4919) lr 7.6791e-02 eta 0:02:28
+epoch [18/50] batch [10/12] time 0.111 (0.247) data 0.000 (0.134) loss 0.4836 (0.4654) lr 7.6791e-02 eta 0:01:35
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 212
+* accuracy: 52.5%
+* error: 47.5%
+* macro_f1: 46.1%
+* ECE: 23.20
+* ACE: 23.20
+epoch [19/50] batch [5/12] time 0.109 (0.369) data 0.000 (0.257) loss 0.4434 (0.4775) lr 7.4088e-02 eta 0:02:19
+epoch [19/50] batch [10/12] time 0.108 (0.239) data 0.000 (0.129) loss 0.3592 (0.4474) lr 7.4088e-02 eta 0:01:29
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 211
+* accuracy: 52.2%
+* error: 47.8%
+* macro_f1: 46.2%
+* ECE: 23.29
+* ACE: 23.30
+epoch [20/50] batch [5/12] time 0.112 (0.394) data 0.000 (0.285) loss 0.3659 (0.4407) lr 7.1289e-02 eta 0:02:24
+epoch [20/50] batch [10/12] time 0.106 (0.251) data 0.000 (0.143) loss 0.4784 (0.4319) lr 7.1289e-02 eta 0:01:30
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 207
+* accuracy: 51.2%
+* error: 48.8%
+* macro_f1: 45.0%
+* ECE: 24.17
+* ACE: 24.18
+epoch [21/50] batch [5/12] time 0.109 (0.424) data 0.000 (0.312) loss 0.5124 (0.4512) lr 6.8406e-02 eta 0:02:30
+epoch [21/50] batch [10/12] time 0.103 (0.265) data 0.000 (0.156) loss 0.4561 (0.4191) lr 6.8406e-02 eta 0:01:32
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 204
+* accuracy: 50.5%
+* error: 49.5%
+* macro_f1: 44.2%
+* ECE: 24.89
+* ACE: 24.89
+epoch [22/50] batch [5/12] time 0.110 (0.369) data 0.000 (0.259) loss 0.4359 (0.4213) lr 6.5451e-02 eta 0:02:06
+epoch [22/50] batch [10/12] time 0.108 (0.240) data 0.000 (0.130) loss 0.4118 (0.4448) lr 6.5451e-02 eta 0:01:21
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 206
+* accuracy: 51.0%
+* error: 49.0%
+* macro_f1: 44.7%
+* ECE: 24.80
+* ACE: 24.29
+epoch [23/50] batch [5/12] time 0.115 (0.414) data 0.000 (0.303) loss 0.4641 (0.4450) lr 6.2434e-02 eta 0:02:16
+epoch [23/50] batch [10/12] time 0.112 (0.263) data 0.000 (0.151) loss 0.4188 (0.4375) lr 6.2434e-02 eta 0:01:25
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 207
+* accuracy: 51.2%
+* error: 48.8%
+* macro_f1: 45.3%
+* ECE: 24.04
+* ACE: 24.04
+epoch [24/50] batch [5/12] time 0.111 (0.373) data 0.000 (0.263) loss 0.4376 (0.4040) lr 5.9369e-02 eta 0:01:58
+epoch [24/50] batch [10/12] time 0.116 (0.243) data 0.000 (0.132) loss 0.4898 (0.4165) lr 5.9369e-02 eta 0:01:16
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 208
+* accuracy: 51.5%
+* error: 48.5%
+* macro_f1: 45.4%
+* ECE: 23.88
+* ACE: 23.88
+epoch [25/50] batch [5/12] time 0.111 (0.424) data 0.000 (0.313) loss 0.4429 (0.3974) lr 5.6267e-02 eta 0:02:10
+epoch [25/50] batch [10/12] time 0.113 (0.267) data 0.000 (0.156) loss 0.3083 (0.3924) lr 5.6267e-02 eta 0:01:20
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 206
+* accuracy: 51.0%
+* error: 49.0%
+* macro_f1: 45.2%
+* ECE: 24.43
+* ACE: 24.43
+epoch [26/50] batch [5/12] time 0.112 (0.396) data 0.000 (0.282) loss 0.3702 (0.4152) lr 5.3140e-02 eta 0:01:56
+epoch [26/50] batch [10/12] time 0.108 (0.253) data 0.000 (0.141) loss 0.3770 (0.4231) lr 5.3140e-02 eta 0:01:13
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 203
+* accuracy: 50.2%
+* error: 49.8%
+* macro_f1: 44.4%
+* ECE: 25.30
+* ACE: 25.30
+epoch [27/50] batch [5/12] time 0.111 (0.409) data 0.000 (0.296) loss 0.4028 (0.3990) lr 5.0000e-02 eta 0:01:55
+epoch [27/50] batch [10/12] time 0.110 (0.260) data 0.000 (0.148) loss 0.4119 (0.4193) lr 5.0000e-02 eta 0:01:12
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 203
+* accuracy: 50.2%
+* error: 49.8%
+* macro_f1: 44.5%
+* ECE: 25.35
+* ACE: 25.35
+epoch [28/50] batch [5/12] time 0.108 (0.381) data 0.000 (0.272) loss 0.4751 (0.3991) lr 4.6860e-02 eta 0:01:43
+epoch [28/50] batch [10/12] time 0.106 (0.246) data 0.000 (0.136) loss 0.3844 (0.3878) lr 4.6860e-02 eta 0:01:05
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 201
+* accuracy: 49.8%
+* error: 50.2%
+* macro_f1: 43.9%
+* ECE: 25.85
+* ACE: 25.85
+epoch [29/50] batch [5/12] time 0.123 (0.363) data 0.000 (0.248) loss 0.4107 (0.4191) lr 4.3733e-02 eta 0:01:33
+epoch [29/50] batch [10/12] time 0.107 (0.237) data 0.000 (0.124) loss 0.4064 (0.3974) lr 4.3733e-02 eta 0:01:00
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 201
+* accuracy: 49.8%
+* error: 50.2%
+* macro_f1: 44.0%
+* ECE: 25.87
+* ACE: 25.87
+epoch [30/50] batch [5/12] time 0.115 (0.416) data 0.000 (0.303) loss 0.2789 (0.3949) lr 4.0631e-02 eta 0:01:42
+epoch [30/50] batch [10/12] time 0.112 (0.264) data 0.000 (0.152) loss 0.3687 (0.4043) lr 4.0631e-02 eta 0:01:03
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 201
+* accuracy: 49.8%
+* error: 50.2%
+* macro_f1: 44.1%
+* ECE: 25.88
+* ACE: 25.88
+epoch [31/50] batch [5/12] time 0.112 (0.374) data 0.000 (0.268) loss 0.3374 (0.3906) lr 3.7566e-02 eta 0:01:27
+epoch [31/50] batch [10/12] time 0.115 (0.244) data 0.000 (0.134) loss 0.4185 (0.4142) lr 3.7566e-02 eta 0:00:56
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 199
+* accuracy: 49.3%
+* error: 50.7%
+* macro_f1: 43.4%
+* ECE: 26.36
+* ACE: 26.36
+epoch [32/50] batch [5/12] time 0.115 (0.394) data 0.000 (0.280) loss 0.3835 (0.3939) lr 3.4549e-02 eta 0:01:27
+epoch [32/50] batch [10/12] time 0.109 (0.253) data 0.000 (0.140) loss 0.3757 (0.3835) lr 3.4549e-02 eta 0:00:55
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 199
+* accuracy: 49.3%
+* error: 50.7%
+* macro_f1: 43.4%
+* ECE: 26.35
+* ACE: 26.36
+epoch [33/50] batch [5/12] time 0.113 (0.415) data 0.000 (0.301) loss 0.2834 (0.3936) lr 3.1594e-02 eta 0:01:27
+epoch [33/50] batch [10/12] time 0.107 (0.263) data 0.000 (0.150) loss 0.4459 (0.4008) lr 3.1594e-02 eta 0:00:54
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 200
+* accuracy: 49.5%
+* error: 50.5%
+* macro_f1: 43.5%
+* ECE: 26.10
+* ACE: 26.11
+epoch [34/50] batch [5/12] time 0.113 (0.415) data 0.000 (0.305) loss 0.4388 (0.4058) lr 2.8711e-02 eta 0:01:22
+epoch [34/50] batch [10/12] time 0.114 (0.265) data 0.000 (0.153) loss 0.4505 (0.4092) lr 2.8711e-02 eta 0:00:51
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 200
+* accuracy: 49.5%
+* error: 50.5%
+* macro_f1: 43.5%
+* ECE: 26.09
+* ACE: 26.10
+epoch [35/50] batch [5/12] time 0.111 (0.387) data 0.000 (0.277) loss 0.3847 (0.4402) lr 2.5912e-02 eta 0:01:12
+epoch [35/50] batch [10/12] time 0.111 (0.249) data 0.000 (0.139) loss 0.3861 (0.3988) lr 2.5912e-02 eta 0:00:45
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 200
+* accuracy: 49.5%
+* error: 50.5%
+* macro_f1: 43.5%
+* ECE: 26.08
+* ACE: 26.09
+epoch [36/50] batch [5/12] time 0.116 (0.403) data 0.000 (0.289) loss 0.3880 (0.4200) lr 2.3209e-02 eta 0:01:10
+epoch [36/50] batch [10/12] time 0.108 (0.258) data 0.000 (0.145) loss 0.4481 (0.4211) lr 2.3209e-02 eta 0:00:43
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 200
+* accuracy: 49.5%
+* error: 50.5%
+* macro_f1: 43.5%
+* ECE: 26.07
+* ACE: 26.09
+epoch [37/50] batch [5/12] time 0.115 (0.379) data 0.000 (0.267) loss 0.4270 (0.4206) lr 2.0611e-02 eta 0:01:01
+epoch [37/50] batch [10/12] time 0.112 (0.245) data 0.000 (0.133) loss 0.4093 (0.4140) lr 2.0611e-02 eta 0:00:38
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 200
+* accuracy: 49.5%
+* error: 50.5%
+* macro_f1: 43.5%
+* ECE: 26.09
+* ACE: 26.11
+epoch [38/50] batch [5/12] time 0.114 (0.407) data 0.000 (0.294) loss 0.4851 (0.4120) lr 1.8129e-02 eta 0:01:01
+epoch [38/50] batch [10/12] time 0.111 (0.260) data 0.000 (0.147) loss 0.4406 (0.3991) lr 1.8129e-02 eta 0:00:37
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 200
+* accuracy: 49.5%
+* error: 50.5%
+* macro_f1: 43.6%
+* ECE: 26.06
+* ACE: 26.08
+epoch [39/50] batch [5/12] time 0.115 (0.429) data 0.000 (0.316) loss 0.3249 (0.3947) lr 1.5773e-02 eta 0:00:59
+epoch [39/50] batch [10/12] time 0.110 (0.271) data 0.000 (0.158) loss 0.3446 (0.3947) lr 1.5773e-02 eta 0:00:36
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 199
+* accuracy: 49.3%
+* error: 50.7%
+* macro_f1: 43.4%
+* ECE: 26.28
+* ACE: 26.29
+epoch [40/50] batch [5/12] time 0.113 (0.396) data 0.000 (0.285) loss 0.4836 (0.4274) lr 1.3552e-02 eta 0:00:50
+epoch [40/50] batch [10/12] time 0.110 (0.254) data 0.000 (0.143) loss 0.5350 (0.4178) lr 1.3552e-02 eta 0:00:30
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 199
+* accuracy: 49.3%
+* error: 50.7%
+* macro_f1: 43.4%
+* ECE: 26.26
+* ACE: 26.27
+epoch [41/50] batch [5/12] time 0.109 (0.404) data 0.000 (0.295) loss 0.3941 (0.4049) lr 1.1474e-02 eta 0:00:46
+epoch [41/50] batch [10/12] time 0.110 (0.257) data 0.000 (0.148) loss 0.3230 (0.3951) lr 1.1474e-02 eta 0:00:28
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 199
+* accuracy: 49.3%
+* error: 50.7%
+* macro_f1: 43.4%
+* ECE: 26.27
+* ACE: 26.28
+epoch [42/50] batch [5/12] time 0.115 (0.430) data 0.000 (0.314) loss 0.3378 (0.3745) lr 9.5492e-03 eta 0:00:44
+epoch [42/50] batch [10/12] time 0.106 (0.269) data 0.000 (0.157) loss 0.4342 (0.4036) lr 9.5492e-03 eta 0:00:26
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 198
+* accuracy: 49.0%
+* error: 51.0%
+* macro_f1: 43.0%
+* ECE: 26.52
+* ACE: 26.54
+epoch [43/50] batch [5/12] time 0.109 (0.398) data 0.000 (0.287) loss 0.3738 (0.3835) lr 7.7836e-03 eta 0:00:36
+epoch [43/50] batch [10/12] time 0.106 (0.253) data 0.000 (0.144) loss 0.4608 (0.4103) lr 7.7836e-03 eta 0:00:21
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 198
+* accuracy: 49.0%
+* error: 51.0%
+* macro_f1: 43.0%
+* ECE: 26.51
+* ACE: 26.53
+epoch [44/50] batch [5/12] time 0.110 (0.356) data 0.000 (0.243) loss 0.4242 (0.4178) lr 6.1847e-03 eta 0:00:28
+epoch [44/50] batch [10/12] time 0.108 (0.234) data 0.000 (0.122) loss 0.3527 (0.4061) lr 6.1847e-03 eta 0:00:17
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 199
+* accuracy: 49.3%
+* error: 50.7%
+* macro_f1: 43.4%
+* ECE: 26.29
+* ACE: 26.31
+epoch [45/50] batch [5/12] time 0.110 (0.375) data 0.000 (0.265) loss 0.5389 (0.4718) lr 4.7586e-03 eta 0:00:25
+epoch [45/50] batch [10/12] time 0.115 (0.245) data 0.000 (0.132) loss 0.4091 (0.4325) lr 4.7586e-03 eta 0:00:15
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 199
+* accuracy: 49.3%
+* error: 50.7%
+* macro_f1: 43.4%
+* ECE: 26.29
+* ACE: 26.29
+epoch [46/50] batch [5/12] time 0.113 (0.401) data 0.000 (0.289) loss 0.4084 (0.4148) lr 3.5112e-03 eta 0:00:22
+epoch [46/50] batch [10/12] time 0.115 (0.258) data 0.000 (0.145) loss 0.3350 (0.4209) lr 3.5112e-03 eta 0:00:12
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 197
+* accuracy: 48.8%
+* error: 51.2%
+* macro_f1: 42.8%
+* ECE: 26.77
+* ACE: 26.77
+epoch [47/50] batch [5/12] time 0.110 (0.412) data 0.000 (0.302) loss 0.4048 (0.3930) lr 2.4472e-03 eta 0:00:17
+epoch [47/50] batch [10/12] time 0.116 (0.264) data 0.000 (0.151) loss 0.4234 (0.4122) lr 2.4472e-03 eta 0:00:10
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 198
+* accuracy: 49.0%
+* error: 51.0%
+* macro_f1: 43.0%
+* ECE: 26.53
+* ACE: 26.54
+epoch [48/50] batch [5/12] time 0.108 (0.428) data 0.000 (0.320) loss 0.5255 (0.4166) lr 1.5708e-03 eta 0:00:13
+epoch [48/50] batch [10/12] time 0.106 (0.268) data 0.000 (0.160) loss 0.4603 (0.4102) lr 1.5708e-03 eta 0:00:06
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 198
+* accuracy: 49.0%
+* error: 51.0%
+* macro_f1: 43.0%
+* ECE: 26.52
+* ACE: 26.53
+epoch [49/50] batch [5/12] time 0.115 (0.392) data 0.000 (0.279) loss 0.4788 (0.3983) lr 8.8564e-04 eta 0:00:07
+epoch [49/50] batch [10/12] time 0.109 (0.252) data 0.000 (0.139) loss 0.4984 (0.4070) lr 8.8564e-04 eta 0:00:03
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 198
+* accuracy: 49.0%
+* error: 51.0%
+* macro_f1: 43.0%
+* ECE: 26.52
+* ACE: 26.52
+epoch [50/50] batch [5/12] time 0.109 (0.371) data 0.000 (0.261) loss 0.3890 (0.3822) lr 3.9426e-04 eta 0:00:02
+epoch [50/50] batch [10/12] time 0.112 (0.241) data 0.000 (0.130) loss 0.3891 (0.3742) lr 3.9426e-04 eta 0:00:00
+Evaluate on the *val* set
+=> result
+* total: 404
+* correct: 198
+* accuracy: 49.0%
+* error: 51.0%
+* macro_f1: 43.0%
+* ECE: 26.53
+* ACE: 26.54
+Checkpoint saved to output/food101/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/scl_20260426_003051/prompt_learner/model.pth.tar-50
+Finish training
+Deploy the model with the best val performance
+Loading weights to prompt_learner from "output/food101/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/scl_20260426_003051/prompt_learner/model-best.pth.tar" (epoch = 2)
+Evaluate on the *test* set
+=> result
+* total: 30,300
+* correct: 20,701
+* accuracy: 68.3%
+* error: 31.7%
+* macro_f1: 64.5%
+* ECE: 9.39
+* ACE: 9.39
+Elapsed: 0:04:08
+Ended
+
+[Final] Learned prompt vocab matches:
+
+============================================================
+Learned Prompts - Top-1 BPE Vocabulary Matches
+============================================================
+Prompt Token 0: 'gerard' (ID: 35979, Similarity: 0.1920)
+Prompt Token 1: '!! ' (ID: 748, Similarity: 0.1697)
+Prompt Token 2: 'vicky ' (ID: 25788, Similarity: 0.1812)
+Prompt Token 3: 'ers ' (ID: 612, Similarity: 0.2083)
+Prompt Token 4: 'hadi ' (ID: 39058, Similarity: 0.1999)
+Prompt Token 5: 'my' (ID: 1152, Similarity: 0.2105)
+Prompt Token 6: 'maroon ' (ID: 20501, Similarity: 0.1770)
+Prompt Token 7: 'duh ' (ID: 26716, Similarity: 0.1827)
+Prompt Token 8: 'tey ' (ID: 32395, Similarity: 0.2501)
+Prompt Token 9: 'where ' (ID: 1234, Similarity: 0.2258)
+Prompt Token 10: 'founder ' (ID: 5145, Similarity: 0.2122)
+Prompt Token 11: 'describing ' (ID: 24239, Similarity: 0.2486)
+Prompt Token 12: 'with ' (ID: 593, Similarity: 0.2248)
+Prompt Token 13: 'at' (ID: 527, Similarity: 0.2073)
+Prompt Token 14: 'ad' (ID: 594, Similarity: 0.2146)
+Prompt Token 15: 'ville ' (ID: 1930, Similarity: 0.1859)
+============================================================
+
+Available tags: ['train/loss', 'train/lr', 'val/accuracy', 'val/error_rate', 'val/macro_f1', 'val/ece', 'val/ace', 'test/accuracy', 'test/error_rate', 'test/macro_f1', 'test/ece', 'test/ace']
+Loss curve saved to output/food101/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/scl_20260426_003051/loss_curve.png

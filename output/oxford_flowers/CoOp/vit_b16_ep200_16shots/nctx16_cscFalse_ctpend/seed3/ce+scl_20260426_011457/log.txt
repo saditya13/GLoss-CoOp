@@ -1,0 +1,935 @@
+***************
+** Arguments **
+***************
+backbone: 
+config_file: configs/trainers/CoOp/vit_b16_ep200.yaml
+coop_loss_type: ce+scl
+dataset_config_file: configs/datasets/oxford_flowers.yaml
+eval_only: False
+head: 
+load_epoch: None
+model_dir: 
+no_train: False
+opts: ['TRAINER.COOP.N_CTX', '16', 'TRAINER.COOP.CSC', 'False', 'TRAINER.COOP.CLASS_TOKEN_POSITION', 'end', 'DATASET.NUM_SHOTS', '16']
+output_dir: output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457
+resume: 
+root: /home/aditya/CoOp/Data
+seed: 3
+source_domains: None
+target_domains: None
+trainer: CoOp
+transforms: None
+************
+** Config **
+************
+DATALOADER:
+  K_TRANSFORMS: 1
+  NUM_WORKERS: 8
+  RETURN_IMG0: False
+  TEST:
+    BATCH_SIZE: 100
+    SAMPLER: SequentialSampler
+  TRAIN_U:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAME_AS_X: True
+    SAMPLER: RandomSampler
+  TRAIN_X:
+    BATCH_SIZE: 128
+    N_DOMAIN: 0
+    N_INS: 16
+    SAMPLER: RandomSampler
+DATASET:
+  ALL_AS_UNLABELED: False
+  CIFAR_C_LEVEL: 1
+  CIFAR_C_TYPE: 
+  NAME: OxfordFlowers
+  NUM_LABELED: -1
+  NUM_SHOTS: 16
+  ROOT: /home/aditya/CoOp/Data
+  SOURCE_DOMAINS: ()
+  STL10_FOLD: -1
+  SUBSAMPLE_CLASSES: all
+  TARGET_DOMAINS: ()
+  VAL_PERCENT: 0.1
+INPUT:
+  COLORJITTER_B: 0.4
+  COLORJITTER_C: 0.4
+  COLORJITTER_H: 0.1
+  COLORJITTER_S: 0.4
+  CROP_PADDING: 4
+  CUTOUT_LEN: 16
+  CUTOUT_N: 1
+  GB_K: 21
+  GB_P: 0.5
+  GN_MEAN: 0.0
+  GN_STD: 0.15
+  INTERPOLATION: bicubic
+  NO_TRANSFORM: False
+  PIXEL_MEAN: [0.48145466, 0.4578275, 0.40821073]
+  PIXEL_STD: [0.26862954, 0.26130258, 0.27577711]
+  RANDAUGMENT_M: 10
+  RANDAUGMENT_N: 2
+  RGS_P: 0.2
+  RRCROP_SCALE: (0.08, 1.0)
+  SIZE: (224, 224)
+  TRANSFORMS: ('random_resized_crop', 'random_flip', 'normalize')
+MODEL:
+  BACKBONE:
+    NAME: ViT-B/16
+    PRETRAINED: True
+  HEAD:
+    ACTIVATION: relu
+    BN: True
+    DROPOUT: 0.0
+    HIDDEN_LAYERS: ()
+    NAME: 
+  INIT_WEIGHTS: 
+OPTIM:
+  ADAM_BETA1: 0.9
+  ADAM_BETA2: 0.999
+  BASE_LR_MULT: 0.1
+  GAMMA: 0.1
+  LR: 0.1
+  LR_SCHEDULER: cosine
+  MAX_EPOCH: 50
+  MOMENTUM: 0.9
+  NAME: sgd
+  NEW_LAYERS: ()
+  RMSPROP_ALPHA: 0.99
+  SGD_DAMPNING: 0
+  SGD_NESTEROV: False
+  STAGED_LR: False
+  STEPSIZE: (-1,)
+  WARMUP_CONS_LR: 1e-05
+  WARMUP_EPOCH: 1
+  WARMUP_MIN_LR: 1e-05
+  WARMUP_RECOUNT: True
+  WARMUP_TYPE: constant
+  WEIGHT_DECAY: 0.0005
+OUTPUT_DIR: output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457
+RESUME: 
+SEED: 3
+TEST:
+  COMPUTE_CMAT: False
+  EVALUATOR: Classification
+  FINAL_MODEL: best_val
+  NO_TEST: False
+  PER_CLASS_RESULT: False
+  SPLIT: test
+TRAIN:
+  CHECKPOINT_FREQ: 0
+  COUNT_ITER: train_x
+  PRINT_FREQ: 5
+TRAINER:
+  CDAC:
+    CLASS_LR_MULTI: 10
+    P_THRESH: 0.95
+    RAMPUP_COEF: 30
+    RAMPUP_ITRS: 1000
+    STRONG_TRANSFORMS: ()
+    TOPK_MATCH: 5
+  COCOOP:
+    CTX_INIT: 
+    N_CTX: 16
+    PREC: fp16
+  COOP:
+    CLASS_TOKEN_POSITION: end
+    CSC: False
+    CTX_INIT: 
+    GLOSS_GAMMA: 0.5
+    GLOSS_SIGMA: 0.3
+    LOSS_TYPE: ce+scl
+    N_CTX: 16
+    PREC: fp16
+  CROSSGRAD:
+    ALPHA_D: 0.5
+    ALPHA_F: 0.5
+    EPS_D: 1.0
+    EPS_F: 1.0
+  DAEL:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DAELDG:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DDAIG:
+    ALPHA: 0.5
+    CLAMP: False
+    CLAMP_MAX: 1.0
+    CLAMP_MIN: -1.0
+    G_ARCH: 
+    LMDA: 0.3
+    WARMUP: 0
+  DOMAINMIX:
+    ALPHA: 1.0
+    BETA: 1.0
+    TYPE: crossdomain
+  ENTMIN:
+    LMDA: 0.001
+  FIXMATCH:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 1.0
+  M3SDA:
+    LMDA: 0.5
+    N_STEP_F: 4
+  MCD:
+    N_STEP_F: 4
+  MEANTEACHER:
+    EMA_ALPHA: 0.999
+    RAMPUP: 5
+    WEIGHT_U: 1.0
+  MIXMATCH:
+    MIXUP_BETA: 0.75
+    RAMPUP: 20000
+    TEMP: 2.0
+    WEIGHT_U: 100.0
+  MME:
+    LMDA: 0.1
+  NAME: CoOp
+  SE:
+    CONF_THRE: 0.95
+    EMA_ALPHA: 0.999
+    RAMPUP: 300
+USE_CUDA: True
+VERBOSE: True
+VERSION: 1
+Collecting env info ...
+** System info **
+PyTorch version: 2.4.1
+Is debug build: False
+CUDA used to build PyTorch: 12.4
+ROCM used to build PyTorch: N/A
+
+OS: Ubuntu 24.04.1 LTS (x86_64)
+GCC version: (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Clang version: Could not collect
+CMake version: Could not collect
+Libc version: glibc-2.39
+
+Python version: 3.8.20 (default, Oct  3 2024, 15:24:27)  [GCC 11.2.0] (64-bit runtime)
+Python platform: Linux-6.11.0-1027-oem-x86_64-with-glibc2.17
+Is CUDA available: True
+CUDA runtime version: 13.2.51
+CUDA_MODULE_LOADING set to: LAZY
+GPU models and configuration: GPU 0: NVIDIA A100 80GB PCIe
+Nvidia driver version: 580.126.09
+cuDNN version: Could not collect
+HIP runtime version: N/A
+MIOpen runtime version: N/A
+Is XNNPACK available: True
+
+CPU:
+Architecture:                         x86_64
+CPU op-mode(s):                       32-bit, 64-bit
+Address sizes:                        46 bits physical, 57 bits virtual
+Byte Order:                           Little Endian
+CPU(s):                               16
+On-line CPU(s) list:                  0-15
+Vendor ID:                            GenuineIntel
+Model name:                           Intel(R) Xeon(R) Silver 4309Y CPU @ 2.80GHz
+CPU family:                           6
+Model:                                106
+Thread(s) per core:                   2
+Core(s) per socket:                   8
+Socket(s):                            1
+Stepping:                             6
+CPU(s) scaling MHz:                   41%
+CPU max MHz:                          3600.0000
+CPU min MHz:                          800.0000
+BogoMIPS:                             5600.00
+Flags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3 ssbd mba ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb intel_pt avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local split_lock_detect wbnoinvd dtherm ida arat pln pts hwp hwp_act_window hwp_pkg_req vnmi avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq la57 rdpid fsrm md_clear pconfig flush_l1d arch_capabilities
+Virtualization:                       VT-x
+L1d cache:                            384 KiB (8 instances)
+L1i cache:                            256 KiB (8 instances)
+L2 cache:                             10 MiB (8 instances)
+L3 cache:                             12 MiB (1 instance)
+NUMA node(s):                         1
+NUMA node0 CPU(s):                    0-15
+Vulnerability Gather data sampling:   Mitigation; Microcode
+Vulnerability Itlb multihit:          Not affected
+Vulnerability L1tf:                   Not affected
+Vulnerability Mds:                    Not affected
+Vulnerability Meltdown:               Not affected
+Vulnerability Mmio stale data:        Mitigation; Clear CPU buffers; SMT vulnerable
+Vulnerability Reg file data sampling: Not affected
+Vulnerability Retbleed:               Not affected
+Vulnerability Spec rstack overflow:   Not affected
+Vulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop
+Vulnerability Srbds:                  Not affected
+Vulnerability Tsx async abort:        Not affected
+
+Versions of relevant libraries:
+[pip3] flake8==3.7.9
+[pip3] numpy==1.24.3
+[pip3] torch==2.4.1
+[pip3] torchvision==0.20.0
+[pip3] triton==3.0.0
+[conda] blas                      1.0                         mkl  
+[conda] cudatoolkit               10.2.89              hfd86e86_1  
+[conda] libjpeg-turbo             2.0.0                h9bf148f_0    pytorch
+[conda] mkl                       2023.1.0         h213fc3f_46344  
+[conda] mkl-service               2.4.0            py38h5eee18b_1  
+[conda] mkl_fft                   1.3.8            py38h5eee18b_0  
+[conda] mkl_random                1.2.4            py38hdb19cb5_0  
+[conda] numpy                     1.24.3           py38hf6e8229_1  
+[conda] numpy-base                1.24.3           py38h060ed82_1  
+[conda] pytorch                   2.4.1           py3.8_cuda12.4_cudnn9.1.0_0    pytorch
+[conda] pytorch-cuda              12.4                 hc786d27_7    pytorch
+[conda] pytorch-mutex             1.0                        cuda    pytorch
+[conda] torchtriton               3.0.0                      py38    pytorch
+[conda] torchvision               0.20.0               py38_cu124    pytorch
+        Pillow (10.4.0)
+
+Loading trainer: CoOp
+Loading dataset: OxfordFlowers
+Reading split from /home/aditya/CoOp/Data/oxford_flowers/split_zhou_OxfordFlowers.json
+Loading preprocessed few-shot data from /home/aditya/CoOp/Data/oxford_flowers/split_fewshot/shot_16-seed_3.pkl
+Building transform_train
++ random resized crop (size=(224, 224), scale=(0.08, 1.0))
++ random flip
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+Building transform_test
++ resize the smaller edge to 224
++ 224x224 center crop
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+---------  -------------
+Dataset    OxfordFlowers
+# classes  102
+# train_x  1,632
+# val      408
+# test     2,463
+---------  -------------
+Loading CLIP (backbone: ViT-B/16)
+Building custom CLIP
+Initializing a generic context
+Initial context: "X X X X X X X X X X X X X X X X"
+Number of context words (tokens): 16
+Turning off gradients in both the image and the text encoder
+Loading evaluator: Classification
+No checkpoint found, train from scratch
+Initialize tensorboard (log_dir=output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/tensorboard)
+epoch [1/50] batch [5/12] time 0.213 (0.802) data 0.001 (0.330) loss 3.4557 (3.3838) lr 1.0000e-05 eta 0:07:56
+epoch [1/50] batch [10/12] time 0.212 (0.506) data 0.000 (0.165) loss 3.0767 (3.2869) lr 1.0000e-05 eta 0:04:58
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 102
+* accuracy: 25.0%
+* error: 75.0%
+* macro_f1: 17.1%
+* ECE: 4.80
+* ACE: 3.86
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [2/50] batch [5/12] time 0.214 (0.552) data 0.000 (0.340) loss 1.8764 (2.3752) lr 1.0000e-01 eta 0:05:22
+epoch [2/50] batch [10/12] time 0.221 (0.383) data 0.000 (0.170) loss 1.6558 (2.0628) lr 1.0000e-01 eta 0:03:41
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 190
+* accuracy: 46.6%
+* error: 53.4%
+* macro_f1: 41.0%
+* ECE: 10.20
+* ACE: 10.20
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [3/50] batch [5/12] time 0.222 (0.532) data 0.000 (0.316) loss 1.5141 (1.6269) lr 9.9901e-02 eta 0:05:03
+epoch [3/50] batch [10/12] time 0.223 (0.376) data 0.000 (0.158) loss 1.5031 (1.5582) lr 9.9901e-02 eta 0:03:32
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 201
+* accuracy: 49.3%
+* error: 50.7%
+* macro_f1: 44.3%
+* ECE: 9.88
+* ACE: 10.96
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [4/50] batch [5/12] time 0.209 (0.578) data 0.000 (0.368) loss 1.5454 (1.5070) lr 9.9606e-02 eta 0:05:23
+epoch [4/50] batch [10/12] time 0.210 (0.394) data 0.000 (0.184) loss 1.3629 (1.4742) lr 9.9606e-02 eta 0:03:38
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 206
+* accuracy: 50.5%
+* error: 49.5%
+* macro_f1: 45.2%
+* ECE: 10.24
+* ACE: 10.24
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [5/50] batch [5/12] time 0.210 (0.564) data 0.000 (0.349) loss 1.4457 (1.3729) lr 9.9114e-02 eta 0:05:08
+epoch [5/50] batch [10/12] time 0.209 (0.388) data 0.000 (0.175) loss 1.2686 (1.3881) lr 9.9114e-02 eta 0:03:30
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 211
+* accuracy: 51.7%
+* error: 48.3%
+* macro_f1: 46.7%
+* ECE: 9.96
+* ACE: 9.99
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [6/50] batch [5/12] time 0.230 (0.524) data 0.000 (0.305) loss 1.4306 (1.3656) lr 9.8429e-02 eta 0:04:40
+epoch [6/50] batch [10/12] time 0.210 (0.369) data 0.000 (0.153) loss 1.3390 (1.3695) lr 9.8429e-02 eta 0:03:15
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 219
+* accuracy: 53.7%
+* error: 46.3%
+* macro_f1: 49.5%
+* ECE: 8.66
+* ACE: 9.21
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [7/50] batch [5/12] time 0.221 (0.553) data 0.000 (0.335) loss 1.2532 (1.3667) lr 9.7553e-02 eta 0:04:49
+epoch [7/50] batch [10/12] time 0.217 (0.385) data 0.001 (0.167) loss 1.3817 (1.3226) lr 9.7553e-02 eta 0:03:19
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 220
+* accuracy: 53.9%
+* error: 46.1%
+* macro_f1: 49.8%
+* ECE: 9.01
+* ACE: 9.01
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [8/50] batch [5/12] time 0.211 (0.577) data 0.000 (0.366) loss 1.3778 (1.2698) lr 9.6489e-02 eta 0:04:55
+epoch [8/50] batch [10/12] time 0.218 (0.395) data 0.000 (0.183) loss 1.0981 (1.2491) lr 9.6489e-02 eta 0:03:19
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 226
+* accuracy: 55.4%
+* error: 44.6%
+* macro_f1: 51.6%
+* ECE: 8.05
+* ACE: 8.11
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [9/50] batch [5/12] time 0.216 (0.544) data 0.000 (0.329) loss 1.2308 (1.2277) lr 9.5241e-02 eta 0:04:31
+epoch [9/50] batch [10/12] time 0.212 (0.378) data 0.000 (0.164) loss 1.2502 (1.2172) lr 9.5241e-02 eta 0:03:06
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 230
+* accuracy: 56.4%
+* error: 43.6%
+* macro_f1: 52.6%
+* ECE: 7.92
+* ACE: 7.65
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [10/50] batch [5/12] time 0.216 (0.527) data 0.000 (0.313) loss 1.1801 (1.2444) lr 9.3815e-02 eta 0:04:16
+epoch [10/50] batch [10/12] time 0.215 (0.370) data 0.000 (0.156) loss 1.2587 (1.2595) lr 9.3815e-02 eta 0:02:58
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 229
+* accuracy: 56.1%
+* error: 43.9%
+* macro_f1: 52.1%
+* ECE: 8.33
+* ACE: 8.12
+epoch [11/50] batch [5/12] time 0.212 (0.470) data 0.000 (0.251) loss 1.3059 (1.2427) lr 9.2216e-02 eta 0:03:43
+epoch [11/50] batch [10/12] time 0.211 (0.341) data 0.000 (0.126) loss 1.2652 (1.2179) lr 9.2216e-02 eta 0:02:40
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 230
+* accuracy: 56.4%
+* error: 43.6%
+* macro_f1: 52.4%
+* ECE: 8.20
+* ACE: 8.20
+epoch [12/50] batch [5/12] time 0.223 (0.488) data 0.000 (0.267) loss 1.1672 (1.1777) lr 9.0451e-02 eta 0:03:46
+epoch [12/50] batch [10/12] time 0.219 (0.353) data 0.000 (0.134) loss 1.1958 (1.1926) lr 9.0451e-02 eta 0:02:41
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 233
+* accuracy: 57.1%
+* error: 42.9%
+* macro_f1: 53.4%
+* ECE: 7.80
+* ACE: 7.77
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [13/50] batch [5/12] time 0.214 (0.512) data 0.000 (0.301) loss 1.1649 (1.2333) lr 8.8526e-02 eta 0:03:50
+epoch [13/50] batch [10/12] time 0.223 (0.366) data 0.000 (0.151) loss 1.1722 (1.2075) lr 8.8526e-02 eta 0:02:43
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 233
+* accuracy: 57.1%
+* error: 42.9%
+* macro_f1: 53.5%
+* ECE: 7.96
+* ACE: 8.02
+epoch [14/50] batch [5/12] time 0.215 (0.482) data 0.000 (0.267) loss 1.3043 (1.2397) lr 8.6448e-02 eta 0:03:31
+epoch [14/50] batch [10/12] time 0.214 (0.348) data 0.000 (0.133) loss 1.1445 (1.1813) lr 8.6448e-02 eta 0:02:31
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 234
+* accuracy: 57.4%
+* error: 42.6%
+* macro_f1: 54.0%
+* ECE: 7.98
+* ACE: 7.90
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [15/50] batch [5/12] time 0.219 (0.536) data 0.000 (0.319) loss 1.0727 (1.1346) lr 8.4227e-02 eta 0:03:48
+epoch [15/50] batch [10/12] time 0.213 (0.375) data 0.000 (0.160) loss 1.1524 (1.1509) lr 8.4227e-02 eta 0:02:38
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 236
+* accuracy: 57.8%
+* error: 42.2%
+* macro_f1: 54.6%
+* ECE: 7.68
+* ACE: 7.91
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [16/50] batch [5/12] time 0.214 (0.475) data 0.000 (0.256) loss 1.2308 (1.1278) lr 8.1871e-02 eta 0:03:17
+epoch [16/50] batch [10/12] time 0.217 (0.345) data 0.000 (0.128) loss 1.1443 (1.1377) lr 8.1871e-02 eta 0:02:21
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 242
+* accuracy: 59.3%
+* error: 40.7%
+* macro_f1: 55.8%
+* ECE: 6.50
+* ACE: 6.70
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [17/50] batch [5/12] time 0.210 (0.565) data 0.000 (0.351) loss 1.1549 (1.1437) lr 7.9389e-02 eta 0:03:47
+epoch [17/50] batch [10/12] time 0.220 (0.391) data 0.000 (0.176) loss 1.1902 (1.1535) lr 7.9389e-02 eta 0:02:35
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 244
+* accuracy: 59.8%
+* error: 40.2%
+* macro_f1: 56.3%
+* ECE: 6.93
+* ACE: 6.26
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [18/50] batch [5/12] time 0.216 (0.508) data 0.000 (0.291) loss 1.1572 (1.0624) lr 7.6791e-02 eta 0:03:18
+epoch [18/50] batch [10/12] time 0.218 (0.362) data 0.000 (0.146) loss 1.3002 (1.1179) lr 7.6791e-02 eta 0:02:19
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 247
+* accuracy: 60.5%
+* error: 39.5%
+* macro_f1: 57.0%
+* ECE: 6.61
+* ACE: 5.56
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [19/50] batch [5/12] time 0.212 (0.557) data 0.000 (0.345) loss 1.2224 (1.1392) lr 7.4088e-02 eta 0:03:31
+epoch [19/50] batch [10/12] time 0.222 (0.386) data 0.000 (0.173) loss 0.9969 (1.1152) lr 7.4088e-02 eta 0:02:24
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 250
+* accuracy: 61.3%
+* error: 38.7%
+* macro_f1: 57.8%
+* ECE: 7.53
+* ACE: 6.11
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [20/50] batch [5/12] time 0.215 (0.512) data 0.000 (0.295) loss 1.0771 (1.0998) lr 7.1289e-02 eta 0:03:07
+epoch [20/50] batch [10/12] time 0.211 (0.365) data 0.000 (0.148) loss 1.1145 (1.1089) lr 7.1289e-02 eta 0:02:12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 249
+* accuracy: 61.0%
+* error: 39.0%
+* macro_f1: 57.6%
+* ECE: 7.37
+* ACE: 6.71
+epoch [21/50] batch [5/12] time 0.220 (0.560) data 0.000 (0.345) loss 0.9128 (1.0471) lr 6.8406e-02 eta 0:03:18
+epoch [21/50] batch [10/12] time 0.211 (0.386) data 0.000 (0.173) loss 1.1549 (1.0874) lr 6.8406e-02 eta 0:02:15
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 249
+* accuracy: 61.0%
+* error: 39.0%
+* macro_f1: 57.7%
+* ECE: 6.62
+* ACE: 6.26
+epoch [22/50] batch [5/12] time 0.219 (0.542) data 0.000 (0.319) loss 1.1312 (1.0607) lr 6.5451e-02 eta 0:03:05
+epoch [22/50] batch [10/12] time 0.209 (0.376) data 0.000 (0.160) loss 1.0485 (1.0815) lr 6.5451e-02 eta 0:02:07
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 250
+* accuracy: 61.3%
+* error: 38.7%
+* macro_f1: 57.9%
+* ECE: 6.02
+* ACE: 5.18
+epoch [23/50] batch [5/12] time 0.225 (0.513) data 0.000 (0.293) loss 1.0219 (1.0822) lr 6.2434e-02 eta 0:02:49
+epoch [23/50] batch [10/12] time 0.213 (0.364) data 0.000 (0.146) loss 1.0717 (1.0812) lr 6.2434e-02 eta 0:01:58
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 249
+* accuracy: 61.0%
+* error: 39.0%
+* macro_f1: 58.0%
+* ECE: 6.70
+* ACE: 6.42
+epoch [24/50] batch [5/12] time 0.213 (0.581) data 0.000 (0.365) loss 1.1380 (1.0859) lr 5.9369e-02 eta 0:03:05
+epoch [24/50] batch [10/12] time 0.217 (0.398) data 0.000 (0.182) loss 1.1004 (1.0703) lr 5.9369e-02 eta 0:02:05
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 253
+* accuracy: 62.0%
+* error: 38.0%
+* macro_f1: 58.8%
+* ECE: 7.55
+* ACE: 8.25
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [25/50] batch [5/12] time 0.212 (0.572) data 0.000 (0.359) loss 1.0410 (1.0479) lr 5.6267e-02 eta 0:02:55
+epoch [25/50] batch [10/12] time 0.211 (0.391) data 0.000 (0.180) loss 1.0090 (1.0606) lr 5.6267e-02 eta 0:01:58
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 257
+* accuracy: 63.0%
+* error: 37.0%
+* macro_f1: 59.8%
+* ECE: 6.29
+* ACE: 6.22
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [26/50] batch [5/12] time 0.214 (0.533) data 0.000 (0.315) loss 1.0263 (1.0514) lr 5.3140e-02 eta 0:02:37
+epoch [26/50] batch [10/12] time 0.214 (0.374) data 0.000 (0.157) loss 0.9725 (1.0390) lr 5.3140e-02 eta 0:01:48
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 259
+* accuracy: 63.5%
+* error: 36.5%
+* macro_f1: 60.3%
+* ECE: 5.38
+* ACE: 5.76
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [27/50] batch [5/12] time 0.220 (0.543) data 0.000 (0.327) loss 1.0550 (1.0098) lr 5.0000e-02 eta 0:02:33
+epoch [27/50] batch [10/12] time 0.209 (0.376) data 0.001 (0.163) loss 0.9918 (1.0139) lr 5.0000e-02 eta 0:01:44
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 261
+* accuracy: 64.0%
+* error: 36.0%
+* macro_f1: 60.7%
+* ECE: 4.99
+* ACE: 5.33
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [28/50] batch [5/12] time 0.215 (0.553) data 0.000 (0.336) loss 1.0851 (1.0032) lr 4.6860e-02 eta 0:02:29
+epoch [28/50] batch [10/12] time 0.209 (0.384) data 0.001 (0.168) loss 1.1475 (1.0362) lr 4.6860e-02 eta 0:01:42
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 262
+* accuracy: 64.2%
+* error: 35.8%
+* macro_f1: 60.9%
+* ECE: 5.74
+* ACE: 6.13
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [29/50] batch [5/12] time 0.224 (0.573) data 0.000 (0.356) loss 0.9088 (1.0012) lr 4.3733e-02 eta 0:02:28
+epoch [29/50] batch [10/12] time 0.209 (0.393) data 0.000 (0.178) loss 0.9804 (0.9815) lr 4.3733e-02 eta 0:01:39
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 262
+* accuracy: 64.2%
+* error: 35.8%
+* macro_f1: 60.9%
+* ECE: 4.97
+* ACE: 5.17
+epoch [30/50] batch [5/12] time 0.210 (0.506) data 0.000 (0.293) loss 1.0075 (1.0083) lr 4.0631e-02 eta 0:02:04
+epoch [30/50] batch [10/12] time 0.209 (0.358) data 0.000 (0.146) loss 0.9474 (1.0204) lr 4.0631e-02 eta 0:01:26
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 261
+* accuracy: 64.0%
+* error: 36.0%
+* macro_f1: 60.7%
+* ECE: 5.52
+* ACE: 4.90
+epoch [31/50] batch [5/12] time 0.221 (0.587) data 0.000 (0.370) loss 0.9209 (1.0013) lr 3.7566e-02 eta 0:02:17
+epoch [31/50] batch [10/12] time 0.216 (0.404) data 0.000 (0.185) loss 1.1550 (1.0352) lr 3.7566e-02 eta 0:01:32
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 261
+* accuracy: 64.0%
+* error: 36.0%
+* macro_f1: 60.9%
+* ECE: 4.67
+* ACE: 5.41
+epoch [32/50] batch [5/12] time 0.211 (0.571) data 0.000 (0.358) loss 0.9884 (0.9864) lr 3.4549e-02 eta 0:02:07
+epoch [32/50] batch [10/12] time 0.211 (0.392) data 0.000 (0.179) loss 1.0095 (1.0169) lr 3.4549e-02 eta 0:01:25
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 264
+* accuracy: 64.7%
+* error: 35.3%
+* macro_f1: 61.5%
+* ECE: 5.29
+* ACE: 5.15
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [33/50] batch [5/12] time 0.219 (0.461) data 0.000 (0.247) loss 1.1345 (1.0107) lr 3.1594e-02 eta 0:01:37
+epoch [33/50] batch [10/12] time 0.216 (0.336) data 0.000 (0.123) loss 1.0378 (1.0168) lr 3.1594e-02 eta 0:01:09
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 265
+* accuracy: 65.0%
+* error: 35.0%
+* macro_f1: 61.8%
+* ECE: 5.63
+* ACE: 4.43
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [34/50] batch [5/12] time 0.224 (0.573) data 0.000 (0.352) loss 1.1085 (1.0020) lr 2.8711e-02 eta 0:01:54
+epoch [34/50] batch [10/12] time 0.217 (0.394) data 0.001 (0.176) loss 1.0374 (1.0128) lr 2.8711e-02 eta 0:01:16
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 265
+* accuracy: 65.0%
+* error: 35.0%
+* macro_f1: 61.8%
+* ECE: 4.79
+* ACE: 3.99
+epoch [35/50] batch [5/12] time 0.212 (0.489) data 0.000 (0.276) loss 1.0805 (0.9974) lr 2.5912e-02 eta 0:01:31
+epoch [35/50] batch [10/12] time 0.214 (0.351) data 0.000 (0.138) loss 0.9763 (1.0134) lr 2.5912e-02 eta 0:01:03
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 266
+* accuracy: 65.2%
+* error: 34.8%
+* macro_f1: 62.1%
+* ECE: 4.34
+* ACE: 4.34
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [36/50] batch [5/12] time 0.209 (0.560) data 0.000 (0.348) loss 0.8426 (0.9813) lr 2.3209e-02 eta 0:01:38
+epoch [36/50] batch [10/12] time 0.212 (0.385) data 0.000 (0.174) loss 0.9531 (0.9748) lr 2.3209e-02 eta 0:01:05
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 266
+* accuracy: 65.2%
+* error: 34.8%
+* macro_f1: 62.1%
+* ECE: 4.71
+* ACE: 4.33
+epoch [37/50] batch [5/12] time 0.216 (0.494) data 0.000 (0.278) loss 0.8758 (0.9713) lr 2.0611e-02 eta 0:01:20
+epoch [37/50] batch [10/12] time 0.216 (0.354) data 0.000 (0.139) loss 0.9524 (1.0023) lr 2.0611e-02 eta 0:00:55
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 266
+* accuracy: 65.2%
+* error: 34.8%
+* macro_f1: 62.1%
+* ECE: 4.44
+* ACE: 4.23
+epoch [38/50] batch [5/12] time 0.221 (0.575) data 0.000 (0.359) loss 1.0487 (1.0443) lr 1.8129e-02 eta 0:01:26
+epoch [38/50] batch [10/12] time 0.217 (0.394) data 0.000 (0.180) loss 0.9025 (1.0069) lr 1.8129e-02 eta 0:00:57
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 266
+* accuracy: 65.2%
+* error: 34.8%
+* macro_f1: 62.1%
+* ECE: 4.81
+* ACE: 4.79
+epoch [39/50] batch [5/12] time 0.215 (0.570) data 0.000 (0.355) loss 1.0211 (1.0262) lr 1.5773e-02 eta 0:01:19
+epoch [39/50] batch [10/12] time 0.213 (0.392) data 0.000 (0.177) loss 1.0584 (1.0156) lr 1.5773e-02 eta 0:00:52
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 266
+* accuracy: 65.2%
+* error: 34.8%
+* macro_f1: 62.1%
+* ECE: 5.00
+* ACE: 5.28
+epoch [40/50] batch [5/12] time 0.217 (0.483) data 0.000 (0.266) loss 1.1908 (1.0558) lr 1.3552e-02 eta 0:01:01
+epoch [40/50] batch [10/12] time 0.211 (0.348) data 0.000 (0.133) loss 0.9300 (1.0339) lr 1.3552e-02 eta 0:00:42
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 267
+* accuracy: 65.4%
+* error: 34.6%
+* macro_f1: 62.2%
+* ECE: 4.41
+* ACE: 4.06
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar
+epoch [41/50] batch [5/12] time 0.212 (0.554) data 0.000 (0.331) loss 0.9954 (1.0240) lr 1.1474e-02 eta 0:01:03
+epoch [41/50] batch [10/12] time 0.211 (0.384) data 0.000 (0.166) loss 1.0014 (1.0114) lr 1.1474e-02 eta 0:00:42
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 266
+* accuracy: 65.2%
+* error: 34.8%
+* macro_f1: 62.0%
+* ECE: 5.81
+* ACE: 5.28
+epoch [42/50] batch [5/12] time 0.225 (0.571) data 0.000 (0.355) loss 1.0004 (0.9758) lr 9.5492e-03 eta 0:00:58
+epoch [42/50] batch [10/12] time 0.214 (0.393) data 0.000 (0.177) loss 1.0825 (0.9972) lr 9.5492e-03 eta 0:00:38
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 266
+* accuracy: 65.2%
+* error: 34.8%
+* macro_f1: 62.1%
+* ECE: 4.59
+* ACE: 4.31
+epoch [43/50] batch [5/12] time 0.214 (0.551) data 0.000 (0.333) loss 1.0284 (0.9896) lr 7.7836e-03 eta 0:00:50
+epoch [43/50] batch [10/12] time 0.224 (0.385) data 0.000 (0.166) loss 1.1115 (1.0003) lr 7.7836e-03 eta 0:00:33
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 266
+* accuracy: 65.2%
+* error: 34.8%
+* macro_f1: 62.0%
+* ECE: 5.33
+* ACE: 5.29
+epoch [44/50] batch [5/12] time 0.213 (0.568) data 0.000 (0.355) loss 0.9237 (1.0400) lr 6.1847e-03 eta 0:00:44
+epoch [44/50] batch [10/12] time 0.217 (0.391) data 0.000 (0.177) loss 0.9911 (1.0236) lr 6.1847e-03 eta 0:00:28
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 266
+* accuracy: 65.2%
+* error: 34.8%
+* macro_f1: 62.1%
+* ECE: 5.08
+* ACE: 4.79
+epoch [45/50] batch [5/12] time 0.211 (0.571) data 0.000 (0.358) loss 0.9733 (1.0020) lr 4.7586e-03 eta 0:00:38
+epoch [45/50] batch [10/12] time 0.215 (0.391) data 0.000 (0.179) loss 0.9101 (1.0075) lr 4.7586e-03 eta 0:00:24
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 266
+* accuracy: 65.2%
+* error: 34.8%
+* macro_f1: 62.1%
+* ECE: 5.56
+* ACE: 4.78
+epoch [46/50] batch [5/12] time 0.223 (0.577) data 0.000 (0.358) loss 0.9966 (1.0285) lr 3.5112e-03 eta 0:00:31
+epoch [46/50] batch [10/12] time 0.215 (0.397) data 0.000 (0.179) loss 1.0106 (0.9990) lr 3.5112e-03 eta 0:00:19
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 266
+* accuracy: 65.2%
+* error: 34.8%
+* macro_f1: 62.0%
+* ECE: 5.10
+* ACE: 5.19
+epoch [47/50] batch [5/12] time 0.214 (0.503) data 0.000 (0.282) loss 0.9869 (1.0077) lr 2.4472e-03 eta 0:00:21
+epoch [47/50] batch [10/12] time 0.213 (0.358) data 0.000 (0.141) loss 1.0099 (1.0101) lr 2.4472e-03 eta 0:00:13
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 266
+* accuracy: 65.2%
+* error: 34.8%
+* macro_f1: 62.1%
+* ECE: 5.24
+* ACE: 4.32
+epoch [48/50] batch [5/12] time 0.217 (0.568) data 0.000 (0.351) loss 0.9839 (1.0093) lr 1.5708e-03 eta 0:00:17
+epoch [48/50] batch [10/12] time 0.222 (0.393) data 0.000 (0.176) loss 1.0471 (0.9850) lr 1.5708e-03 eta 0:00:10
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 266
+* accuracy: 65.2%
+* error: 34.8%
+* macro_f1: 62.0%
+* ECE: 5.09
+* ACE: 4.31
+epoch [49/50] batch [5/12] time 0.215 (0.491) data 0.000 (0.272) loss 1.0042 (0.9813) lr 8.8564e-04 eta 0:00:09
+epoch [49/50] batch [10/12] time 0.213 (0.353) data 0.000 (0.136) loss 0.9465 (0.9865) lr 8.8564e-04 eta 0:00:04
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 266
+* accuracy: 65.2%
+* error: 34.8%
+* macro_f1: 62.0%
+* ECE: 5.00
+* ACE: 4.32
+epoch [50/50] batch [5/12] time 0.217 (0.531) data 0.000 (0.314) loss 0.9663 (0.9977) lr 3.9426e-04 eta 0:00:03
+epoch [50/50] batch [10/12] time 0.212 (0.372) data 0.000 (0.157) loss 1.0167 (1.0324) lr 3.9426e-04 eta 0:00:00
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 266
+* accuracy: 65.2%
+* error: 34.8%
+* macro_f1: 62.0%
+* ECE: 4.54
+* ACE: 4.32
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model.pth.tar-50
+Finish training
+Deploy the model with the best val performance
+Loading weights to prompt_learner from "output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/prompt_learner/model-best.pth.tar" (epoch = 40)
+Evaluate on the *test* set
+=> result
+* total: 2,463
+* correct: 1,584
+* accuracy: 64.3%
+* error: 35.7%
+* macro_f1: 60.3%
+* ECE: 3.20
+* ACE: 3.34
+Elapsed: 0:04:57
+Ended
+
+[Final] Learned prompt vocab matches:
+
+============================================================
+Learned Prompts - Top-1 BPE Vocabulary Matches
+============================================================
+Prompt Token 0: 'eisen' (ID: 25273, Similarity: 0.1867)
+Prompt Token 1: 'shan' (ID: 5171, Similarity: 0.1972)
+Prompt Token 2: 'le ' (ID: 579, Similarity: 0.1994)
+Prompt Token 3: ', ' (ID: 267, Similarity: 0.2403)
+Prompt Token 4: 'cay ' (ID: 37399, Similarity: 0.1782)
+Prompt Token 5: 'my' (ID: 1152, Similarity: 0.2113)
+Prompt Token 6: 'tan' (ID: 2123, Similarity: 0.1934)
+Prompt Token 7: 'elli ' (ID: 6673, Similarity: 0.1760)
+Prompt Token 8: 'point' (ID: 13280, Similarity: 0.1933)
+Prompt Token 9: 'layers ' (ID: 15900, Similarity: 0.2086)
+Prompt Token 10: 'inci' (ID: 5747, Similarity: 0.1793)
+Prompt Token 11: 'cites ' (ID: 34490, Similarity: 0.2209)
+Prompt Token 12: 'epa ' (ID: 15866, Similarity: 0.2197)
+Prompt Token 13: 'use' (ID: 4419, Similarity: 0.2035)
+Prompt Token 14: 'blatant ' (ID: 41391, Similarity: 0.2020)
+Prompt Token 15: 'colorful ' (ID: 11444, Similarity: 0.2525)
+============================================================
+
+Available tags: ['train/loss', 'train/lr', 'val/accuracy', 'val/error_rate', 'val/macro_f1', 'val/ece', 'val/ace', 'test/accuracy', 'test/error_rate', 'test/macro_f1', 'test/ece', 'test/ace']
+Loss curve saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_011457/loss_curve.png

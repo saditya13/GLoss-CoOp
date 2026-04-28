@@ -1,0 +1,879 @@
+***************
+** Arguments **
+***************
+backbone: 
+config_file: configs/trainers/CoOp/vit_b16_ep200.yaml
+coop_loss_type: cross_entropy
+dataset_config_file: configs/datasets/dtd.yaml
+eval_only: False
+head: 
+load_epoch: None
+model_dir: 
+no_train: False
+opts: ['TRAINER.COOP.N_CTX', '16', 'TRAINER.COOP.CSC', 'False', 'TRAINER.COOP.CLASS_TOKEN_POSITION', 'end', 'DATASET.NUM_SHOTS', '16']
+output_dir: output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941
+resume: 
+root: /home/aditya/CoOp/Data
+seed: 3
+source_domains: None
+target_domains: None
+trainer: CoOp
+transforms: None
+************
+** Config **
+************
+DATALOADER:
+  K_TRANSFORMS: 1
+  NUM_WORKERS: 8
+  RETURN_IMG0: False
+  TEST:
+    BATCH_SIZE: 100
+    SAMPLER: SequentialSampler
+  TRAIN_U:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAME_AS_X: True
+    SAMPLER: RandomSampler
+  TRAIN_X:
+    BATCH_SIZE: 128
+    N_DOMAIN: 0
+    N_INS: 16
+    SAMPLER: RandomSampler
+DATASET:
+  ALL_AS_UNLABELED: False
+  CIFAR_C_LEVEL: 1
+  CIFAR_C_TYPE: 
+  NAME: DescribableTextures
+  NUM_LABELED: -1
+  NUM_SHOTS: 16
+  ROOT: /home/aditya/CoOp/Data
+  SOURCE_DOMAINS: ()
+  STL10_FOLD: -1
+  SUBSAMPLE_CLASSES: all
+  TARGET_DOMAINS: ()
+  VAL_PERCENT: 0.1
+INPUT:
+  COLORJITTER_B: 0.4
+  COLORJITTER_C: 0.4
+  COLORJITTER_H: 0.1
+  COLORJITTER_S: 0.4
+  CROP_PADDING: 4
+  CUTOUT_LEN: 16
+  CUTOUT_N: 1
+  GB_K: 21
+  GB_P: 0.5
+  GN_MEAN: 0.0
+  GN_STD: 0.15
+  INTERPOLATION: bicubic
+  NO_TRANSFORM: False
+  PIXEL_MEAN: [0.48145466, 0.4578275, 0.40821073]
+  PIXEL_STD: [0.26862954, 0.26130258, 0.27577711]
+  RANDAUGMENT_M: 10
+  RANDAUGMENT_N: 2
+  RGS_P: 0.2
+  RRCROP_SCALE: (0.08, 1.0)
+  SIZE: (224, 224)
+  TRANSFORMS: ('random_resized_crop', 'random_flip', 'normalize')
+MODEL:
+  BACKBONE:
+    NAME: ViT-B/16
+    PRETRAINED: True
+  HEAD:
+    ACTIVATION: relu
+    BN: True
+    DROPOUT: 0.0
+    HIDDEN_LAYERS: ()
+    NAME: 
+  INIT_WEIGHTS: 
+OPTIM:
+  ADAM_BETA1: 0.9
+  ADAM_BETA2: 0.999
+  BASE_LR_MULT: 0.1
+  GAMMA: 0.1
+  LR: 0.1
+  LR_SCHEDULER: cosine
+  MAX_EPOCH: 50
+  MOMENTUM: 0.9
+  NAME: sgd
+  NEW_LAYERS: ()
+  RMSPROP_ALPHA: 0.99
+  SGD_DAMPNING: 0
+  SGD_NESTEROV: False
+  STAGED_LR: False
+  STEPSIZE: (-1,)
+  WARMUP_CONS_LR: 1e-05
+  WARMUP_EPOCH: 1
+  WARMUP_MIN_LR: 1e-05
+  WARMUP_RECOUNT: True
+  WARMUP_TYPE: constant
+  WEIGHT_DECAY: 0.0005
+OUTPUT_DIR: output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941
+RESUME: 
+SEED: 3
+TEST:
+  COMPUTE_CMAT: False
+  EVALUATOR: Classification
+  FINAL_MODEL: best_val
+  NO_TEST: False
+  PER_CLASS_RESULT: False
+  SPLIT: test
+TRAIN:
+  CHECKPOINT_FREQ: 0
+  COUNT_ITER: train_x
+  PRINT_FREQ: 5
+TRAINER:
+  CDAC:
+    CLASS_LR_MULTI: 10
+    P_THRESH: 0.95
+    RAMPUP_COEF: 30
+    RAMPUP_ITRS: 1000
+    STRONG_TRANSFORMS: ()
+    TOPK_MATCH: 5
+  COCOOP:
+    CTX_INIT: 
+    N_CTX: 16
+    PREC: fp16
+  COOP:
+    CLASS_TOKEN_POSITION: end
+    CSC: False
+    CTX_INIT: 
+    GLOSS_GAMMA: 0.5
+    GLOSS_SIGMA: 0.3
+    LOSS_TYPE: cross_entropy
+    N_CTX: 16
+    PREC: fp16
+  CROSSGRAD:
+    ALPHA_D: 0.5
+    ALPHA_F: 0.5
+    EPS_D: 1.0
+    EPS_F: 1.0
+  DAEL:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DAELDG:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DDAIG:
+    ALPHA: 0.5
+    CLAMP: False
+    CLAMP_MAX: 1.0
+    CLAMP_MIN: -1.0
+    G_ARCH: 
+    LMDA: 0.3
+    WARMUP: 0
+  DOMAINMIX:
+    ALPHA: 1.0
+    BETA: 1.0
+    TYPE: crossdomain
+  ENTMIN:
+    LMDA: 0.001
+  FIXMATCH:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 1.0
+  M3SDA:
+    LMDA: 0.5
+    N_STEP_F: 4
+  MCD:
+    N_STEP_F: 4
+  MEANTEACHER:
+    EMA_ALPHA: 0.999
+    RAMPUP: 5
+    WEIGHT_U: 1.0
+  MIXMATCH:
+    MIXUP_BETA: 0.75
+    RAMPUP: 20000
+    TEMP: 2.0
+    WEIGHT_U: 100.0
+  MME:
+    LMDA: 0.1
+  NAME: CoOp
+  SE:
+    CONF_THRE: 0.95
+    EMA_ALPHA: 0.999
+    RAMPUP: 300
+USE_CUDA: True
+VERBOSE: True
+VERSION: 1
+Collecting env info ...
+** System info **
+PyTorch version: 2.4.1
+Is debug build: False
+CUDA used to build PyTorch: 12.4
+ROCM used to build PyTorch: N/A
+
+OS: Ubuntu 24.04.1 LTS (x86_64)
+GCC version: (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Clang version: Could not collect
+CMake version: Could not collect
+Libc version: glibc-2.39
+
+Python version: 3.8.20 (default, Oct  3 2024, 15:24:27)  [GCC 11.2.0] (64-bit runtime)
+Python platform: Linux-6.11.0-1027-oem-x86_64-with-glibc2.17
+Is CUDA available: True
+CUDA runtime version: 13.2.51
+CUDA_MODULE_LOADING set to: LAZY
+GPU models and configuration: GPU 0: NVIDIA A100 80GB PCIe
+Nvidia driver version: 580.126.09
+cuDNN version: Could not collect
+HIP runtime version: N/A
+MIOpen runtime version: N/A
+Is XNNPACK available: True
+
+CPU:
+Architecture:                         x86_64
+CPU op-mode(s):                       32-bit, 64-bit
+Address sizes:                        46 bits physical, 57 bits virtual
+Byte Order:                           Little Endian
+CPU(s):                               16
+On-line CPU(s) list:                  0-15
+Vendor ID:                            GenuineIntel
+Model name:                           Intel(R) Xeon(R) Silver 4309Y CPU @ 2.80GHz
+CPU family:                           6
+Model:                                106
+Thread(s) per core:                   2
+Core(s) per socket:                   8
+Socket(s):                            1
+Stepping:                             6
+CPU(s) scaling MHz:                   49%
+CPU max MHz:                          3600.0000
+CPU min MHz:                          800.0000
+BogoMIPS:                             5600.00
+Flags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3 ssbd mba ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb intel_pt avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local split_lock_detect wbnoinvd dtherm ida arat pln pts hwp hwp_act_window hwp_pkg_req vnmi avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq la57 rdpid fsrm md_clear pconfig flush_l1d arch_capabilities
+Virtualization:                       VT-x
+L1d cache:                            384 KiB (8 instances)
+L1i cache:                            256 KiB (8 instances)
+L2 cache:                             10 MiB (8 instances)
+L3 cache:                             12 MiB (1 instance)
+NUMA node(s):                         1
+NUMA node0 CPU(s):                    0-15
+Vulnerability Gather data sampling:   Mitigation; Microcode
+Vulnerability Itlb multihit:          Not affected
+Vulnerability L1tf:                   Not affected
+Vulnerability Mds:                    Not affected
+Vulnerability Meltdown:               Not affected
+Vulnerability Mmio stale data:        Mitigation; Clear CPU buffers; SMT vulnerable
+Vulnerability Reg file data sampling: Not affected
+Vulnerability Retbleed:               Not affected
+Vulnerability Spec rstack overflow:   Not affected
+Vulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop
+Vulnerability Srbds:                  Not affected
+Vulnerability Tsx async abort:        Not affected
+
+Versions of relevant libraries:
+[pip3] flake8==3.7.9
+[pip3] numpy==1.24.3
+[pip3] torch==2.4.1
+[pip3] torchvision==0.20.0
+[pip3] triton==3.0.0
+[conda] blas                      1.0                         mkl  
+[conda] cudatoolkit               10.2.89              hfd86e86_1  
+[conda] libjpeg-turbo             2.0.0                h9bf148f_0    pytorch
+[conda] mkl                       2023.1.0         h213fc3f_46344  
+[conda] mkl-service               2.4.0            py38h5eee18b_1  
+[conda] mkl_fft                   1.3.8            py38h5eee18b_0  
+[conda] mkl_random                1.2.4            py38hdb19cb5_0  
+[conda] numpy                     1.24.3           py38hf6e8229_1  
+[conda] numpy-base                1.24.3           py38h060ed82_1  
+[conda] pytorch                   2.4.1           py3.8_cuda12.4_cudnn9.1.0_0    pytorch
+[conda] pytorch-cuda              12.4                 hc786d27_7    pytorch
+[conda] pytorch-mutex             1.0                        cuda    pytorch
+[conda] torchtriton               3.0.0                      py38    pytorch
+[conda] torchvision               0.20.0               py38_cu124    pytorch
+        Pillow (10.4.0)
+
+Loading trainer: CoOp
+Loading dataset: DescribableTextures
+Reading split from /home/aditya/CoOp/Data/dtd/split_zhou_DescribableTextures.json
+Loading preprocessed few-shot data from /home/aditya/CoOp/Data/dtd/split_fewshot/shot_16-seed_3.pkl
+Building transform_train
++ random resized crop (size=(224, 224), scale=(0.08, 1.0))
++ random flip
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+Building transform_test
++ resize the smaller edge to 224
++ 224x224 center crop
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+---------  -------------------
+Dataset    DescribableTextures
+# classes  47
+# train_x  752
+# val      188
+# test     1,692
+---------  -------------------
+Loading CLIP (backbone: ViT-B/16)
+Building custom CLIP
+Initializing a generic context
+Initial context: "X X X X X X X X X X X X X X X X"
+Number of context words (tokens): 16
+Turning off gradients in both the image and the text encoder
+Loading evaluator: Classification
+No checkpoint found, train from scratch
+Initialize tensorboard (log_dir=output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/tensorboard)
+epoch [1/50] batch [5/5] time 0.097 (0.810) data 0.000 (0.539) loss 3.1973 (3.2602) lr 1.0000e-01 eta 0:03:18
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 49
+* accuracy: 26.1%
+* error: 73.9%
+* macro_f1: 21.8%
+* ECE: 12.71
+* ACE: 12.49
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar
+epoch [2/50] batch [5/5] time 0.096 (0.372) data 0.000 (0.278) loss 2.9629 (3.0559) lr 9.9901e-02 eta 0:01:29
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 66
+* accuracy: 35.1%
+* error: 64.9%
+* macro_f1: 27.8%
+* ECE: 6.97
+* ACE: 9.61
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar
+epoch [3/50] batch [5/5] time 0.093 (0.375) data 0.000 (0.282) loss 2.5332 (2.6570) lr 9.9606e-02 eta 0:01:28
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 70
+* accuracy: 37.2%
+* error: 62.8%
+* macro_f1: 31.0%
+* ECE: 6.26
+* ACE: 5.05
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar
+epoch [4/50] batch [5/5] time 0.093 (0.362) data 0.001 (0.270) loss 2.3672 (2.4766) lr 9.9114e-02 eta 0:01:23
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 74
+* accuracy: 39.4%
+* error: 60.6%
+* macro_f1: 33.7%
+* ECE: 4.98
+* ACE: 6.35
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar
+epoch [5/50] batch [5/5] time 0.077 (0.364) data 0.000 (0.279) loss 2.2695 (2.3852) lr 9.8429e-02 eta 0:01:21
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 76
+* accuracy: 40.4%
+* error: 59.6%
+* macro_f1: 34.8%
+* ECE: 8.46
+* ACE: 8.11
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar
+epoch [6/50] batch [5/5] time 0.088 (0.354) data 0.000 (0.262) loss 2.2246 (2.2578) lr 9.7553e-02 eta 0:01:17
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 80
+* accuracy: 42.6%
+* error: 57.4%
+* macro_f1: 36.5%
+* ECE: 6.41
+* ACE: 7.78
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar
+epoch [7/50] batch [5/5] time 0.088 (0.338) data 0.001 (0.249) loss 2.0957 (2.1535) lr 9.6489e-02 eta 0:01:12
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 81
+* accuracy: 43.1%
+* error: 56.9%
+* macro_f1: 38.2%
+* ECE: 6.77
+* ACE: 8.09
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar
+epoch [8/50] batch [5/5] time 0.091 (0.332) data 0.000 (0.239) loss 2.0254 (2.0746) lr 9.5241e-02 eta 0:01:09
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 85
+* accuracy: 45.2%
+* error: 54.8%
+* macro_f1: 40.9%
+* ECE: 6.10
+* ACE: 4.89
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar
+epoch [9/50] batch [5/5] time 0.092 (0.348) data 0.000 (0.254) loss 2.1660 (2.0059) lr 9.3815e-02 eta 0:01:11
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 88
+* accuracy: 46.8%
+* error: 53.2%
+* macro_f1: 43.2%
+* ECE: 5.92
+* ACE: 6.70
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar
+epoch [10/50] batch [5/5] time 0.097 (0.324) data 0.000 (0.227) loss 1.9316 (1.9434) lr 9.2216e-02 eta 0:01:04
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 91
+* accuracy: 48.4%
+* error: 51.6%
+* macro_f1: 44.6%
+* ECE: 6.77
+* ACE: 7.56
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar
+epoch [11/50] batch [5/5] time 0.093 (0.348) data 0.000 (0.253) loss 1.9023 (1.9324) lr 9.0451e-02 eta 0:01:07
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 93
+* accuracy: 49.5%
+* error: 50.5%
+* macro_f1: 46.2%
+* ECE: 3.84
+* ACE: 5.04
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar
+epoch [12/50] batch [5/5] time 0.093 (0.335) data 0.000 (0.243) loss 1.6748 (1.8857) lr 8.8526e-02 eta 0:01:03
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 95
+* accuracy: 50.5%
+* error: 49.5%
+* macro_f1: 47.7%
+* ECE: 4.35
+* ACE: 4.94
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar
+epoch [13/50] batch [5/5] time 0.094 (0.332) data 0.000 (0.238) loss 1.5723 (1.7227) lr 8.6448e-02 eta 0:01:01
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 97
+* accuracy: 51.6%
+* error: 48.4%
+* macro_f1: 49.5%
+* ECE: 4.44
+* ACE: 4.02
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar
+epoch [14/50] batch [5/5] time 0.091 (0.333) data 0.000 (0.241) loss 1.7764 (1.6799) lr 8.4227e-02 eta 0:00:59
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 103
+* accuracy: 54.8%
+* error: 45.2%
+* macro_f1: 53.7%
+* ECE: 7.08
+* ACE: 6.50
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar
+epoch [15/50] batch [5/5] time 0.093 (0.359) data 0.000 (0.265) loss 1.6465 (1.6908) lr 8.1871e-02 eta 0:01:02
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 102
+* accuracy: 54.3%
+* error: 45.7%
+* macro_f1: 52.9%
+* ECE: 7.20
+* ACE: 7.66
+epoch [16/50] batch [5/5] time 0.093 (0.352) data 0.000 (0.261) loss 1.5918 (1.5895) lr 7.9389e-02 eta 0:00:59
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 109
+* accuracy: 58.0%
+* error: 42.0%
+* macro_f1: 56.6%
+* ECE: 9.57
+* ACE: 9.66
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar
+epoch [17/50] batch [5/5] time 0.094 (0.351) data 0.000 (0.258) loss 1.5420 (1.5340) lr 7.6791e-02 eta 0:00:57
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 110
+* accuracy: 58.5%
+* error: 41.5%
+* macro_f1: 56.9%
+* ECE: 7.97
+* ACE: 11.42
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar
+epoch [18/50] batch [5/5] time 0.091 (0.363) data 0.000 (0.271) loss 1.5234 (1.4752) lr 7.4088e-02 eta 0:00:58
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 109
+* accuracy: 58.0%
+* error: 42.0%
+* macro_f1: 56.7%
+* ECE: 5.60
+* ACE: 5.58
+epoch [19/50] batch [5/5] time 0.092 (0.354) data 0.000 (0.261) loss 1.7383 (1.4625) lr 7.1289e-02 eta 0:00:54
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 108
+* accuracy: 57.4%
+* error: 42.6%
+* macro_f1: 56.0%
+* ECE: 3.73
+* ACE: 7.48
+epoch [20/50] batch [5/5] time 0.094 (0.339) data 0.000 (0.247) loss 1.3945 (1.4529) lr 6.8406e-02 eta 0:00:50
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 108
+* accuracy: 57.4%
+* error: 42.6%
+* macro_f1: 56.5%
+* ECE: 6.44
+* ACE: 6.11
+epoch [21/50] batch [5/5] time 0.093 (0.339) data 0.000 (0.246) loss 1.3252 (1.3879) lr 6.5451e-02 eta 0:00:49
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 110
+* accuracy: 58.5%
+* error: 41.5%
+* macro_f1: 57.8%
+* ECE: 5.13
+* ACE: 3.78
+epoch [22/50] batch [5/5] time 0.097 (0.372) data 0.000 (0.277) loss 1.5625 (1.3994) lr 6.2434e-02 eta 0:00:52
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 112
+* accuracy: 59.6%
+* error: 40.4%
+* macro_f1: 58.5%
+* ECE: 5.76
+* ACE: 6.82
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar
+epoch [23/50] batch [5/5] time 0.097 (0.354) data 0.000 (0.258) loss 1.4375 (1.3279) lr 5.9369e-02 eta 0:00:47
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 109
+* accuracy: 58.0%
+* error: 42.0%
+* macro_f1: 57.1%
+* ECE: 7.06
+* ACE: 8.33
+epoch [24/50] batch [5/5] time 0.090 (0.369) data 0.000 (0.279) loss 1.6240 (1.3463) lr 5.6267e-02 eta 0:00:47
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 107
+* accuracy: 56.9%
+* error: 43.1%
+* macro_f1: 56.2%
+* ECE: 7.12
+* ACE: 9.12
+epoch [25/50] batch [5/5] time 0.092 (0.364) data 0.000 (0.271) loss 1.4580 (1.3494) lr 5.3140e-02 eta 0:00:45
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 106
+* accuracy: 56.4%
+* error: 43.6%
+* macro_f1: 55.8%
+* ECE: 7.61
+* ACE: 10.82
+epoch [26/50] batch [5/5] time 0.091 (0.348) data 0.000 (0.256) loss 1.1426 (1.2439) lr 5.0000e-02 eta 0:00:41
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 105
+* accuracy: 55.9%
+* error: 44.1%
+* macro_f1: 55.6%
+* ECE: 7.85
+* ACE: 9.05
+epoch [27/50] batch [5/5] time 0.093 (0.334) data 0.000 (0.239) loss 1.3467 (1.2975) lr 4.6860e-02 eta 0:00:38
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 109
+* accuracy: 58.0%
+* error: 42.0%
+* macro_f1: 57.9%
+* ECE: 9.77
+* ACE: 5.44
+epoch [28/50] batch [5/5] time 0.094 (0.338) data 0.000 (0.245) loss 1.1895 (1.2178) lr 4.3733e-02 eta 0:00:37
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 111
+* accuracy: 59.0%
+* error: 41.0%
+* macro_f1: 58.9%
+* ECE: 10.73
+* ACE: 7.64
+epoch [29/50] batch [5/5] time 0.092 (0.342) data 0.000 (0.248) loss 1.2832 (1.2650) lr 4.0631e-02 eta 0:00:35
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 113
+* accuracy: 60.1%
+* error: 39.9%
+* macro_f1: 59.5%
+* ECE: 6.94
+* ACE: 6.03
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar
+epoch [30/50] batch [5/5] time 0.092 (0.356) data 0.000 (0.266) loss 1.1182 (1.2811) lr 3.7566e-02 eta 0:00:35
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 112
+* accuracy: 59.6%
+* error: 40.4%
+* macro_f1: 59.5%
+* ECE: 6.84
+* ACE: 6.71
+epoch [31/50] batch [5/5] time 0.089 (0.351) data 0.000 (0.261) loss 1.2637 (1.2443) lr 3.4549e-02 eta 0:00:33
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 109
+* accuracy: 58.0%
+* error: 42.0%
+* macro_f1: 57.5%
+* ECE: 9.10
+* ACE: 7.33
+epoch [32/50] batch [5/5] time 0.091 (0.361) data 0.000 (0.268) loss 1.3506 (1.1859) lr 3.1594e-02 eta 0:00:32
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 109
+* accuracy: 58.0%
+* error: 42.0%
+* macro_f1: 57.4%
+* ECE: 9.68
+* ACE: 7.81
+epoch [33/50] batch [5/5] time 0.093 (0.355) data 0.000 (0.261) loss 1.3154 (1.1680) lr 2.8711e-02 eta 0:00:30
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 111
+* accuracy: 59.0%
+* error: 41.0%
+* macro_f1: 58.6%
+* ECE: 7.88
+* ACE: 7.54
+epoch [34/50] batch [5/5] time 0.095 (0.362) data 0.000 (0.266) loss 0.9990 (1.1922) lr 2.5912e-02 eta 0:00:28
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 112
+* accuracy: 59.6%
+* error: 40.4%
+* macro_f1: 58.9%
+* ECE: 6.22
+* ACE: 6.63
+epoch [35/50] batch [5/5] time 0.095 (0.346) data 0.000 (0.251) loss 1.1836 (1.1857) lr 2.3209e-02 eta 0:00:25
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 111
+* accuracy: 59.0%
+* error: 41.0%
+* macro_f1: 58.2%
+* ECE: 8.36
+* ACE: 7.74
+epoch [36/50] batch [5/5] time 0.092 (0.352) data 0.000 (0.260) loss 1.2871 (1.1394) lr 2.0611e-02 eta 0:00:24
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 113
+* accuracy: 60.1%
+* error: 39.9%
+* macro_f1: 59.6%
+* ECE: 8.15
+* ACE: 7.76
+epoch [37/50] batch [5/5] time 0.095 (0.350) data 0.001 (0.254) loss 1.4004 (1.2074) lr 1.8129e-02 eta 0:00:22
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 113
+* accuracy: 60.1%
+* error: 39.9%
+* macro_f1: 59.7%
+* ECE: 10.17
+* ACE: 5.94
+epoch [38/50] batch [5/5] time 0.093 (0.339) data 0.000 (0.244) loss 1.2148 (1.1801) lr 1.5773e-02 eta 0:00:20
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 113
+* accuracy: 60.1%
+* error: 39.9%
+* macro_f1: 59.2%
+* ECE: 8.29
+* ACE: 8.41
+epoch [39/50] batch [5/5] time 0.100 (0.323) data 0.000 (0.229) loss 1.0537 (1.1936) lr 1.3552e-02 eta 0:00:17
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 114
+* accuracy: 60.6%
+* error: 39.4%
+* macro_f1: 59.9%
+* ECE: 8.52
+* ACE: 7.83
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar
+epoch [40/50] batch [5/5] time 0.092 (0.353) data 0.000 (0.261) loss 1.0566 (1.1224) lr 1.1474e-02 eta 0:00:17
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 113
+* accuracy: 60.1%
+* error: 39.9%
+* macro_f1: 60.0%
+* ECE: 7.11
+* ACE: 6.22
+epoch [41/50] batch [5/5] time 0.097 (0.326) data 0.000 (0.230) loss 0.9790 (1.1645) lr 9.5492e-03 eta 0:00:14
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 113
+* accuracy: 60.1%
+* error: 39.9%
+* macro_f1: 60.1%
+* ECE: 7.54
+* ACE: 9.51
+epoch [42/50] batch [5/5] time 0.098 (0.365) data 0.000 (0.268) loss 1.1191 (1.1572) lr 7.7836e-03 eta 0:00:14
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 112
+* accuracy: 59.6%
+* error: 40.4%
+* macro_f1: 59.3%
+* ECE: 8.51
+* ACE: 8.91
+epoch [43/50] batch [5/5] time 0.096 (0.354) data 0.000 (0.259) loss 1.1768 (1.1639) lr 6.1847e-03 eta 0:00:12
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 111
+* accuracy: 59.0%
+* error: 41.0%
+* macro_f1: 58.8%
+* ECE: 7.81
+* ACE: 8.33
+epoch [44/50] batch [5/5] time 0.092 (0.346) data 0.000 (0.254) loss 1.0166 (1.1531) lr 4.7586e-03 eta 0:00:10
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 110
+* accuracy: 58.5%
+* error: 41.5%
+* macro_f1: 58.2%
+* ECE: 8.81
+* ACE: 9.37
+epoch [45/50] batch [5/5] time 0.094 (0.375) data 0.000 (0.281) loss 1.2168 (1.1832) lr 3.5112e-03 eta 0:00:09
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 111
+* accuracy: 59.0%
+* error: 41.0%
+* macro_f1: 58.7%
+* ECE: 8.53
+* ACE: 8.84
+epoch [46/50] batch [5/5] time 0.095 (0.366) data 0.000 (0.274) loss 1.3574 (1.1775) lr 2.4472e-03 eta 0:00:07
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 111
+* accuracy: 59.0%
+* error: 41.0%
+* macro_f1: 58.7%
+* ECE: 8.24
+* ACE: 8.84
+epoch [47/50] batch [5/5] time 0.094 (0.355) data 0.000 (0.264) loss 1.2412 (1.1943) lr 1.5708e-03 eta 0:00:05
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 111
+* accuracy: 59.0%
+* error: 41.0%
+* macro_f1: 58.7%
+* ECE: 8.53
+* ACE: 9.90
+epoch [48/50] batch [5/5] time 0.098 (0.326) data 0.000 (0.232) loss 1.1670 (1.1037) lr 8.8564e-04 eta 0:00:03
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 110
+* accuracy: 58.5%
+* error: 41.5%
+* macro_f1: 58.2%
+* ECE: 9.69
+* ACE: 8.30
+epoch [49/50] batch [5/5] time 0.098 (0.354) data 0.000 (0.258) loss 1.1924 (1.1208) lr 3.9426e-04 eta 0:00:01
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 110
+* accuracy: 58.5%
+* error: 41.5%
+* macro_f1: 58.2%
+* ECE: 9.27
+* ACE: 9.35
+epoch [50/50] batch [5/5] time 0.094 (0.347) data 0.000 (0.252) loss 1.1299 (1.1801) lr 9.8664e-05 eta 0:00:00
+Evaluate on the *val* set
+=> result
+* total: 188
+* correct: 111
+* accuracy: 59.0%
+* error: 41.0%
+* macro_f1: 58.7%
+* ECE: 9.91
+* ACE: 8.82
+Checkpoint saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model.pth.tar-50
+Finish training
+Deploy the model with the best val performance
+Loading weights to prompt_learner from "output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/prompt_learner/model-best.pth.tar" (epoch = 39)
+Evaluate on the *test* set
+=> result
+* total: 1,692
+* correct: 1,019
+* accuracy: 60.2%
+* error: 39.8%
+* macro_f1: 59.6%
+* ECE: 4.36
+* ACE: 3.19
+Elapsed: 0:02:47
+Ended
+
+[Final] Learned prompt vocab matches:
+
+============================================================
+Learned Prompts - Top-1 BPE Vocabulary Matches
+============================================================
+Prompt Token 0: 'pinky ' (ID: 29803, Similarity: 0.1876)
+Prompt Token 1: 'shiv ' (ID: 37121, Similarity: 0.1922)
+Prompt Token 2: 'le' (ID: 534, Similarity: 0.2085)
+Prompt Token 3: 'le' (ID: 534, Similarity: 0.1673)
+Prompt Token 4: 'y' (ID: 88, Similarity: 0.1787)
+Prompt Token 5: 'bax' (ID: 21216, Similarity: 0.2167)
+Prompt Token 6: 'lincol' (ID: 6239, Similarity: 0.2058)
+Prompt Token 7: 'newsat ' (ID: 43979, Similarity: 0.1827)
+Prompt Token 8: 'jongin ' (ID: 36957, Similarity: 0.1807)
+Prompt Token 9: 'anyone ' (ID: 2302, Similarity: 0.1999)
+Prompt Token 10: 'pig' (ID: 12009, Similarity: 0.1790)
+Prompt Token 11: '× ' (ID: 16165, Similarity: 0.2366)
+Prompt Token 12: 'here ' (ID: 763, Similarity: 0.1969)
+Prompt Token 13: '�' (ID: 240, Similarity: 0.2333)
+Prompt Token 14: 'lustre ' (ID: 46673, Similarity: 0.2047)
+Prompt Token 15: 'your ' (ID: 695, Similarity: 0.2488)
+============================================================
+
+Available tags: ['train/loss', 'train/lr', 'val/accuracy', 'val/error_rate', 'val/macro_f1', 'val/ece', 'val/ace', 'test/accuracy', 'test/error_rate', 'test/macro_f1', 'test/ece', 'test/ace']
+Loss curve saved to output/dtd/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/cross_entropy_20260425_235941/loss_curve.png

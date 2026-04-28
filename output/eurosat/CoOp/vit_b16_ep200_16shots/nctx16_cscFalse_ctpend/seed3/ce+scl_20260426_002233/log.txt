@@ -1,0 +1,867 @@
+***************
+** Arguments **
+***************
+backbone: 
+config_file: configs/trainers/CoOp/vit_b16_ep200.yaml
+coop_loss_type: ce+scl
+dataset_config_file: configs/datasets/eurosat.yaml
+eval_only: False
+head: 
+load_epoch: None
+model_dir: 
+no_train: False
+opts: ['TRAINER.COOP.N_CTX', '16', 'TRAINER.COOP.CSC', 'False', 'TRAINER.COOP.CLASS_TOKEN_POSITION', 'end', 'DATASET.NUM_SHOTS', '16']
+output_dir: output/eurosat/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_002233
+resume: 
+root: /home/aditya/CoOp/Data
+seed: 3
+source_domains: None
+target_domains: None
+trainer: CoOp
+transforms: None
+************
+** Config **
+************
+DATALOADER:
+  K_TRANSFORMS: 1
+  NUM_WORKERS: 8
+  RETURN_IMG0: False
+  TEST:
+    BATCH_SIZE: 100
+    SAMPLER: SequentialSampler
+  TRAIN_U:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAME_AS_X: True
+    SAMPLER: RandomSampler
+  TRAIN_X:
+    BATCH_SIZE: 128
+    N_DOMAIN: 0
+    N_INS: 16
+    SAMPLER: RandomSampler
+DATASET:
+  ALL_AS_UNLABELED: False
+  CIFAR_C_LEVEL: 1
+  CIFAR_C_TYPE: 
+  NAME: EuroSAT
+  NUM_LABELED: -1
+  NUM_SHOTS: 16
+  ROOT: /home/aditya/CoOp/Data
+  SOURCE_DOMAINS: ()
+  STL10_FOLD: -1
+  SUBSAMPLE_CLASSES: all
+  TARGET_DOMAINS: ()
+  VAL_PERCENT: 0.1
+INPUT:
+  COLORJITTER_B: 0.4
+  COLORJITTER_C: 0.4
+  COLORJITTER_H: 0.1
+  COLORJITTER_S: 0.4
+  CROP_PADDING: 4
+  CUTOUT_LEN: 16
+  CUTOUT_N: 1
+  GB_K: 21
+  GB_P: 0.5
+  GN_MEAN: 0.0
+  GN_STD: 0.15
+  INTERPOLATION: bicubic
+  NO_TRANSFORM: False
+  PIXEL_MEAN: [0.48145466, 0.4578275, 0.40821073]
+  PIXEL_STD: [0.26862954, 0.26130258, 0.27577711]
+  RANDAUGMENT_M: 10
+  RANDAUGMENT_N: 2
+  RGS_P: 0.2
+  RRCROP_SCALE: (0.08, 1.0)
+  SIZE: (224, 224)
+  TRANSFORMS: ('random_resized_crop', 'random_flip', 'normalize')
+MODEL:
+  BACKBONE:
+    NAME: ViT-B/16
+    PRETRAINED: True
+  HEAD:
+    ACTIVATION: relu
+    BN: True
+    DROPOUT: 0.0
+    HIDDEN_LAYERS: ()
+    NAME: 
+  INIT_WEIGHTS: 
+OPTIM:
+  ADAM_BETA1: 0.9
+  ADAM_BETA2: 0.999
+  BASE_LR_MULT: 0.1
+  GAMMA: 0.1
+  LR: 0.1
+  LR_SCHEDULER: cosine
+  MAX_EPOCH: 50
+  MOMENTUM: 0.9
+  NAME: sgd
+  NEW_LAYERS: ()
+  RMSPROP_ALPHA: 0.99
+  SGD_DAMPNING: 0
+  SGD_NESTEROV: False
+  STAGED_LR: False
+  STEPSIZE: (-1,)
+  WARMUP_CONS_LR: 1e-05
+  WARMUP_EPOCH: 1
+  WARMUP_MIN_LR: 1e-05
+  WARMUP_RECOUNT: True
+  WARMUP_TYPE: constant
+  WEIGHT_DECAY: 0.0005
+OUTPUT_DIR: output/eurosat/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_002233
+RESUME: 
+SEED: 3
+TEST:
+  COMPUTE_CMAT: False
+  EVALUATOR: Classification
+  FINAL_MODEL: best_val
+  NO_TEST: False
+  PER_CLASS_RESULT: False
+  SPLIT: test
+TRAIN:
+  CHECKPOINT_FREQ: 0
+  COUNT_ITER: train_x
+  PRINT_FREQ: 5
+TRAINER:
+  CDAC:
+    CLASS_LR_MULTI: 10
+    P_THRESH: 0.95
+    RAMPUP_COEF: 30
+    RAMPUP_ITRS: 1000
+    STRONG_TRANSFORMS: ()
+    TOPK_MATCH: 5
+  COCOOP:
+    CTX_INIT: 
+    N_CTX: 16
+    PREC: fp16
+  COOP:
+    CLASS_TOKEN_POSITION: end
+    CSC: False
+    CTX_INIT: 
+    GLOSS_GAMMA: 0.5
+    GLOSS_SIGMA: 0.3
+    LOSS_TYPE: ce+scl
+    N_CTX: 16
+    PREC: fp16
+  CROSSGRAD:
+    ALPHA_D: 0.5
+    ALPHA_F: 0.5
+    EPS_D: 1.0
+    EPS_F: 1.0
+  DAEL:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DAELDG:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DDAIG:
+    ALPHA: 0.5
+    CLAMP: False
+    CLAMP_MAX: 1.0
+    CLAMP_MIN: -1.0
+    G_ARCH: 
+    LMDA: 0.3
+    WARMUP: 0
+  DOMAINMIX:
+    ALPHA: 1.0
+    BETA: 1.0
+    TYPE: crossdomain
+  ENTMIN:
+    LMDA: 0.001
+  FIXMATCH:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 1.0
+  M3SDA:
+    LMDA: 0.5
+    N_STEP_F: 4
+  MCD:
+    N_STEP_F: 4
+  MEANTEACHER:
+    EMA_ALPHA: 0.999
+    RAMPUP: 5
+    WEIGHT_U: 1.0
+  MIXMATCH:
+    MIXUP_BETA: 0.75
+    RAMPUP: 20000
+    TEMP: 2.0
+    WEIGHT_U: 100.0
+  MME:
+    LMDA: 0.1
+  NAME: CoOp
+  SE:
+    CONF_THRE: 0.95
+    EMA_ALPHA: 0.999
+    RAMPUP: 300
+USE_CUDA: True
+VERBOSE: True
+VERSION: 1
+Collecting env info ...
+** System info **
+PyTorch version: 2.4.1
+Is debug build: False
+CUDA used to build PyTorch: 12.4
+ROCM used to build PyTorch: N/A
+
+OS: Ubuntu 24.04.1 LTS (x86_64)
+GCC version: (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Clang version: Could not collect
+CMake version: Could not collect
+Libc version: glibc-2.39
+
+Python version: 3.8.20 (default, Oct  3 2024, 15:24:27)  [GCC 11.2.0] (64-bit runtime)
+Python platform: Linux-6.11.0-1027-oem-x86_64-with-glibc2.17
+Is CUDA available: True
+CUDA runtime version: 13.2.51
+CUDA_MODULE_LOADING set to: LAZY
+GPU models and configuration: GPU 0: NVIDIA A100 80GB PCIe
+Nvidia driver version: 580.126.09
+cuDNN version: Could not collect
+HIP runtime version: N/A
+MIOpen runtime version: N/A
+Is XNNPACK available: True
+
+CPU:
+Architecture:                         x86_64
+CPU op-mode(s):                       32-bit, 64-bit
+Address sizes:                        46 bits physical, 57 bits virtual
+Byte Order:                           Little Endian
+CPU(s):                               16
+On-line CPU(s) list:                  0-15
+Vendor ID:                            GenuineIntel
+Model name:                           Intel(R) Xeon(R) Silver 4309Y CPU @ 2.80GHz
+CPU family:                           6
+Model:                                106
+Thread(s) per core:                   2
+Core(s) per socket:                   8
+Socket(s):                            1
+Stepping:                             6
+CPU(s) scaling MHz:                   52%
+CPU max MHz:                          3600.0000
+CPU min MHz:                          800.0000
+BogoMIPS:                             5600.00
+Flags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3 ssbd mba ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb intel_pt avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local split_lock_detect wbnoinvd dtherm ida arat pln pts hwp hwp_act_window hwp_pkg_req vnmi avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq la57 rdpid fsrm md_clear pconfig flush_l1d arch_capabilities
+Virtualization:                       VT-x
+L1d cache:                            384 KiB (8 instances)
+L1i cache:                            256 KiB (8 instances)
+L2 cache:                             10 MiB (8 instances)
+L3 cache:                             12 MiB (1 instance)
+NUMA node(s):                         1
+NUMA node0 CPU(s):                    0-15
+Vulnerability Gather data sampling:   Mitigation; Microcode
+Vulnerability Itlb multihit:          Not affected
+Vulnerability L1tf:                   Not affected
+Vulnerability Mds:                    Not affected
+Vulnerability Meltdown:               Not affected
+Vulnerability Mmio stale data:        Mitigation; Clear CPU buffers; SMT vulnerable
+Vulnerability Reg file data sampling: Not affected
+Vulnerability Retbleed:               Not affected
+Vulnerability Spec rstack overflow:   Not affected
+Vulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop
+Vulnerability Srbds:                  Not affected
+Vulnerability Tsx async abort:        Not affected
+
+Versions of relevant libraries:
+[pip3] flake8==3.7.9
+[pip3] numpy==1.24.3
+[pip3] torch==2.4.1
+[pip3] torchvision==0.20.0
+[pip3] triton==3.0.0
+[conda] blas                      1.0                         mkl  
+[conda] cudatoolkit               10.2.89              hfd86e86_1  
+[conda] libjpeg-turbo             2.0.0                h9bf148f_0    pytorch
+[conda] mkl                       2023.1.0         h213fc3f_46344  
+[conda] mkl-service               2.4.0            py38h5eee18b_1  
+[conda] mkl_fft                   1.3.8            py38h5eee18b_0  
+[conda] mkl_random                1.2.4            py38hdb19cb5_0  
+[conda] numpy                     1.24.3           py38hf6e8229_1  
+[conda] numpy-base                1.24.3           py38h060ed82_1  
+[conda] pytorch                   2.4.1           py3.8_cuda12.4_cudnn9.1.0_0    pytorch
+[conda] pytorch-cuda              12.4                 hc786d27_7    pytorch
+[conda] pytorch-mutex             1.0                        cuda    pytorch
+[conda] torchtriton               3.0.0                      py38    pytorch
+[conda] torchvision               0.20.0               py38_cu124    pytorch
+        Pillow (10.4.0)
+
+Loading trainer: CoOp
+Loading dataset: EuroSAT
+Reading split from /home/aditya/CoOp/Data/eurosat/split_zhou_EuroSAT.json
+Loading preprocessed few-shot data from /home/aditya/CoOp/Data/eurosat/split_fewshot/shot_16-seed_3.pkl
+Building transform_train
++ random resized crop (size=(224, 224), scale=(0.08, 1.0))
++ random flip
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+Building transform_test
++ resize the smaller edge to 224
++ 224x224 center crop
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+---------  -------
+Dataset    EuroSAT
+# classes  10
+# train_x  160
+# val      40
+# test     8,100
+---------  -------
+Loading CLIP (backbone: ViT-B/16)
+Building custom CLIP
+Initializing a generic context
+Initial context: "X X X X X X X X X X X X X X X X"
+Number of context words (tokens): 16
+Turning off gradients in both the image and the text encoder
+Loading evaluator: Classification
+No checkpoint found, train from scratch
+Initialize tensorboard (log_dir=output/eurosat/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_002233/tensorboard)
+epoch [1/50] batch [1/1] time 1.540 (1.540) data 0.618 (0.618) loss 3.8108 (3.8108) lr 1.0000e-01 eta 0:01:15
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 14
+* accuracy: 35.0%
+* error: 65.0%
+* macro_f1: 28.5%
+* ECE: 14.70
+* ACE: 25.41
+Checkpoint saved to output/eurosat/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_002233/prompt_learner/model-best.pth.tar
+epoch [2/50] batch [1/1] time 0.722 (0.722) data 0.539 (0.539) loss 3.8175 (3.8175) lr 9.9901e-02 eta 0:00:34
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 21
+* accuracy: 52.5%
+* error: 47.5%
+* macro_f1: 43.9%
+* ECE: 18.76
+* ACE: 17.58
+Checkpoint saved to output/eurosat/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_002233/prompt_learner/model-best.pth.tar
+epoch [3/50] batch [1/1] time 0.702 (0.702) data 0.529 (0.529) loss 4.0217 (4.0217) lr 9.9606e-02 eta 0:00:32
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 19
+* accuracy: 47.5%
+* error: 52.5%
+* macro_f1: 47.0%
+* ECE: 18.26
+* ACE: 18.78
+epoch [4/50] batch [1/1] time 0.660 (0.660) data 0.494 (0.494) loss 3.8149 (3.8149) lr 9.9114e-02 eta 0:00:30
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 25
+* accuracy: 62.5%
+* error: 37.5%
+* macro_f1: 59.7%
+* ECE: 21.74
+* ACE: 21.74
+Checkpoint saved to output/eurosat/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_002233/prompt_learner/model-best.pth.tar
+epoch [5/50] batch [1/1] time 0.685 (0.685) data 0.516 (0.516) loss 3.7895 (3.7895) lr 9.8429e-02 eta 0:00:30
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 22
+* accuracy: 55.0%
+* error: 45.0%
+* macro_f1: 53.4%
+* ECE: 15.28
+* ACE: 22.40
+epoch [6/50] batch [1/1] time 0.768 (0.768) data 0.595 (0.595) loss 3.6323 (3.6323) lr 9.7553e-02 eta 0:00:33
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 20
+* accuracy: 50.0%
+* error: 50.0%
+* macro_f1: 44.7%
+* ECE: 16.33
+* ACE: 22.48
+epoch [7/50] batch [1/1] time 0.726 (0.726) data 0.550 (0.550) loss 3.6378 (3.6378) lr 9.6489e-02 eta 0:00:31
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 18
+* accuracy: 45.0%
+* error: 55.0%
+* macro_f1: 41.9%
+* ECE: 11.47
+* ACE: 18.17
+epoch [8/50] batch [1/1] time 0.743 (0.743) data 0.566 (0.566) loss 3.6305 (3.6305) lr 9.5241e-02 eta 0:00:31
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 23
+* accuracy: 57.5%
+* error: 42.5%
+* macro_f1: 57.8%
+* ECE: 17.08
+* ACE: 23.46
+epoch [9/50] batch [1/1] time 0.750 (0.750) data 0.585 (0.585) loss 3.5305 (3.5305) lr 9.3815e-02 eta 0:00:30
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 22
+* accuracy: 55.0%
+* error: 45.0%
+* macro_f1: 50.4%
+* ECE: 9.97
+* ACE: 18.23
+epoch [10/50] batch [1/1] time 0.728 (0.728) data 0.559 (0.559) loss 3.5586 (3.5586) lr 9.2216e-02 eta 0:00:29
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 21
+* accuracy: 52.5%
+* error: 47.5%
+* macro_f1: 47.0%
+* ECE: 14.74
+* ACE: 14.25
+epoch [11/50] batch [1/1] time 0.721 (0.721) data 0.541 (0.541) loss 3.5079 (3.5079) lr 9.0451e-02 eta 0:00:28
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 21
+* accuracy: 52.5%
+* error: 47.5%
+* macro_f1: 46.8%
+* ECE: 19.67
+* ACE: 26.73
+epoch [12/50] batch [1/1] time 0.697 (0.697) data 0.526 (0.526) loss 3.5595 (3.5595) lr 8.8526e-02 eta 0:00:26
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 21
+* accuracy: 52.5%
+* error: 47.5%
+* macro_f1: 47.0%
+* ECE: 11.53
+* ACE: 20.41
+epoch [13/50] batch [1/1] time 0.743 (0.743) data 0.573 (0.573) loss 3.5588 (3.5588) lr 8.6448e-02 eta 0:00:27
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 23
+* accuracy: 57.5%
+* error: 42.5%
+* macro_f1: 52.7%
+* ECE: 18.54
+* ACE: 21.48
+epoch [14/50] batch [1/1] time 0.835 (0.835) data 0.672 (0.672) loss 3.5819 (3.5819) lr 8.4227e-02 eta 0:00:30
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 26
+* accuracy: 65.0%
+* error: 35.0%
+* macro_f1: 63.4%
+* ECE: 26.03
+* ACE: 28.07
+Checkpoint saved to output/eurosat/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_002233/prompt_learner/model-best.pth.tar
+epoch [15/50] batch [1/1] time 0.786 (0.786) data 0.611 (0.611) loss 3.3690 (3.3690) lr 8.1871e-02 eta 0:00:27
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 26
+* accuracy: 65.0%
+* error: 35.0%
+* macro_f1: 63.1%
+* ECE: 22.35
+* ACE: 27.21
+epoch [16/50] batch [1/1] time 0.755 (0.755) data 0.579 (0.579) loss 3.3644 (3.3644) lr 7.9389e-02 eta 0:00:25
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 27
+* accuracy: 67.5%
+* error: 32.5%
+* macro_f1: 65.6%
+* ECE: 23.71
+* ACE: 22.65
+Checkpoint saved to output/eurosat/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_002233/prompt_learner/model-best.pth.tar
+epoch [17/50] batch [1/1] time 0.738 (0.738) data 0.574 (0.574) loss 3.3546 (3.3546) lr 7.6791e-02 eta 0:00:24
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 27
+* accuracy: 67.5%
+* error: 32.5%
+* macro_f1: 64.2%
+* ECE: 20.60
+* ACE: 26.38
+epoch [18/50] batch [1/1] time 0.699 (0.699) data 0.524 (0.524) loss 3.2722 (3.2722) lr 7.4088e-02 eta 0:00:22
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 25
+* accuracy: 62.5%
+* error: 37.5%
+* macro_f1: 57.0%
+* ECE: 18.17
+* ACE: 25.55
+epoch [19/50] batch [1/1] time 0.757 (0.757) data 0.586 (0.586) loss 3.4346 (3.4346) lr 7.1289e-02 eta 0:00:23
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 25
+* accuracy: 62.5%
+* error: 37.5%
+* macro_f1: 60.7%
+* ECE: 17.60
+* ACE: 16.88
+epoch [20/50] batch [1/1] time 0.746 (0.746) data 0.573 (0.573) loss 3.3579 (3.3579) lr 6.8406e-02 eta 0:00:22
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 27
+* accuracy: 67.5%
+* error: 32.5%
+* macro_f1: 67.1%
+* ECE: 24.32
+* ACE: 28.01
+epoch [21/50] batch [1/1] time 0.753 (0.753) data 0.577 (0.577) loss 3.3274 (3.3274) lr 6.5451e-02 eta 0:00:21
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 26
+* accuracy: 65.0%
+* error: 35.0%
+* macro_f1: 65.3%
+* ECE: 15.27
+* ACE: 19.57
+epoch [22/50] batch [1/1] time 0.719 (0.719) data 0.540 (0.540) loss 3.2661 (3.2661) lr 6.2434e-02 eta 0:00:20
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 25
+* accuracy: 62.5%
+* error: 37.5%
+* macro_f1: 61.2%
+* ECE: 10.36
+* ACE: 22.21
+epoch [23/50] batch [1/1] time 0.753 (0.753) data 0.585 (0.585) loss 3.3146 (3.3146) lr 5.9369e-02 eta 0:00:20
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 26
+* accuracy: 65.0%
+* error: 35.0%
+* macro_f1: 64.2%
+* ECE: 14.04
+* ACE: 27.87
+epoch [24/50] batch [1/1] time 0.729 (0.729) data 0.561 (0.561) loss 3.2438 (3.2438) lr 5.6267e-02 eta 0:00:18
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 28
+* accuracy: 70.0%
+* error: 30.0%
+* macro_f1: 68.7%
+* ECE: 19.86
+* ACE: 22.26
+Checkpoint saved to output/eurosat/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_002233/prompt_learner/model-best.pth.tar
+epoch [25/50] batch [1/1] time 0.704 (0.704) data 0.521 (0.521) loss 3.3042 (3.3042) lr 5.3140e-02 eta 0:00:17
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 28
+* accuracy: 70.0%
+* error: 30.0%
+* macro_f1: 68.8%
+* ECE: 25.62
+* ACE: 24.11
+epoch [26/50] batch [1/1] time 0.724 (0.724) data 0.554 (0.554) loss 3.2122 (3.2122) lr 5.0000e-02 eta 0:00:17
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 28
+* accuracy: 70.0%
+* error: 30.0%
+* macro_f1: 68.8%
+* ECE: 28.93
+* ACE: 29.90
+epoch [27/50] batch [1/1] time 0.668 (0.668) data 0.496 (0.496) loss 3.2555 (3.2555) lr 4.6860e-02 eta 0:00:15
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 27
+* accuracy: 67.5%
+* error: 32.5%
+* macro_f1: 66.5%
+* ECE: 24.00
+* ACE: 26.40
+epoch [28/50] batch [1/1] time 0.728 (0.728) data 0.560 (0.560) loss 3.1864 (3.1864) lr 4.3733e-02 eta 0:00:16
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 27
+* accuracy: 67.5%
+* error: 32.5%
+* macro_f1: 66.3%
+* ECE: 24.47
+* ACE: 30.03
+epoch [29/50] batch [1/1] time 0.690 (0.690) data 0.521 (0.521) loss 3.2405 (3.2405) lr 4.0631e-02 eta 0:00:14
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 27
+* accuracy: 67.5%
+* error: 32.5%
+* macro_f1: 66.2%
+* ECE: 18.60
+* ACE: 20.61
+epoch [30/50] batch [1/1] time 0.690 (0.690) data 0.521 (0.521) loss 3.2250 (3.2250) lr 3.7566e-02 eta 0:00:13
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 27
+* accuracy: 67.5%
+* error: 32.5%
+* macro_f1: 67.0%
+* ECE: 28.54
+* ACE: 22.94
+epoch [31/50] batch [1/1] time 0.709 (0.709) data 0.536 (0.536) loss 3.0765 (3.0765) lr 3.4549e-02 eta 0:00:13
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 27
+* accuracy: 67.5%
+* error: 32.5%
+* macro_f1: 67.0%
+* ECE: 25.84
+* ACE: 22.99
+epoch [32/50] batch [1/1] time 0.719 (0.719) data 0.553 (0.553) loss 3.0696 (3.0696) lr 3.1594e-02 eta 0:00:12
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 28
+* accuracy: 70.0%
+* error: 30.0%
+* macro_f1: 69.0%
+* ECE: 22.44
+* ACE: 19.91
+epoch [33/50] batch [1/1] time 0.738 (0.738) data 0.570 (0.570) loss 3.2938 (3.2938) lr 2.8711e-02 eta 0:00:12
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 26
+* accuracy: 65.0%
+* error: 35.0%
+* macro_f1: 63.3%
+* ECE: 24.05
+* ACE: 21.73
+epoch [34/50] batch [1/1] time 0.715 (0.715) data 0.548 (0.548) loss 3.1609 (3.1609) lr 2.5912e-02 eta 0:00:11
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 28
+* accuracy: 70.0%
+* error: 30.0%
+* macro_f1: 69.7%
+* ECE: 20.65
+* ACE: 24.92
+epoch [35/50] batch [1/1] time 0.791 (0.791) data 0.617 (0.617) loss 3.0325 (3.0325) lr 2.3209e-02 eta 0:00:11
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 29
+* accuracy: 72.5%
+* error: 27.5%
+* macro_f1: 72.0%
+* ECE: 26.71
+* ACE: 22.69
+Checkpoint saved to output/eurosat/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_002233/prompt_learner/model-best.pth.tar
+epoch [36/50] batch [1/1] time 0.740 (0.740) data 0.570 (0.570) loss 3.2304 (3.2304) lr 2.0611e-02 eta 0:00:10
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 29
+* accuracy: 72.5%
+* error: 27.5%
+* macro_f1: 72.0%
+* ECE: 23.09
+* ACE: 25.63
+epoch [37/50] batch [1/1] time 0.729 (0.729) data 0.558 (0.558) loss 3.0731 (3.0731) lr 1.8129e-02 eta 0:00:09
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 28
+* accuracy: 70.0%
+* error: 30.0%
+* macro_f1: 69.2%
+* ECE: 21.16
+* ACE: 28.11
+epoch [38/50] batch [1/1] time 0.764 (0.764) data 0.592 (0.592) loss 3.1314 (3.1314) lr 1.5773e-02 eta 0:00:09
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 28
+* accuracy: 70.0%
+* error: 30.0%
+* macro_f1: 69.4%
+* ECE: 22.86
+* ACE: 26.19
+epoch [39/50] batch [1/1] time 0.725 (0.725) data 0.559 (0.559) loss 3.2737 (3.2737) lr 1.3552e-02 eta 0:00:07
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 28
+* accuracy: 70.0%
+* error: 30.0%
+* macro_f1: 69.6%
+* ECE: 25.84
+* ACE: 26.36
+epoch [40/50] batch [1/1] time 0.733 (0.733) data 0.558 (0.558) loss 3.2121 (3.2121) lr 1.1474e-02 eta 0:00:07
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 28
+* accuracy: 70.0%
+* error: 30.0%
+* macro_f1: 69.6%
+* ECE: 27.83
+* ACE: 26.42
+epoch [41/50] batch [1/1] time 0.682 (0.682) data 0.519 (0.519) loss 3.2233 (3.2233) lr 9.5492e-03 eta 0:00:06
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 29
+* accuracy: 72.5%
+* error: 27.5%
+* macro_f1: 72.2%
+* ECE: 25.07
+* ACE: 26.55
+epoch [42/50] batch [1/1] time 0.804 (0.804) data 0.629 (0.629) loss 3.0725 (3.0725) lr 7.7836e-03 eta 0:00:06
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 29
+* accuracy: 72.5%
+* error: 27.5%
+* macro_f1: 72.2%
+* ECE: 27.83
+* ACE: 26.45
+epoch [43/50] batch [1/1] time 0.790 (0.790) data 0.613 (0.613) loss 3.0975 (3.0975) lr 6.1847e-03 eta 0:00:05
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 29
+* accuracy: 72.5%
+* error: 27.5%
+* macro_f1: 72.4%
+* ECE: 27.52
+* ACE: 26.39
+epoch [44/50] batch [1/1] time 0.776 (0.776) data 0.602 (0.602) loss 3.0340 (3.0340) lr 4.7586e-03 eta 0:00:04
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 29
+* accuracy: 72.5%
+* error: 27.5%
+* macro_f1: 72.6%
+* ECE: 24.19
+* ACE: 23.52
+epoch [45/50] batch [1/1] time 0.756 (0.756) data 0.582 (0.582) loss 3.1074 (3.1074) lr 3.5112e-03 eta 0:00:03
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 29
+* accuracy: 72.5%
+* error: 27.5%
+* macro_f1: 72.6%
+* ECE: 23.32
+* ACE: 23.48
+epoch [46/50] batch [1/1] time 0.730 (0.730) data 0.561 (0.561) loss 3.1346 (3.1346) lr 2.4472e-03 eta 0:00:02
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 29
+* accuracy: 72.5%
+* error: 27.5%
+* macro_f1: 72.6%
+* ECE: 23.40
+* ACE: 23.45
+epoch [47/50] batch [1/1] time 0.721 (0.721) data 0.541 (0.541) loss 2.9597 (2.9597) lr 1.5708e-03 eta 0:00:02
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 29
+* accuracy: 72.5%
+* error: 27.5%
+* macro_f1: 72.6%
+* ECE: 24.37
+* ACE: 23.35
+epoch [48/50] batch [1/1] time 0.735 (0.735) data 0.566 (0.566) loss 3.2515 (3.2515) lr 8.8564e-04 eta 0:00:01
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 29
+* accuracy: 72.5%
+* error: 27.5%
+* macro_f1: 72.6%
+* ECE: 24.34
+* ACE: 20.89
+epoch [49/50] batch [1/1] time 0.721 (0.721) data 0.550 (0.550) loss 2.8148 (2.8148) lr 3.9426e-04 eta 0:00:00
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 29
+* accuracy: 72.5%
+* error: 27.5%
+* macro_f1: 72.6%
+* ECE: 24.32
+* ACE: 23.21
+epoch [50/50] batch [1/1] time 0.746 (0.746) data 0.576 (0.576) loss 3.0822 (3.0822) lr 9.8664e-05 eta 0:00:00
+Evaluate on the *val* set
+=> result
+* total: 40
+* correct: 29
+* accuracy: 72.5%
+* error: 27.5%
+* macro_f1: 72.6%
+* ECE: 24.35
+* ACE: 20.88
+Checkpoint saved to output/eurosat/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_002233/prompt_learner/model.pth.tar-50
+Finish training
+Deploy the model with the best val performance
+Loading weights to prompt_learner from "output/eurosat/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_002233/prompt_learner/model-best.pth.tar" (epoch = 35)
+Evaluate on the *test* set
+=> result
+* total: 8,100
+* correct: 5,993
+* accuracy: 74.0%
+* error: 26.0%
+* macro_f1: 72.1%
+* ECE: 23.11
+* ACE: 23.11
+Elapsed: 0:01:10
+Ended
+
+[Final] Learned prompt vocab matches:
+
+============================================================
+Learned Prompts - Top-1 BPE Vocabulary Matches
+============================================================
+Prompt Token 0: 'pad' (ID: 3798, Similarity: 0.1808)
+Prompt Token 1: 'î' (ID: 48704, Similarity: 0.1771)
+Prompt Token 2: 'o ' (ID: 334, Similarity: 0.1868)
+Prompt Token 3: 'bau' (ID: 6055, Similarity: 0.2019)
+Prompt Token 4: 'pas' (ID: 1341, Similarity: 0.2117)
+Prompt Token 5: 'ves' (ID: 9616, Similarity: 0.1811)
+Prompt Token 6: 'cuse ' (ID: 37950, Similarity: 0.1923)
+Prompt Token 7: 'elf' (ID: 45961, Similarity: 0.2163)
+Prompt Token 8: 'ada ' (ID: 1886, Similarity: 0.1950)
+Prompt Token 9: 'they ' (ID: 889, Similarity: 0.2276)
+Prompt Token 10: 'nfamily ' (ID: 20098, Similarity: 0.1885)
+Prompt Token 11: 'continues ' (ID: 4305, Similarity: 0.2200)
+Prompt Token 12: ''? ' (ID: 17242, Similarity: 0.2296)
+Prompt Token 13: '�' (ID: 149, Similarity: 0.1990)
+Prompt Token 14: 'ana ' (ID: 1388, Similarity: 0.1752)
+Prompt Token 15: 'ari' (ID: 1221, Similarity: 0.1830)
+============================================================
+
+Available tags: ['train/loss', 'train/lr', 'val/accuracy', 'val/error_rate', 'val/macro_f1', 'val/ece', 'val/ace', 'test/accuracy', 'test/error_rate', 'test/macro_f1', 'test/ece', 'test/ace']
+Loss curve saved to output/eurosat/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+scl_20260426_002233/loss_curve.png

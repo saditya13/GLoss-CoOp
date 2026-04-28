@@ -278,6 +278,21 @@ class CustomCLIP(nn.Module):
         concat_features = concat_features / concat_features.norm(dim=-1, keepdim=True)
         
         return concat_features
+    # def forward_with_label_graph(self, image, labels):
+    #     image_features = self.encode_image(image)
+    #     text_features = self.encode_text_features()   # [n_cls, d] — from prompt
+
+    #     image_features = image_features / image_features.norm(dim=-1, keepdim=True)
+    #     text_features  = text_features  / text_features.norm(dim=-1, keepdim=True)
+
+    #     # Cross-modal probability vector for each image
+    #     logits = self.logit_scale.exp() * image_features @ text_features.T  # [B, n_cls]
+    #     probs  = F.softmax(logits, dim=-1)                                   # [B, n_cls]
+
+    #     # Hellinger embedding: sqrt(p) brings it into a Euclidean-friendly space
+    #     hellinger_features = torch.sqrt(probs + 1e-8)                        # [B, n_cls]
+
+    #     return hellinger_features   # this replaces concat_features everywhere
 
     
 
@@ -406,6 +421,7 @@ class CoOp(TrainerX):
 
         I = torch.eye(T_uu.shape[0], dtype=torch.float32, device=device)
         F_UU = torch.linalg.solve(I - T_uu, T_ul.mm(Y[train_mask]))
+        # F_UU = torch.linalg.solve((I - T_uu) + 1e-8 * I, T_ul.mm(Y[train_mask]))
 
         if torch.isnan(F_UU).any() or torch.isinf(F_UU).any():
             raise ValueError("NaN or inf in F_UU before normalization")

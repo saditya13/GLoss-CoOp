@@ -1,0 +1,1584 @@
+***************
+** Arguments **
+***************
+backbone: 
+config_file: configs/trainers/CoOp/vit_b16_ep200.yaml
+coop_loss_type: ce+gloss
+dataset_config_file: configs/datasets/oxford_flowers.yaml
+eval_only: False
+head: 
+load_epoch: None
+model_dir: 
+no_train: False
+opts: ['TRAINER.COOP.N_CTX', '16', 'TRAINER.COOP.CSC', 'False', 'TRAINER.COOP.CLASS_TOKEN_POSITION', 'end', 'DATASET.NUM_SHOTS', '16']
+output_dir: output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003
+resume: 
+root: /home/aditya/CoOp/Data
+seed: 3
+source_domains: None
+target_domains: None
+trainer: CoOp
+transforms: None
+************
+** Config **
+************
+DATALOADER:
+  K_TRANSFORMS: 1
+  NUM_WORKERS: 8
+  RETURN_IMG0: False
+  TEST:
+    BATCH_SIZE: 100
+    SAMPLER: SequentialSampler
+  TRAIN_U:
+    BATCH_SIZE: 32
+    N_DOMAIN: 0
+    N_INS: 16
+    SAME_AS_X: True
+    SAMPLER: RandomSampler
+  TRAIN_X:
+    BATCH_SIZE: 128
+    N_DOMAIN: 0
+    N_INS: 16
+    SAMPLER: RandomSampler
+DATASET:
+  ALL_AS_UNLABELED: False
+  CIFAR_C_LEVEL: 1
+  CIFAR_C_TYPE: 
+  NAME: OxfordFlowers
+  NUM_LABELED: -1
+  NUM_SHOTS: 16
+  ROOT: /home/aditya/CoOp/Data
+  SOURCE_DOMAINS: ()
+  STL10_FOLD: -1
+  SUBSAMPLE_CLASSES: all
+  TARGET_DOMAINS: ()
+  VAL_PERCENT: 0.1
+INPUT:
+  COLORJITTER_B: 0.4
+  COLORJITTER_C: 0.4
+  COLORJITTER_H: 0.1
+  COLORJITTER_S: 0.4
+  CROP_PADDING: 4
+  CUTOUT_LEN: 16
+  CUTOUT_N: 1
+  GB_K: 21
+  GB_P: 0.5
+  GN_MEAN: 0.0
+  GN_STD: 0.15
+  INTERPOLATION: bicubic
+  NO_TRANSFORM: False
+  PIXEL_MEAN: [0.48145466, 0.4578275, 0.40821073]
+  PIXEL_STD: [0.26862954, 0.26130258, 0.27577711]
+  RANDAUGMENT_M: 10
+  RANDAUGMENT_N: 2
+  RGS_P: 0.2
+  RRCROP_SCALE: (0.08, 1.0)
+  SIZE: (224, 224)
+  TRANSFORMS: ('random_resized_crop', 'random_flip', 'normalize')
+MODEL:
+  BACKBONE:
+    NAME: ViT-B/16
+    PRETRAINED: True
+  HEAD:
+    ACTIVATION: relu
+    BN: True
+    DROPOUT: 0.0
+    HIDDEN_LAYERS: ()
+    NAME: 
+  INIT_WEIGHTS: 
+OPTIM:
+  ADAM_BETA1: 0.9
+  ADAM_BETA2: 0.999
+  BASE_LR_MULT: 0.1
+  GAMMA: 0.1
+  LR: 0.1
+  LR_SCHEDULER: cosine
+  MAX_EPOCH: 50
+  MOMENTUM: 0.9
+  NAME: sgd
+  NEW_LAYERS: ()
+  RMSPROP_ALPHA: 0.99
+  SGD_DAMPNING: 0
+  SGD_NESTEROV: False
+  STAGED_LR: False
+  STEPSIZE: (-1,)
+  WARMUP_CONS_LR: 1e-05
+  WARMUP_EPOCH: 1
+  WARMUP_MIN_LR: 1e-05
+  WARMUP_RECOUNT: True
+  WARMUP_TYPE: constant
+  WEIGHT_DECAY: 0.0005
+OUTPUT_DIR: output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003
+RESUME: 
+SEED: 3
+TEST:
+  COMPUTE_CMAT: False
+  EVALUATOR: Classification
+  FINAL_MODEL: best_val
+  NO_TEST: False
+  PER_CLASS_RESULT: False
+  SPLIT: test
+TRAIN:
+  CHECKPOINT_FREQ: 0
+  COUNT_ITER: train_x
+  PRINT_FREQ: 5
+TRAINER:
+  CDAC:
+    CLASS_LR_MULTI: 10
+    P_THRESH: 0.95
+    RAMPUP_COEF: 30
+    RAMPUP_ITRS: 1000
+    STRONG_TRANSFORMS: ()
+    TOPK_MATCH: 5
+  COCOOP:
+    CTX_INIT: 
+    N_CTX: 16
+    PREC: fp16
+  COOP:
+    CLASS_TOKEN_POSITION: end
+    CSC: False
+    CTX_INIT: 
+    GLOSS_GAMMA: 0.5
+    GLOSS_SIGMA: 0.3
+    LOSS_TYPE: ce+gloss
+    N_CTX: 16
+    PREC: fp16
+  CROSSGRAD:
+    ALPHA_D: 0.5
+    ALPHA_F: 0.5
+    EPS_D: 1.0
+    EPS_F: 1.0
+  DAEL:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DAELDG:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 0.5
+  DDAIG:
+    ALPHA: 0.5
+    CLAMP: False
+    CLAMP_MAX: 1.0
+    CLAMP_MIN: -1.0
+    G_ARCH: 
+    LMDA: 0.3
+    WARMUP: 0
+  DOMAINMIX:
+    ALPHA: 1.0
+    BETA: 1.0
+    TYPE: crossdomain
+  ENTMIN:
+    LMDA: 0.001
+  FIXMATCH:
+    CONF_THRE: 0.95
+    STRONG_TRANSFORMS: ()
+    WEIGHT_U: 1.0
+  M3SDA:
+    LMDA: 0.5
+    N_STEP_F: 4
+  MCD:
+    N_STEP_F: 4
+  MEANTEACHER:
+    EMA_ALPHA: 0.999
+    RAMPUP: 5
+    WEIGHT_U: 1.0
+  MIXMATCH:
+    MIXUP_BETA: 0.75
+    RAMPUP: 20000
+    TEMP: 2.0
+    WEIGHT_U: 100.0
+  MME:
+    LMDA: 0.1
+  NAME: CoOp
+  SE:
+    CONF_THRE: 0.95
+    EMA_ALPHA: 0.999
+    RAMPUP: 300
+USE_CUDA: True
+VERBOSE: True
+VERSION: 1
+Collecting env info ...
+** System info **
+PyTorch version: 2.4.1
+Is debug build: False
+CUDA used to build PyTorch: 12.4
+ROCM used to build PyTorch: N/A
+
+OS: Ubuntu 24.04.1 LTS (x86_64)
+GCC version: (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Clang version: Could not collect
+CMake version: Could not collect
+Libc version: glibc-2.39
+
+Python version: 3.8.20 (default, Oct  3 2024, 15:24:27)  [GCC 11.2.0] (64-bit runtime)
+Python platform: Linux-6.11.0-1027-oem-x86_64-with-glibc2.17
+Is CUDA available: True
+CUDA runtime version: 13.2.51
+CUDA_MODULE_LOADING set to: LAZY
+GPU models and configuration: GPU 0: NVIDIA A100 80GB PCIe
+Nvidia driver version: 580.126.09
+cuDNN version: Could not collect
+HIP runtime version: N/A
+MIOpen runtime version: N/A
+Is XNNPACK available: True
+
+CPU:
+Architecture:                         x86_64
+CPU op-mode(s):                       32-bit, 64-bit
+Address sizes:                        46 bits physical, 57 bits virtual
+Byte Order:                           Little Endian
+CPU(s):                               16
+On-line CPU(s) list:                  0-15
+Vendor ID:                            GenuineIntel
+Model name:                           Intel(R) Xeon(R) Silver 4309Y CPU @ 2.80GHz
+CPU family:                           6
+Model:                                106
+Thread(s) per core:                   2
+Core(s) per socket:                   8
+Socket(s):                            1
+Stepping:                             6
+CPU(s) scaling MHz:                   51%
+CPU max MHz:                          3600.0000
+CPU min MHz:                          800.0000
+BogoMIPS:                             5600.00
+Flags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3 ssbd mba ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb intel_pt avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local split_lock_detect wbnoinvd dtherm ida arat pln pts hwp hwp_act_window hwp_pkg_req vnmi avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq la57 rdpid fsrm md_clear pconfig flush_l1d arch_capabilities
+Virtualization:                       VT-x
+L1d cache:                            384 KiB (8 instances)
+L1i cache:                            256 KiB (8 instances)
+L2 cache:                             10 MiB (8 instances)
+L3 cache:                             12 MiB (1 instance)
+NUMA node(s):                         1
+NUMA node0 CPU(s):                    0-15
+Vulnerability Gather data sampling:   Mitigation; Microcode
+Vulnerability Itlb multihit:          Not affected
+Vulnerability L1tf:                   Not affected
+Vulnerability Mds:                    Not affected
+Vulnerability Meltdown:               Not affected
+Vulnerability Mmio stale data:        Mitigation; Clear CPU buffers; SMT vulnerable
+Vulnerability Reg file data sampling: Not affected
+Vulnerability Retbleed:               Not affected
+Vulnerability Spec rstack overflow:   Not affected
+Vulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop
+Vulnerability Srbds:                  Not affected
+Vulnerability Tsx async abort:        Not affected
+
+Versions of relevant libraries:
+[pip3] flake8==3.7.9
+[pip3] numpy==1.24.3
+[pip3] torch==2.4.1
+[pip3] torchvision==0.20.0
+[pip3] triton==3.0.0
+[conda] blas                      1.0                         mkl  
+[conda] cudatoolkit               10.2.89              hfd86e86_1  
+[conda] libjpeg-turbo             2.0.0                h9bf148f_0    pytorch
+[conda] mkl                       2023.1.0         h213fc3f_46344  
+[conda] mkl-service               2.4.0            py38h5eee18b_1  
+[conda] mkl_fft                   1.3.8            py38h5eee18b_0  
+[conda] mkl_random                1.2.4            py38hdb19cb5_0  
+[conda] numpy                     1.24.3           py38hf6e8229_1  
+[conda] numpy-base                1.24.3           py38h060ed82_1  
+[conda] pytorch                   2.4.1           py3.8_cuda12.4_cudnn9.1.0_0    pytorch
+[conda] pytorch-cuda              12.4                 hc786d27_7    pytorch
+[conda] pytorch-mutex             1.0                        cuda    pytorch
+[conda] torchtriton               3.0.0                      py38    pytorch
+[conda] torchvision               0.20.0               py38_cu124    pytorch
+        Pillow (10.4.0)
+
+Loading trainer: CoOp
+Loading dataset: OxfordFlowers
+Reading split from /home/aditya/CoOp/Data/oxford_flowers/split_zhou_OxfordFlowers.json
+Loading preprocessed few-shot data from /home/aditya/CoOp/Data/oxford_flowers/split_fewshot/shot_16-seed_3.pkl
+Building transform_train
++ random resized crop (size=(224, 224), scale=(0.08, 1.0))
++ random flip
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+Building transform_test
++ resize the smaller edge to 224
++ 224x224 center crop
++ to torch tensor of range [0, 1]
++ normalization (mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
+---------  -------------
+Dataset    OxfordFlowers
+# classes  102
+# train_x  1,632
+# val      408
+# test     2,463
+---------  -------------
+Loading CLIP (backbone: ViT-B/16)
+Building custom CLIP
+Initializing a generic context
+Initial context: "X X X X X X X X X X X X X X X X"
+Number of context words (tokens): 16
+Turning off gradients in both the image and the text encoder
+Loading evaluator: Classification
+No checkpoint found, train from scratch
+Initialize tensorboard (log_dir=output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/tensorboard)
+Adjacency matrix stats: min=0.0000, max=0.0227, mean=0.0077, std=0.0021
+Adjacency matrix stats: min=0.0000, max=0.0276, mean=0.0078, std=0.0021
+Adjacency matrix stats: min=0.0000, max=0.0247, mean=0.0078, std=0.0020
+Adjacency matrix stats: min=0.0000, max=0.0250, mean=0.0078, std=0.0021
+Adjacency matrix stats: min=0.0000, max=0.0276, mean=0.0078, std=0.0021
+epoch [1/50] batch [5/12] time 0.585 (1.192) data 0.001 (0.290) loss 4.4760 (4.6445) lr 1.0000e-05 eta 0:11:49
+Adjacency matrix stats: min=0.0000, max=0.0297, mean=0.0078, std=0.0021
+Adjacency matrix stats: min=0.0000, max=0.0290, mean=0.0078, std=0.0021
+Adjacency matrix stats: min=0.0000, max=0.0273, mean=0.0078, std=0.0021
+Adjacency matrix stats: min=0.0000, max=0.0286, mean=0.0078, std=0.0021
+Adjacency matrix stats: min=0.0000, max=0.0236, mean=0.0078, std=0.0020
+epoch [1/50] batch [10/12] time 0.586 (0.886) data 0.000 (0.145) loss 4.5107 (4.5626) lr 1.0000e-05 eta 0:08:42
+Adjacency matrix stats: min=0.0000, max=0.0233, mean=0.0078, std=0.0020
+Adjacency matrix stats: min=0.0000, max=0.0310, mean=0.0078, std=0.0021
+[Epoch 0] CE: 4.3454 | GLoss: 4.6214 | Total: 4.5387Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 97
+* accuracy: 23.8%
+* error: 76.2%
+* macro_f1: 16.5%
+* ECE: 4.04
+* ACE: 4.11
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.0269, mean=0.0078, std=0.0021
+Adjacency matrix stats: min=0.0000, max=0.0526, mean=0.0077, std=0.0030
+Adjacency matrix stats: min=0.0000, max=0.0521, mean=0.0077, std=0.0031
+Adjacency matrix stats: min=0.0000, max=0.0885, mean=0.0077, std=0.0038
+Adjacency matrix stats: min=0.0000, max=0.1004, mean=0.0076, std=0.0045
+epoch [2/50] batch [5/12] time 0.571 (0.947) data 0.000 (0.354) loss 4.1739 (4.2958) lr 1.0000e-01 eta 0:09:11
+Adjacency matrix stats: min=0.0000, max=0.0959, mean=0.0076, std=0.0047
+Adjacency matrix stats: min=0.0000, max=0.0991, mean=0.0076, std=0.0048
+Adjacency matrix stats: min=0.0000, max=0.1176, mean=0.0076, std=0.0052
+Adjacency matrix stats: min=0.0000, max=0.1239, mean=0.0077, std=0.0060
+Adjacency matrix stats: min=0.0000, max=0.1360, mean=0.0076, std=0.0062
+epoch [2/50] batch [10/12] time 0.572 (0.781) data 0.000 (0.177) loss 3.9378 (4.1695) lr 1.0000e-01 eta 0:07:31
+Adjacency matrix stats: min=0.0000, max=0.1670, mean=0.0076, std=0.0060
+Adjacency matrix stats: min=0.0000, max=0.1323, mean=0.0076, std=0.0060
+[Epoch 1] CE: 3.1086 | GLoss: 4.6051 | Total: 4.1561Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 192
+* accuracy: 47.1%
+* error: 52.9%
+* macro_f1: 40.0%
+* ECE: 5.89
+* ACE: 6.18
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.1419, mean=0.0077, std=0.0060
+Adjacency matrix stats: min=0.0000, max=0.1215, mean=0.0076, std=0.0062
+Adjacency matrix stats: min=0.0000, max=0.1191, mean=0.0076, std=0.0060
+Adjacency matrix stats: min=0.0000, max=0.1364, mean=0.0077, std=0.0062
+Adjacency matrix stats: min=0.0000, max=0.1268, mean=0.0076, std=0.0070
+epoch [3/50] batch [5/12] time 0.579 (0.908) data 0.000 (0.283) loss 3.9257 (4.0101) lr 9.9901e-02 eta 0:08:38
+Adjacency matrix stats: min=0.0000, max=0.1076, mean=0.0077, std=0.0060
+Adjacency matrix stats: min=0.0000, max=0.1190, mean=0.0077, std=0.0071
+Adjacency matrix stats: min=0.0000, max=0.1457, mean=0.0077, std=0.0076
+Adjacency matrix stats: min=0.0000, max=0.1512, mean=0.0077, std=0.0074
+Adjacency matrix stats: min=0.0000, max=0.1436, mean=0.0077, std=0.0075
+epoch [3/50] batch [10/12] time 0.832 (0.770) data 0.000 (0.142) loss 3.9704 (3.9879) lr 9.9901e-02 eta 0:07:15
+Adjacency matrix stats: min=0.0000, max=0.1604, mean=0.0076, std=0.0065
+Adjacency matrix stats: min=0.0000, max=0.1404, mean=0.0077, std=0.0075
+[Epoch 2] CE: 2.5526 | GLoss: 4.5897 | Total: 3.9785Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 216
+* accuracy: 52.9%
+* error: 47.1%
+* macro_f1: 47.9%
+* ECE: 4.21
+* ACE: 5.01
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.1494, mean=0.0077, std=0.0089
+Adjacency matrix stats: min=0.0000, max=0.1576, mean=0.0077, std=0.0071
+Adjacency matrix stats: min=0.0000, max=0.1514, mean=0.0077, std=0.0071
+Adjacency matrix stats: min=0.0000, max=0.1376, mean=0.0077, std=0.0069
+Adjacency matrix stats: min=0.0000, max=0.1189, mean=0.0077, std=0.0075
+epoch [4/50] batch [5/12] time 0.577 (0.937) data 0.001 (0.322) loss 3.8991 (3.9161) lr 9.9606e-02 eta 0:08:43
+Adjacency matrix stats: min=0.0000, max=0.1387, mean=0.0077, std=0.0088
+Adjacency matrix stats: min=0.0000, max=0.1651, mean=0.0077, std=0.0073
+Adjacency matrix stats: min=0.0000, max=0.1691, mean=0.0077, std=0.0074
+Adjacency matrix stats: min=0.0000, max=0.1415, mean=0.0076, std=0.0075
+Adjacency matrix stats: min=0.0000, max=0.1477, mean=0.0077, std=0.0084
+epoch [4/50] batch [10/12] time 0.662 (0.764) data 0.000 (0.161) loss 3.8712 (3.9010) lr 9.9606e-02 eta 0:07:02
+Adjacency matrix stats: min=0.0000, max=0.1540, mean=0.0077, std=0.0078
+Adjacency matrix stats: min=0.0000, max=0.1390, mean=0.0076, std=0.0073
+[Epoch 3] CE: 2.2686 | GLoss: 4.5836 | Total: 3.8890Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 231
+* accuracy: 56.6%
+* error: 43.4%
+* macro_f1: 50.9%
+* ECE: 5.27
+* ACE: 4.66
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.1499, mean=0.0077, std=0.0079
+Adjacency matrix stats: min=0.0000, max=0.1565, mean=0.0077, std=0.0084
+Adjacency matrix stats: min=0.0000, max=0.1419, mean=0.0077, std=0.0077
+Adjacency matrix stats: min=0.0000, max=0.1350, mean=0.0076, std=0.0076
+Adjacency matrix stats: min=0.0000, max=0.1406, mean=0.0077, std=0.0083
+epoch [5/50] batch [5/12] time 0.651 (1.042) data 0.000 (0.343) loss 3.8641 (3.8615) lr 9.9114e-02 eta 0:09:30
+Adjacency matrix stats: min=0.0000, max=0.1695, mean=0.0077, std=0.0081
+Adjacency matrix stats: min=0.0000, max=0.1586, mean=0.0077, std=0.0083
+Adjacency matrix stats: min=0.0000, max=0.1404, mean=0.0077, std=0.0079
+Adjacency matrix stats: min=0.0000, max=0.1333, mean=0.0077, std=0.0080
+Adjacency matrix stats: min=0.0000, max=0.1723, mean=0.0077, std=0.0087
+epoch [5/50] batch [10/12] time 0.574 (0.829) data 0.001 (0.172) loss 3.8665 (3.8653) lr 9.9114e-02 eta 0:07:29
+Adjacency matrix stats: min=0.0000, max=0.1369, mean=0.0077, std=0.0073
+Adjacency matrix stats: min=0.0000, max=0.1414, mean=0.0077, std=0.0082
+[Epoch 4] CE: 2.2035 | GLoss: 4.5801 | Total: 3.8670Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 234
+* accuracy: 57.4%
+* error: 42.6%
+* macro_f1: 51.7%
+* ECE: 5.49
+* ACE: 7.58
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.1612, mean=0.0077, std=0.0079
+Adjacency matrix stats: min=0.0000, max=0.1403, mean=0.0077, std=0.0078
+Adjacency matrix stats: min=0.0000, max=0.1494, mean=0.0077, std=0.0080
+Adjacency matrix stats: min=0.0000, max=0.1649, mean=0.0077, std=0.0073
+Adjacency matrix stats: min=0.0000, max=0.1630, mean=0.0077, std=0.0087
+epoch [6/50] batch [5/12] time 0.585 (0.950) data 0.000 (0.289) loss 3.8283 (3.8557) lr 9.8429e-02 eta 0:08:28
+Adjacency matrix stats: min=0.0000, max=0.1764, mean=0.0077, std=0.0082
+Adjacency matrix stats: min=0.0000, max=0.1647, mean=0.0077, std=0.0080
+Adjacency matrix stats: min=0.0000, max=0.1425, mean=0.0077, std=0.0080
+Adjacency matrix stats: min=0.0000, max=0.1416, mean=0.0077, std=0.0086
+Adjacency matrix stats: min=0.0000, max=0.1457, mean=0.0077, std=0.0085
+epoch [6/50] batch [10/12] time 0.574 (0.763) data 0.000 (0.145) loss 3.8663 (3.8580) lr 9.8429e-02 eta 0:06:44
+Adjacency matrix stats: min=0.0000, max=0.1633, mean=0.0077, std=0.0088
+Adjacency matrix stats: min=0.0000, max=0.1572, mean=0.0076, std=0.0079
+[Epoch 5] CE: 2.1260 | GLoss: 4.5831 | Total: 3.8460Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 237
+* accuracy: 58.1%
+* error: 41.9%
+* macro_f1: 52.5%
+* ECE: 4.55
+* ACE: 7.01
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.1473, mean=0.0077, std=0.0082
+Adjacency matrix stats: min=0.0000, max=0.1617, mean=0.0077, std=0.0087
+Adjacency matrix stats: min=0.0000, max=0.1590, mean=0.0077, std=0.0094
+Adjacency matrix stats: min=0.0000, max=0.1893, mean=0.0077, std=0.0076
+Adjacency matrix stats: min=0.0000, max=0.1542, mean=0.0077, std=0.0079
+epoch [7/50] batch [5/12] time 0.857 (1.023) data 0.000 (0.311) loss 3.7945 (3.7959) lr 9.7553e-02 eta 0:08:55
+Adjacency matrix stats: min=0.0000, max=0.1563, mean=0.0076, std=0.0078
+Adjacency matrix stats: min=0.0000, max=0.1941, mean=0.0077, std=0.0086
+Adjacency matrix stats: min=0.0000, max=0.2034, mean=0.0077, std=0.0082
+Adjacency matrix stats: min=0.0000, max=0.1524, mean=0.0077, std=0.0084
+Adjacency matrix stats: min=0.0000, max=0.1695, mean=0.0077, std=0.0084
+epoch [7/50] batch [10/12] time 0.576 (0.823) data 0.000 (0.156) loss 3.8567 (3.8208) lr 9.7553e-02 eta 0:07:06
+Adjacency matrix stats: min=0.0000, max=0.1764, mean=0.0077, std=0.0088
+Adjacency matrix stats: min=0.0000, max=0.1206, mean=0.0077, std=0.0081
+[Epoch 6] CE: 2.0434 | GLoss: 4.5757 | Total: 3.8159Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 238
+* accuracy: 58.3%
+* error: 41.7%
+* macro_f1: 52.9%
+* ECE: 5.45
+* ACE: 6.71
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.1503, mean=0.0077, std=0.0084
+Adjacency matrix stats: min=0.0000, max=0.1760, mean=0.0077, std=0.0095
+Adjacency matrix stats: min=0.0000, max=0.1996, mean=0.0077, std=0.0081
+Adjacency matrix stats: min=0.0000, max=0.1537, mean=0.0076, std=0.0080
+Adjacency matrix stats: min=0.0000, max=0.1295, mean=0.0077, std=0.0076
+epoch [8/50] batch [5/12] time 0.581 (0.898) data 0.000 (0.279) loss 3.8663 (3.8347) lr 9.6489e-02 eta 0:07:38
+Adjacency matrix stats: min=0.0000, max=0.1445, mean=0.0077, std=0.0096
+Adjacency matrix stats: min=0.0000, max=0.1779, mean=0.0077, std=0.0081
+Adjacency matrix stats: min=0.0000, max=0.1660, mean=0.0077, std=0.0082
+Adjacency matrix stats: min=0.0000, max=0.1537, mean=0.0076, std=0.0076
+Adjacency matrix stats: min=0.0000, max=0.1413, mean=0.0077, std=0.0090
+epoch [8/50] batch [10/12] time 0.576 (0.757) data 0.000 (0.140) loss 3.6813 (3.7936) lr 9.6489e-02 eta 0:06:22
+Adjacency matrix stats: min=0.0000, max=0.1465, mean=0.0077, std=0.0084
+Adjacency matrix stats: min=0.0000, max=0.1422, mean=0.0077, std=0.0078
+[Epoch 7] CE: 1.9596 | GLoss: 4.5790 | Total: 3.7932Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 239
+* accuracy: 58.6%
+* error: 41.4%
+* macro_f1: 53.0%
+* ECE: 5.72
+* ACE: 6.48
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.1278, mean=0.0077, std=0.0080
+Adjacency matrix stats: min=0.0000, max=0.1449, mean=0.0077, std=0.0080
+Adjacency matrix stats: min=0.0000, max=0.1749, mean=0.0076, std=0.0089
+Adjacency matrix stats: min=0.0000, max=0.1736, mean=0.0077, std=0.0084
+Adjacency matrix stats: min=0.0000, max=0.1477, mean=0.0077, std=0.0077
+epoch [9/50] batch [5/12] time 0.643 (1.002) data 0.000 (0.330) loss 3.8351 (3.8284) lr 9.5241e-02 eta 0:08:19
+Adjacency matrix stats: min=0.0000, max=0.1471, mean=0.0077, std=0.0089
+Adjacency matrix stats: min=0.0000, max=0.1698, mean=0.0077, std=0.0086
+Adjacency matrix stats: min=0.0000, max=0.1543, mean=0.0077, std=0.0091
+Adjacency matrix stats: min=0.0000, max=0.1593, mean=0.0077, std=0.0086
+Adjacency matrix stats: min=0.0000, max=0.1644, mean=0.0077, std=0.0089
+epoch [9/50] batch [10/12] time 0.584 (0.820) data 0.000 (0.165) loss 3.7222 (3.7893) lr 9.5241e-02 eta 0:06:45
+Adjacency matrix stats: min=0.0000, max=0.1528, mean=0.0077, std=0.0083
+Adjacency matrix stats: min=0.0000, max=0.1381, mean=0.0077, std=0.0093
+[Epoch 8] CE: 1.9023 | GLoss: 4.5788 | Total: 3.7759Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 245
+* accuracy: 60.0%
+* error: 40.0%
+* macro_f1: 54.4%
+* ECE: 5.14
+* ACE: 6.11
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.1307, mean=0.0077, std=0.0075
+Adjacency matrix stats: min=0.0000, max=0.1712, mean=0.0077, std=0.0091
+Adjacency matrix stats: min=0.0000, max=0.1634, mean=0.0077, std=0.0083
+Adjacency matrix stats: min=0.0000, max=0.1614, mean=0.0077, std=0.0083
+Adjacency matrix stats: min=0.0000, max=0.1501, mean=0.0077, std=0.0082
+epoch [10/50] batch [5/12] time 0.590 (1.005) data 0.000 (0.285) loss 3.7722 (3.8007) lr 9.3815e-02 eta 0:08:09
+Adjacency matrix stats: min=0.0000, max=0.1503, mean=0.0077, std=0.0081
+Adjacency matrix stats: min=0.0000, max=0.1451, mean=0.0077, std=0.0092
+Adjacency matrix stats: min=0.0000, max=0.1602, mean=0.0077, std=0.0086
+Adjacency matrix stats: min=0.0000, max=0.1741, mean=0.0077, std=0.0085
+Adjacency matrix stats: min=0.0000, max=0.1759, mean=0.0077, std=0.0087
+epoch [10/50] batch [10/12] time 0.582 (0.792) data 0.000 (0.143) loss 3.7821 (3.7938) lr 9.3815e-02 eta 0:06:21
+Adjacency matrix stats: min=0.0000, max=0.1575, mean=0.0077, std=0.0088
+Adjacency matrix stats: min=0.0000, max=0.1458, mean=0.0077, std=0.0096
+[Epoch 9] CE: 1.9538 | GLoss: 4.5796 | Total: 3.7919Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 249
+* accuracy: 61.0%
+* error: 39.0%
+* macro_f1: 55.8%
+* ECE: 5.36
+* ACE: 5.86
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.2308, mean=0.0077, std=0.0090
+Adjacency matrix stats: min=0.0000, max=0.1481, mean=0.0077, std=0.0089
+Adjacency matrix stats: min=0.0000, max=0.1406, mean=0.0077, std=0.0085
+Adjacency matrix stats: min=0.0000, max=0.1835, mean=0.0077, std=0.0085
+Adjacency matrix stats: min=0.0000, max=0.1606, mean=0.0077, std=0.0090
+epoch [11/50] batch [5/12] time 0.657 (1.071) data 0.000 (0.378) loss 3.7597 (3.7720) lr 9.2216e-02 eta 0:08:28
+Adjacency matrix stats: min=0.0000, max=0.1335, mean=0.0077, std=0.0094
+Adjacency matrix stats: min=0.0000, max=0.1574, mean=0.0077, std=0.0088
+Adjacency matrix stats: min=0.0000, max=0.1604, mean=0.0077, std=0.0089
+Adjacency matrix stats: min=0.0000, max=0.1543, mean=0.0077, std=0.0087
+Adjacency matrix stats: min=0.0000, max=0.1297, mean=0.0077, std=0.0090
+epoch [11/50] batch [10/12] time 0.656 (0.862) data 0.000 (0.189) loss 3.6757 (3.7601) lr 9.2216e-02 eta 0:06:44
+Adjacency matrix stats: min=0.0000, max=0.1590, mean=0.0077, std=0.0087
+Adjacency matrix stats: min=0.0000, max=0.1607, mean=0.0077, std=0.0099
+[Epoch 10] CE: 1.8635 | GLoss: 4.5757 | Total: 3.7620Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 248
+* accuracy: 60.8%
+* error: 39.2%
+* macro_f1: 55.8%
+* ECE: 6.80
+* ACE: 7.79
+Adjacency matrix stats: min=0.0000, max=0.1519, mean=0.0077, std=0.0078
+Adjacency matrix stats: min=0.0000, max=0.1408, mean=0.0077, std=0.0079
+Adjacency matrix stats: min=0.0000, max=0.1797, mean=0.0077, std=0.0093
+Adjacency matrix stats: min=0.0000, max=0.1697, mean=0.0077, std=0.0079
+Adjacency matrix stats: min=0.0000, max=0.1765, mean=0.0077, std=0.0097
+epoch [12/50] batch [5/12] time 0.579 (0.874) data 0.000 (0.279) loss 3.8253 (3.8245) lr 9.0451e-02 eta 0:06:44
+Adjacency matrix stats: min=0.0000, max=0.1478, mean=0.0077, std=0.0096
+Adjacency matrix stats: min=0.0000, max=0.1669, mean=0.0077, std=0.0089
+Adjacency matrix stats: min=0.0000, max=0.1398, mean=0.0077, std=0.0085
+Adjacency matrix stats: min=0.0000, max=0.1828, mean=0.0077, std=0.0100
+Adjacency matrix stats: min=0.0000, max=0.2211, mean=0.0077, std=0.0096
+epoch [12/50] batch [10/12] time 0.578 (0.742) data 0.000 (0.140) loss 3.6058 (3.7723) lr 9.0451e-02 eta 0:05:39
+Adjacency matrix stats: min=0.0000, max=0.1620, mean=0.0077, std=0.0087
+Adjacency matrix stats: min=0.0000, max=0.1436, mean=0.0077, std=0.0088
+[Epoch 11] CE: 1.8382 | GLoss: 4.5787 | Total: 3.7566Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 248
+* accuracy: 60.8%
+* error: 39.2%
+* macro_f1: 55.8%
+* ECE: 7.71
+* ACE: 7.12
+Adjacency matrix stats: min=0.0000, max=0.1546, mean=0.0077, std=0.0090
+Adjacency matrix stats: min=0.0000, max=0.1402, mean=0.0077, std=0.0088
+Adjacency matrix stats: min=0.0000, max=0.1636, mean=0.0077, std=0.0101
+Adjacency matrix stats: min=0.0000, max=0.1616, mean=0.0077, std=0.0097
+Adjacency matrix stats: min=0.0000, max=0.2126, mean=0.0077, std=0.0090
+epoch [13/50] batch [5/12] time 0.568 (0.898) data 0.000 (0.277) loss 3.6913 (3.7084) lr 8.8526e-02 eta 0:06:45
+Adjacency matrix stats: min=0.0000, max=0.1630, mean=0.0077, std=0.0087
+Adjacency matrix stats: min=0.0000, max=0.1405, mean=0.0077, std=0.0081
+Adjacency matrix stats: min=0.0000, max=0.1754, mean=0.0077, std=0.0095
+Adjacency matrix stats: min=0.0000, max=0.1765, mean=0.0077, std=0.0089
+Adjacency matrix stats: min=0.0000, max=0.1779, mean=0.0077, std=0.0083
+epoch [13/50] batch [10/12] time 0.744 (0.752) data 0.000 (0.139) loss 3.7711 (3.7402) lr 8.8526e-02 eta 0:05:35
+Adjacency matrix stats: min=0.0000, max=0.1684, mean=0.0077, std=0.0094
+Adjacency matrix stats: min=0.0000, max=0.2072, mean=0.0077, std=0.0094
+[Epoch 12] CE: 1.7954 | GLoss: 4.5777 | Total: 3.7431Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 253
+* accuracy: 62.0%
+* error: 38.0%
+* macro_f1: 57.4%
+* ECE: 6.15
+* ACE: 5.80
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.2324, mean=0.0077, std=0.0097
+Adjacency matrix stats: min=0.0000, max=0.1654, mean=0.0077, std=0.0099
+Adjacency matrix stats: min=0.0000, max=0.1863, mean=0.0077, std=0.0095
+Adjacency matrix stats: min=0.0000, max=0.1962, mean=0.0077, std=0.0091
+Adjacency matrix stats: min=0.0000, max=0.1684, mean=0.0077, std=0.0088
+epoch [14/50] batch [5/12] time 0.637 (1.039) data 0.000 (0.380) loss 3.6751 (3.7167) lr 8.6448e-02 eta 0:07:36
+Adjacency matrix stats: min=0.0000, max=0.1586, mean=0.0077, std=0.0098
+Adjacency matrix stats: min=0.0000, max=0.1708, mean=0.0077, std=0.0102
+Adjacency matrix stats: min=0.0000, max=0.1815, mean=0.0077, std=0.0092
+Adjacency matrix stats: min=0.0000, max=0.1919, mean=0.0077, std=0.0091
+Adjacency matrix stats: min=0.0000, max=0.1711, mean=0.0077, std=0.0095
+epoch [14/50] batch [10/12] time 0.650 (0.845) data 0.000 (0.190) loss 3.7590 (3.7287) lr 8.6448e-02 eta 0:06:06
+Adjacency matrix stats: min=0.0000, max=0.1594, mean=0.0077, std=0.0096
+Adjacency matrix stats: min=0.0000, max=0.2461, mean=0.0077, std=0.0096
+[Epoch 13] CE: 1.7507 | GLoss: 4.5753 | Total: 3.7280Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 256
+* accuracy: 62.7%
+* error: 37.3%
+* macro_f1: 58.2%
+* ECE: 4.69
+* ACE: 5.57
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.2078, mean=0.0077, std=0.0095
+Adjacency matrix stats: min=0.0000, max=0.1656, mean=0.0077, std=0.0085
+Adjacency matrix stats: min=0.0000, max=0.1670, mean=0.0077, std=0.0091
+Adjacency matrix stats: min=0.0000, max=0.1896, mean=0.0077, std=0.0089
+Adjacency matrix stats: min=0.0000, max=0.1748, mean=0.0077, std=0.0098
+epoch [15/50] batch [5/12] time 0.575 (0.946) data 0.000 (0.302) loss 3.6599 (3.7016) lr 8.4227e-02 eta 0:06:43
+Adjacency matrix stats: min=0.0000, max=0.2045, mean=0.0077, std=0.0097
+Adjacency matrix stats: min=0.0000, max=0.1562, mean=0.0077, std=0.0087
+Adjacency matrix stats: min=0.0000, max=0.2007, mean=0.0077, std=0.0095
+Adjacency matrix stats: min=0.0000, max=0.1496, mean=0.0077, std=0.0094
+Adjacency matrix stats: min=0.0000, max=0.1600, mean=0.0077, std=0.0095
+epoch [15/50] batch [10/12] time 0.572 (0.760) data 0.000 (0.151) loss 3.6677 (3.7196) lr 8.4227e-02 eta 0:05:20
+Adjacency matrix stats: min=0.0000, max=0.2018, mean=0.0077, std=0.0087
+Adjacency matrix stats: min=0.0000, max=0.1684, mean=0.0077, std=0.0095
+[Epoch 14] CE: 1.7054 | GLoss: 4.5779 | Total: 3.7162Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 257
+* accuracy: 63.0%
+* error: 37.0%
+* macro_f1: 58.5%
+* ECE: 5.59
+* ACE: 5.31
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.1877, mean=0.0077, std=0.0095
+Adjacency matrix stats: min=0.0000, max=0.1649, mean=0.0077, std=0.0098
+Adjacency matrix stats: min=0.0000, max=0.1653, mean=0.0077, std=0.0107
+Adjacency matrix stats: min=0.0000, max=0.2125, mean=0.0076, std=0.0095
+Adjacency matrix stats: min=0.0000, max=0.1681, mean=0.0077, std=0.0091
+epoch [16/50] batch [5/12] time 0.567 (1.027) data 0.000 (0.411) loss 3.7563 (3.7058) lr 8.1871e-02 eta 0:07:06
+Adjacency matrix stats: min=0.0000, max=0.1783, mean=0.0077, std=0.0088
+Adjacency matrix stats: min=0.0000, max=0.1578, mean=0.0077, std=0.0094
+Adjacency matrix stats: min=0.0000, max=0.1749, mean=0.0077, std=0.0097
+Adjacency matrix stats: min=0.0000, max=0.2210, mean=0.0077, std=0.0101
+Adjacency matrix stats: min=0.0000, max=0.1666, mean=0.0077, std=0.0092
+epoch [16/50] batch [10/12] time 0.574 (0.801) data 0.000 (0.206) loss 3.7479 (3.7088) lr 8.1871e-02 eta 0:05:28
+Adjacency matrix stats: min=0.0000, max=0.1655, mean=0.0077, std=0.0096
+Adjacency matrix stats: min=0.0000, max=0.1589, mean=0.0077, std=0.0094
+[Epoch 15] CE: 1.6935 | GLoss: 4.5703 | Total: 3.7072Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 261
+* accuracy: 64.0%
+* error: 36.0%
+* macro_f1: 59.8%
+* ECE: 6.29
+* ACE: 5.08
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.1817, mean=0.0077, std=0.0090
+Adjacency matrix stats: min=0.0000, max=0.1710, mean=0.0077, std=0.0102
+Adjacency matrix stats: min=0.0000, max=0.1652, mean=0.0077, std=0.0098
+Adjacency matrix stats: min=0.0000, max=0.1742, mean=0.0077, std=0.0098
+Adjacency matrix stats: min=0.0000, max=0.1721, mean=0.0077, std=0.0096
+epoch [17/50] batch [5/12] time 0.656 (0.999) data 0.000 (0.329) loss 3.7104 (3.6782) lr 7.9389e-02 eta 0:06:42
+Adjacency matrix stats: min=0.0000, max=0.1897, mean=0.0077, std=0.0103
+Adjacency matrix stats: min=0.0000, max=0.1840, mean=0.0077, std=0.0093
+Adjacency matrix stats: min=0.0000, max=0.2199, mean=0.0077, std=0.0102
+Adjacency matrix stats: min=0.0000, max=0.1679, mean=0.0077, std=0.0092
+Adjacency matrix stats: min=0.0000, max=0.1829, mean=0.0077, std=0.0098
+epoch [17/50] batch [10/12] time 0.571 (0.829) data 0.000 (0.165) loss 3.6433 (3.6934) lr 7.9389e-02 eta 0:05:30
+Adjacency matrix stats: min=0.0000, max=0.1692, mean=0.0076, std=0.0103
+Adjacency matrix stats: min=0.0000, max=0.1577, mean=0.0077, std=0.0092
+[Epoch 16] CE: 1.6790 | GLoss: 4.5737 | Total: 3.7052Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 266
+* accuracy: 65.2%
+* error: 34.8%
+* macro_f1: 61.5%
+* ECE: 6.24
+* ACE: 4.39
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.2185, mean=0.0077, std=0.0101
+Adjacency matrix stats: min=0.0000, max=0.1884, mean=0.0077, std=0.0099
+Adjacency matrix stats: min=0.0000, max=0.1838, mean=0.0077, std=0.0094
+Adjacency matrix stats: min=0.0000, max=0.2112, mean=0.0077, std=0.0101
+Adjacency matrix stats: min=0.0000, max=0.1747, mean=0.0077, std=0.0093
+epoch [18/50] batch [5/12] time 0.568 (0.893) data 0.001 (0.258) loss 3.7968 (3.7294) lr 7.6791e-02 eta 0:05:48
+Adjacency matrix stats: min=0.0000, max=0.1667, mean=0.0077, std=0.0094
+Adjacency matrix stats: min=0.0000, max=0.1944, mean=0.0077, std=0.0105
+Adjacency matrix stats: min=0.0000, max=0.1732, mean=0.0077, std=0.0095
+Adjacency matrix stats: min=0.0000, max=0.1857, mean=0.0077, std=0.0104
+Adjacency matrix stats: min=0.0000, max=0.1589, mean=0.0077, std=0.0107
+epoch [18/50] batch [10/12] time 0.658 (0.749) data 0.000 (0.129) loss 3.6548 (3.7039) lr 7.6791e-02 eta 0:04:49
+Adjacency matrix stats: min=0.0000, max=0.1629, mean=0.0077, std=0.0096
+Adjacency matrix stats: min=0.0000, max=0.1920, mean=0.0077, std=0.0104
+[Epoch 17] CE: 1.6703 | GLoss: 4.5678 | Total: 3.6985Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 266
+* accuracy: 65.2%
+* error: 34.8%
+* macro_f1: 61.5%
+* ECE: 6.27
+* ACE: 3.17
+Adjacency matrix stats: min=0.0000, max=0.1718, mean=0.0077, std=0.0104
+Adjacency matrix stats: min=0.0000, max=0.2213, mean=0.0077, std=0.0100
+Adjacency matrix stats: min=0.0000, max=0.1629, mean=0.0076, std=0.0092
+Adjacency matrix stats: min=0.0000, max=0.2069, mean=0.0077, std=0.0105
+Adjacency matrix stats: min=0.0000, max=0.1560, mean=0.0077, std=0.0097
+epoch [19/50] batch [5/12] time 0.651 (0.990) data 0.000 (0.305) loss 3.7336 (3.6995) lr 7.4088e-02 eta 0:06:15
+Adjacency matrix stats: min=0.0000, max=0.1942, mean=0.0077, std=0.0100
+Adjacency matrix stats: min=0.0000, max=0.1911, mean=0.0077, std=0.0108
+Adjacency matrix stats: min=0.0000, max=0.1772, mean=0.0077, std=0.0106
+Adjacency matrix stats: min=0.0000, max=0.2017, mean=0.0077, std=0.0108
+Adjacency matrix stats: min=0.0000, max=0.1769, mean=0.0077, std=0.0097
+epoch [19/50] batch [10/12] time 0.656 (0.819) data 0.000 (0.153) loss 3.6287 (3.6818) lr 7.4088e-02 eta 0:05:06
+Adjacency matrix stats: min=0.0000, max=0.1941, mean=0.0077, std=0.0096
+Adjacency matrix stats: min=0.0000, max=0.2174, mean=0.0077, std=0.0101
+[Epoch 18] CE: 1.6216 | GLoss: 4.5659 | Total: 3.6826Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 268
+* accuracy: 65.7%
+* error: 34.3%
+* macro_f1: 62.3%
+* ECE: 6.75
+* ACE: 3.53
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.1970, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.1689, mean=0.0077, std=0.0103
+Adjacency matrix stats: min=0.0000, max=0.1837, mean=0.0077, std=0.0099
+Adjacency matrix stats: min=0.0000, max=0.1899, mean=0.0077, std=0.0112
+Adjacency matrix stats: min=0.0000, max=0.2545, mean=0.0077, std=0.0107
+epoch [20/50] batch [5/12] time 0.650 (1.003) data 0.000 (0.270) loss 3.6557 (3.6919) lr 7.1289e-02 eta 0:06:07
+Adjacency matrix stats: min=0.0000, max=0.1830, mean=0.0077, std=0.0093
+Adjacency matrix stats: min=0.0000, max=0.1815, mean=0.0077, std=0.0106
+Adjacency matrix stats: min=0.0000, max=0.1554, mean=0.0077, std=0.0094
+Adjacency matrix stats: min=0.0000, max=0.1867, mean=0.0077, std=0.0108
+Adjacency matrix stats: min=0.0000, max=0.2055, mean=0.0077, std=0.0103
+epoch [20/50] batch [10/12] time 0.641 (0.828) data 0.000 (0.135) loss 3.6446 (3.6841) lr 7.1289e-02 eta 0:04:59
+Adjacency matrix stats: min=0.0000, max=0.1864, mean=0.0077, std=0.0103
+Adjacency matrix stats: min=0.0000, max=0.2006, mean=0.0077, std=0.0100
+[Epoch 19] CE: 1.6064 | GLoss: 4.5686 | Total: 3.6799Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 270
+* accuracy: 66.2%
+* error: 33.8%
+* macro_f1: 62.9%
+* ECE: 7.19
+* ACE: 4.09
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.1867, mean=0.0077, std=0.0100
+Adjacency matrix stats: min=0.0000, max=0.2127, mean=0.0077, std=0.0102
+Adjacency matrix stats: min=0.0000, max=0.2042, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.2092, mean=0.0077, std=0.0103
+Adjacency matrix stats: min=0.0000, max=0.1928, mean=0.0077, std=0.0102
+epoch [21/50] batch [5/12] time 0.658 (0.993) data 0.000 (0.323) loss 3.6895 (3.6834) lr 6.8406e-02 eta 0:05:52
+Adjacency matrix stats: min=0.0000, max=0.2175, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.1847, mean=0.0077, std=0.0106
+Adjacency matrix stats: min=0.0000, max=0.1866, mean=0.0076, std=0.0098
+Adjacency matrix stats: min=0.0000, max=0.2280, mean=0.0077, std=0.0098
+Adjacency matrix stats: min=0.0000, max=0.2008, mean=0.0077, std=0.0108
+epoch [21/50] batch [10/12] time 0.652 (0.839) data 0.001 (0.162) loss 3.7390 (3.6876) lr 6.8406e-02 eta 0:04:53
+Adjacency matrix stats: min=0.0000, max=0.1855, mean=0.0077, std=0.0105
+Adjacency matrix stats: min=0.0000, max=0.1972, mean=0.0077, std=0.0097
+[Epoch 20] CE: 1.6017 | GLoss: 4.5671 | Total: 3.6775Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 271
+* accuracy: 66.4%
+* error: 33.6%
+* macro_f1: 63.2%
+* ECE: 7.32
+* ACE: 4.02
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.1563, mean=0.0077, std=0.0105
+Adjacency matrix stats: min=0.0000, max=0.1950, mean=0.0077, std=0.0097
+Adjacency matrix stats: min=0.0000, max=0.1998, mean=0.0077, std=0.0103
+Adjacency matrix stats: min=0.0000, max=0.2017, mean=0.0077, std=0.0099
+Adjacency matrix stats: min=0.0000, max=0.1649, mean=0.0077, std=0.0100
+epoch [22/50] batch [5/12] time 0.567 (0.988) data 0.000 (0.400) loss 3.6906 (3.6910) lr 6.5451e-02 eta 0:05:38
+Adjacency matrix stats: min=0.0000, max=0.1696, mean=0.0077, std=0.0107
+Adjacency matrix stats: min=0.0000, max=0.2083, mean=0.0077, std=0.0106
+Adjacency matrix stats: min=0.0000, max=0.1988, mean=0.0077, std=0.0108
+Adjacency matrix stats: min=0.0000, max=0.1713, mean=0.0077, std=0.0115
+Adjacency matrix stats: min=0.0000, max=0.1595, mean=0.0077, std=0.0104
+epoch [22/50] batch [10/12] time 0.756 (0.801) data 0.000 (0.200) loss 3.6678 (3.6852) lr 6.5451e-02 eta 0:04:30
+Adjacency matrix stats: min=0.0000, max=0.1609, mean=0.0077, std=0.0112
+Adjacency matrix stats: min=0.0000, max=0.1712, mean=0.0077, std=0.0108
+[Epoch 21] CE: 1.5850 | GLoss: 4.5698 | Total: 3.6744Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 274
+* accuracy: 67.2%
+* error: 32.8%
+* macro_f1: 64.2%
+* ECE: 6.76
+* ACE: 4.62
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.1910, mean=0.0077, std=0.0099
+Adjacency matrix stats: min=0.0000, max=0.1922, mean=0.0077, std=0.0103
+Adjacency matrix stats: min=0.0000, max=0.1770, mean=0.0077, std=0.0103
+Adjacency matrix stats: min=0.0000, max=0.2183, mean=0.0077, std=0.0108
+Adjacency matrix stats: min=0.0000, max=0.2048, mean=0.0077, std=0.0098
+epoch [23/50] batch [5/12] time 0.570 (0.936) data 0.000 (0.307) loss 3.6109 (3.6372) lr 6.2434e-02 eta 0:05:09
+Adjacency matrix stats: min=0.0000, max=0.1945, mean=0.0077, std=0.0103
+Adjacency matrix stats: min=0.0000, max=0.1884, mean=0.0077, std=0.0106
+Adjacency matrix stats: min=0.0000, max=0.2372, mean=0.0077, std=0.0116
+Adjacency matrix stats: min=0.0000, max=0.2013, mean=0.0077, std=0.0104
+Adjacency matrix stats: min=0.0000, max=0.1743, mean=0.0077, std=0.0110
+epoch [23/50] batch [10/12] time 0.572 (0.756) data 0.000 (0.154) loss 3.8027 (3.6611) lr 6.2434e-02 eta 0:04:06
+Adjacency matrix stats: min=0.0000, max=0.2347, mean=0.0077, std=0.0100
+Adjacency matrix stats: min=0.0000, max=0.1837, mean=0.0077, std=0.0099
+[Epoch 22] CE: 1.5754 | GLoss: 4.5707 | Total: 3.6721Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 276
+* accuracy: 67.6%
+* error: 32.4%
+* macro_f1: 64.7%
+* ECE: 7.18
+* ACE: 5.37
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.2047, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.1845, mean=0.0077, std=0.0115
+Adjacency matrix stats: min=0.0000, max=0.1915, mean=0.0077, std=0.0113
+Adjacency matrix stats: min=0.0000, max=0.2021, mean=0.0077, std=0.0106
+Adjacency matrix stats: min=0.0000, max=0.1622, mean=0.0077, std=0.0107
+epoch [24/50] batch [5/12] time 0.645 (0.981) data 0.000 (0.309) loss 3.7650 (3.6635) lr 5.9369e-02 eta 0:05:13
+Adjacency matrix stats: min=0.0000, max=0.1760, mean=0.0077, std=0.0108
+Adjacency matrix stats: min=0.0000, max=0.1889, mean=0.0077, std=0.0101
+Adjacency matrix stats: min=0.0000, max=0.2167, mean=0.0077, std=0.0110
+Adjacency matrix stats: min=0.0000, max=0.1998, mean=0.0077, std=0.0106
+Adjacency matrix stats: min=0.0000, max=0.1441, mean=0.0077, std=0.0096
+epoch [24/50] batch [10/12] time 0.584 (0.800) data 0.000 (0.155) loss 3.6798 (3.6563) lr 5.9369e-02 eta 0:04:11
+Adjacency matrix stats: min=0.0000, max=0.1738, mean=0.0077, std=0.0104
+Adjacency matrix stats: min=0.0000, max=0.2171, mean=0.0077, std=0.0111
+[Epoch 23] CE: 1.5400 | GLoss: 4.5669 | Total: 3.6588Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 275
+* accuracy: 67.4%
+* error: 32.6%
+* macro_f1: 64.5%
+* ECE: 5.86
+* ACE: 4.17
+Adjacency matrix stats: min=0.0000, max=0.1693, mean=0.0077, std=0.0099
+Adjacency matrix stats: min=0.0000, max=0.2034, mean=0.0077, std=0.0100
+Adjacency matrix stats: min=0.0000, max=0.2123, mean=0.0077, std=0.0112
+Adjacency matrix stats: min=0.0000, max=0.2331, mean=0.0077, std=0.0113
+Adjacency matrix stats: min=0.0000, max=0.1742, mean=0.0077, std=0.0108
+epoch [25/50] batch [5/12] time 0.577 (0.942) data 0.000 (0.296) loss 3.6109 (3.6377) lr 5.6267e-02 eta 0:04:49
+Adjacency matrix stats: min=0.0000, max=0.1856, mean=0.0077, std=0.0118
+Adjacency matrix stats: min=0.0000, max=0.2328, mean=0.0077, std=0.0108
+Adjacency matrix stats: min=0.0000, max=0.1822, mean=0.0077, std=0.0100
+Adjacency matrix stats: min=0.0000, max=0.1904, mean=0.0077, std=0.0111
+Adjacency matrix stats: min=0.0000, max=0.1979, mean=0.0077, std=0.0110
+epoch [25/50] batch [10/12] time 0.565 (0.757) data 0.000 (0.148) loss 3.6283 (3.6278) lr 5.6267e-02 eta 0:03:48
+Adjacency matrix stats: min=0.0000, max=0.2039, mean=0.0077, std=0.0102
+Adjacency matrix stats: min=0.0000, max=0.1728, mean=0.0077, std=0.0115
+[Epoch 24] CE: 1.4921 | GLoss: 4.5616 | Total: 3.6407Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 276
+* accuracy: 67.6%
+* error: 32.4%
+* macro_f1: 64.8%
+* ECE: 5.08
+* ACE: 5.13
+Adjacency matrix stats: min=0.0000, max=0.2020, mean=0.0077, std=0.0108
+Adjacency matrix stats: min=0.0000, max=0.1731, mean=0.0077, std=0.0102
+Adjacency matrix stats: min=0.0000, max=0.2280, mean=0.0077, std=0.0113
+Adjacency matrix stats: min=0.0000, max=0.2229, mean=0.0077, std=0.0115
+Adjacency matrix stats: min=0.0000, max=0.2058, mean=0.0077, std=0.0107
+epoch [26/50] batch [5/12] time 0.565 (1.098) data 0.000 (0.423) loss 3.7063 (3.6456) lr 5.3140e-02 eta 0:05:23
+Adjacency matrix stats: min=0.0000, max=0.1956, mean=0.0077, std=0.0107
+Adjacency matrix stats: min=0.0000, max=0.2071, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.1650, mean=0.0077, std=0.0107
+Adjacency matrix stats: min=0.0000, max=0.2355, mean=0.0077, std=0.0110
+Adjacency matrix stats: min=0.0000, max=0.2387, mean=0.0077, std=0.0111
+epoch [26/50] batch [10/12] time 0.570 (0.835) data 0.000 (0.211) loss 3.6327 (3.6377) lr 5.3140e-02 eta 0:04:02
+Adjacency matrix stats: min=0.0000, max=0.2106, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.1934, mean=0.0077, std=0.0118
+[Epoch 25] CE: 1.4986 | GLoss: 4.5545 | Total: 3.6377Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 276
+* accuracy: 67.6%
+* error: 32.4%
+* macro_f1: 64.6%
+* ECE: 4.60
+* ACE: 5.27
+Adjacency matrix stats: min=0.0000, max=0.2070, mean=0.0077, std=0.0112
+Adjacency matrix stats: min=0.0000, max=0.2014, mean=0.0077, std=0.0121
+Adjacency matrix stats: min=0.0000, max=0.2098, mean=0.0077, std=0.0107
+Adjacency matrix stats: min=0.0000, max=0.2112, mean=0.0077, std=0.0111
+Adjacency matrix stats: min=0.0000, max=0.2181, mean=0.0077, std=0.0110
+epoch [27/50] batch [5/12] time 0.575 (0.922) data 0.001 (0.323) loss 3.6370 (3.6276) lr 5.0000e-02 eta 0:04:20
+Adjacency matrix stats: min=0.0000, max=0.2192, mean=0.0077, std=0.0105
+Adjacency matrix stats: min=0.0000, max=0.1636, mean=0.0076, std=0.0100
+Adjacency matrix stats: min=0.0000, max=0.1805, mean=0.0077, std=0.0114
+Adjacency matrix stats: min=0.0000, max=0.2221, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.1806, mean=0.0077, std=0.0105
+epoch [27/50] batch [10/12] time 0.640 (0.794) data 0.000 (0.162) loss 3.5534 (3.6477) lr 5.0000e-02 eta 0:03:40
+Adjacency matrix stats: min=0.0000, max=0.1926, mean=0.0077, std=0.0127
+Adjacency matrix stats: min=0.0000, max=0.1717, mean=0.0077, std=0.0107
+[Epoch 26] CE: 1.4987 | GLoss: 4.5621 | Total: 3.6431Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 277
+* accuracy: 67.9%
+* error: 32.1%
+* macro_f1: 65.0%
+* ECE: 4.48
+* ACE: 6.11
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.2151, mean=0.0077, std=0.0111
+Adjacency matrix stats: min=0.0000, max=0.2410, mean=0.0077, std=0.0120
+Adjacency matrix stats: min=0.0000, max=0.1915, mean=0.0077, std=0.0105
+Adjacency matrix stats: min=0.0000, max=0.1750, mean=0.0077, std=0.0108
+Adjacency matrix stats: min=0.0000, max=0.1802, mean=0.0077, std=0.0107
+epoch [28/50] batch [5/12] time 0.575 (0.933) data 0.000 (0.324) loss 3.6045 (3.6312) lr 4.6860e-02 eta 0:04:12
+Adjacency matrix stats: min=0.0000, max=0.2231, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.2225, mean=0.0077, std=0.0110
+Adjacency matrix stats: min=0.0000, max=0.1921, mean=0.0077, std=0.0121
+Adjacency matrix stats: min=0.0000, max=0.1936, mean=0.0077, std=0.0116
+Adjacency matrix stats: min=0.0000, max=0.2143, mean=0.0077, std=0.0106
+epoch [28/50] batch [10/12] time 0.580 (0.759) data 0.001 (0.162) loss 3.6917 (3.6455) lr 4.6860e-02 eta 0:03:21
+Adjacency matrix stats: min=0.0000, max=0.2341, mean=0.0077, std=0.0120
+Adjacency matrix stats: min=0.0000, max=0.1752, mean=0.0077, std=0.0112
+[Epoch 27] CE: 1.5082 | GLoss: 4.5594 | Total: 3.6441Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 278
+* accuracy: 68.1%
+* error: 31.9%
+* macro_f1: 65.1%
+* ECE: 4.53
+* ACE: 5.53
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.2066, mean=0.0077, std=0.0112
+Adjacency matrix stats: min=0.0000, max=0.1959, mean=0.0077, std=0.0106
+Adjacency matrix stats: min=0.0000, max=0.1794, mean=0.0077, std=0.0111
+Adjacency matrix stats: min=0.0000, max=0.1861, mean=0.0077, std=0.0122
+Adjacency matrix stats: min=0.0000, max=0.2231, mean=0.0077, std=0.0114
+epoch [29/50] batch [5/12] time 0.653 (0.962) data 0.000 (0.301) loss 3.6907 (3.6313) lr 4.3733e-02 eta 0:04:09
+Adjacency matrix stats: min=0.0000, max=0.1969, mean=0.0077, std=0.0108
+Adjacency matrix stats: min=0.0000, max=0.2062, mean=0.0077, std=0.0107
+Adjacency matrix stats: min=0.0000, max=0.2285, mean=0.0077, std=0.0112
+Adjacency matrix stats: min=0.0000, max=0.2560, mean=0.0077, std=0.0098
+Adjacency matrix stats: min=0.0000, max=0.2561, mean=0.0077, std=0.0114
+epoch [29/50] batch [10/12] time 0.639 (0.804) data 0.000 (0.151) loss 3.6922 (3.6521) lr 4.3733e-02 eta 0:03:24
+Adjacency matrix stats: min=0.0000, max=0.2398, mean=0.0077, std=0.0112
+Adjacency matrix stats: min=0.0000, max=0.2347, mean=0.0077, std=0.0113
+[Epoch 28] CE: 1.5360 | GLoss: 4.5653 | Total: 3.6565Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 277
+* accuracy: 67.9%
+* error: 32.1%
+* macro_f1: 64.8%
+* ECE: 5.76
+* ACE: 6.07
+Adjacency matrix stats: min=0.0000, max=0.2374, mean=0.0077, std=0.0112
+Adjacency matrix stats: min=0.0000, max=0.2360, mean=0.0077, std=0.0115
+Adjacency matrix stats: min=0.0000, max=0.2625, mean=0.0077, std=0.0113
+Adjacency matrix stats: min=0.0000, max=0.1998, mean=0.0077, std=0.0123
+Adjacency matrix stats: min=0.0000, max=0.1856, mean=0.0077, std=0.0110
+epoch [30/50] batch [5/12] time 0.563 (0.950) data 0.000 (0.291) loss 3.6188 (3.6097) lr 4.0631e-02 eta 0:03:54
+Adjacency matrix stats: min=0.0000, max=0.2012, mean=0.0077, std=0.0116
+Adjacency matrix stats: min=0.0000, max=0.1665, mean=0.0077, std=0.0112
+Adjacency matrix stats: min=0.0000, max=0.1870, mean=0.0077, std=0.0117
+Adjacency matrix stats: min=0.0000, max=0.1927, mean=0.0077, std=0.0103
+Adjacency matrix stats: min=0.0000, max=0.1868, mean=0.0077, std=0.0100
+epoch [30/50] batch [10/12] time 0.567 (0.760) data 0.000 (0.146) loss 3.7468 (3.6533) lr 4.0631e-02 eta 0:03:04
+Adjacency matrix stats: min=0.0000, max=0.1969, mean=0.0077, std=0.0112
+Adjacency matrix stats: min=0.0000, max=0.2285, mean=0.0077, std=0.0123
+[Epoch 29] CE: 1.5163 | GLoss: 4.5613 | Total: 3.6478Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 277
+* accuracy: 67.9%
+* error: 32.1%
+* macro_f1: 65.1%
+* ECE: 5.18
+* ACE: 6.67
+Adjacency matrix stats: min=0.0000, max=0.1889, mean=0.0077, std=0.0106
+Adjacency matrix stats: min=0.0000, max=0.1916, mean=0.0077, std=0.0105
+Adjacency matrix stats: min=0.0000, max=0.2380, mean=0.0077, std=0.0103
+Adjacency matrix stats: min=0.0000, max=0.1801, mean=0.0077, std=0.0112
+Adjacency matrix stats: min=0.0000, max=0.1893, mean=0.0077, std=0.0114
+epoch [31/50] batch [5/12] time 0.646 (0.983) data 0.000 (0.295) loss 3.6742 (3.6370) lr 3.7566e-02 eta 0:03:50
+Adjacency matrix stats: min=0.0000, max=0.2225, mean=0.0076, std=0.0111
+Adjacency matrix stats: min=0.0000, max=0.2518, mean=0.0077, std=0.0120
+Adjacency matrix stats: min=0.0000, max=0.2106, mean=0.0077, std=0.0116
+Adjacency matrix stats: min=0.0000, max=0.1959, mean=0.0077, std=0.0118
+Adjacency matrix stats: min=0.0000, max=0.2108, mean=0.0077, std=0.0111
+epoch [31/50] batch [10/12] time 0.572 (0.825) data 0.000 (0.147) loss 3.6785 (3.6676) lr 3.7566e-02 eta 0:03:09
+Adjacency matrix stats: min=0.0000, max=0.2162, mean=0.0077, std=0.0119
+Adjacency matrix stats: min=0.0000, max=0.2298, mean=0.0077, std=0.0122
+[Epoch 30] CE: 1.5448 | GLoss: 4.5620 | Total: 3.6568Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 279
+* accuracy: 68.4%
+* error: 31.6%
+* macro_f1: 65.6%
+* ECE: 5.15
+* ACE: 5.62
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar
+Adjacency matrix stats: min=0.0000, max=0.1902, mean=0.0077, std=0.0108
+Adjacency matrix stats: min=0.0000, max=0.2477, mean=0.0077, std=0.0111
+Adjacency matrix stats: min=0.0000, max=0.2325, mean=0.0077, std=0.0114
+Adjacency matrix stats: min=0.0000, max=0.1953, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.2077, mean=0.0077, std=0.0121
+epoch [32/50] batch [5/12] time 0.647 (1.058) data 0.000 (0.394) loss 3.6361 (3.6483) lr 3.4549e-02 eta 0:03:56
+Adjacency matrix stats: min=0.0000, max=0.1899, mean=0.0077, std=0.0119
+Adjacency matrix stats: min=0.0000, max=0.2266, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.2721, mean=0.0077, std=0.0112
+Adjacency matrix stats: min=0.0000, max=0.2451, mean=0.0077, std=0.0121
+Adjacency matrix stats: min=0.0000, max=0.1725, mean=0.0077, std=0.0112
+epoch [32/50] batch [10/12] time 0.640 (0.853) data 0.000 (0.197) loss 3.6754 (3.6302) lr 3.4549e-02 eta 0:03:05
+Adjacency matrix stats: min=0.0000, max=0.1646, mean=0.0077, std=0.0106
+Adjacency matrix stats: min=0.0000, max=0.2106, mean=0.0077, std=0.0106
+[Epoch 31] CE: 1.4624 | GLoss: 4.5599 | Total: 3.6307Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 279
+* accuracy: 68.4%
+* error: 31.6%
+* macro_f1: 65.6%
+* ECE: 5.22
+* ACE: 5.50
+Adjacency matrix stats: min=0.0000, max=0.1904, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.2549, mean=0.0077, std=0.0113
+Adjacency matrix stats: min=0.0000, max=0.2018, mean=0.0077, std=0.0125
+Adjacency matrix stats: min=0.0000, max=0.2179, mean=0.0077, std=0.0118
+Adjacency matrix stats: min=0.0000, max=0.1993, mean=0.0077, std=0.0107
+epoch [33/50] batch [5/12] time 0.590 (0.983) data 0.000 (0.374) loss 3.6896 (3.6203) lr 3.1594e-02 eta 0:03:27
+Adjacency matrix stats: min=0.0000, max=0.1790, mean=0.0077, std=0.0110
+Adjacency matrix stats: min=0.0000, max=0.1754, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.2004, mean=0.0077, std=0.0108
+Adjacency matrix stats: min=0.0000, max=0.2521, mean=0.0077, std=0.0127
+Adjacency matrix stats: min=0.0000, max=0.2204, mean=0.0077, std=0.0117
+epoch [33/50] batch [10/12] time 0.582 (0.780) data 0.000 (0.187) loss 3.6535 (3.6275) lr 3.1594e-02 eta 0:02:40
+Adjacency matrix stats: min=0.0000, max=0.1866, mean=0.0077, std=0.0107
+Adjacency matrix stats: min=0.0000, max=0.2055, mean=0.0077, std=0.0117
+[Epoch 32] CE: 1.4531 | GLoss: 4.5630 | Total: 3.6300Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 278
+* accuracy: 68.1%
+* error: 31.9%
+* macro_f1: 65.4%
+* ECE: 5.62
+* ACE: 4.81
+Adjacency matrix stats: min=0.0000, max=0.2428, mean=0.0077, std=0.0122
+Adjacency matrix stats: min=0.0000, max=0.2206, mean=0.0077, std=0.0110
+Adjacency matrix stats: min=0.0000, max=0.1974, mean=0.0077, std=0.0112
+Adjacency matrix stats: min=0.0000, max=0.1862, mean=0.0077, std=0.0101
+Adjacency matrix stats: min=0.0000, max=0.1807, mean=0.0077, std=0.0108
+epoch [34/50] batch [5/12] time 0.634 (1.005) data 0.000 (0.295) loss 3.6135 (3.6428) lr 2.8711e-02 eta 0:03:20
+Adjacency matrix stats: min=0.0000, max=0.2017, mean=0.0077, std=0.0111
+Adjacency matrix stats: min=0.0000, max=0.2735, mean=0.0077, std=0.0123
+Adjacency matrix stats: min=0.0000, max=0.1889, mean=0.0077, std=0.0115
+Adjacency matrix stats: min=0.0000, max=0.2815, mean=0.0077, std=0.0124
+Adjacency matrix stats: min=0.0000, max=0.1921, mean=0.0077, std=0.0108
+epoch [34/50] batch [10/12] time 0.576 (0.789) data 0.000 (0.148) loss 3.6287 (3.6392) lr 2.8711e-02 eta 0:02:33
+Adjacency matrix stats: min=0.0000, max=0.2011, mean=0.0077, std=0.0118
+Adjacency matrix stats: min=0.0000, max=0.1738, mean=0.0077, std=0.0105
+[Epoch 33] CE: 1.4622 | GLoss: 4.5644 | Total: 3.6337Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 278
+* accuracy: 68.1%
+* error: 31.9%
+* macro_f1: 65.4%
+* ECE: 5.47
+* ACE: 5.25
+Adjacency matrix stats: min=0.0000, max=0.2076, mean=0.0077, std=0.0118
+Adjacency matrix stats: min=0.0000, max=0.2510, mean=0.0077, std=0.0123
+Adjacency matrix stats: min=0.0000, max=0.2380, mean=0.0077, std=0.0116
+Adjacency matrix stats: min=0.0000, max=0.1942, mean=0.0077, std=0.0111
+Adjacency matrix stats: min=0.0000, max=0.1716, mean=0.0077, std=0.0109
+epoch [35/50] batch [5/12] time 0.859 (1.022) data 0.000 (0.301) loss 3.5732 (3.6064) lr 2.5912e-02 eta 0:03:11
+Adjacency matrix stats: min=0.0000, max=0.1994, mean=0.0077, std=0.0114
+Adjacency matrix stats: min=0.0000, max=0.2237, mean=0.0077, std=0.0116
+Adjacency matrix stats: min=0.0000, max=0.2293, mean=0.0077, std=0.0111
+Adjacency matrix stats: min=0.0000, max=0.1733, mean=0.0077, std=0.0116
+Adjacency matrix stats: min=0.0000, max=0.2535, mean=0.0077, std=0.0124
+epoch [35/50] batch [10/12] time 0.571 (0.813) data 0.000 (0.151) loss 3.5331 (3.6093) lr 2.5912e-02 eta 0:02:27
+Adjacency matrix stats: min=0.0000, max=0.2171, mean=0.0077, std=0.0111
+Adjacency matrix stats: min=0.0000, max=0.1989, mean=0.0077, std=0.0114
+[Epoch 34] CE: 1.4424 | GLoss: 4.5547 | Total: 3.6210Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 277
+* accuracy: 67.9%
+* error: 32.1%
+* macro_f1: 65.3%
+* ECE: 5.78
+* ACE: 4.97
+Adjacency matrix stats: min=0.0000, max=0.2280, mean=0.0077, std=0.0121
+Adjacency matrix stats: min=0.0000, max=0.2149, mean=0.0077, std=0.0113
+Adjacency matrix stats: min=0.0000, max=0.1711, mean=0.0077, std=0.0105
+Adjacency matrix stats: min=0.0000, max=0.2641, mean=0.0077, std=0.0107
+Adjacency matrix stats: min=0.0000, max=0.2150, mean=0.0077, std=0.0120
+epoch [36/50] batch [5/12] time 0.580 (0.979) data 0.000 (0.375) loss 3.6500 (3.6318) lr 2.3209e-02 eta 0:02:51
+Adjacency matrix stats: min=0.0000, max=0.2432, mean=0.0077, std=0.0118
+Adjacency matrix stats: min=0.0000, max=0.2172, mean=0.0077, std=0.0119
+Adjacency matrix stats: min=0.0000, max=0.1697, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.2024, mean=0.0077, std=0.0110
+Adjacency matrix stats: min=0.0000, max=0.2706, mean=0.0077, std=0.0109
+epoch [36/50] batch [10/12] time 0.661 (0.811) data 0.000 (0.188) loss 3.6212 (3.6318) lr 2.3209e-02 eta 0:02:17
+Adjacency matrix stats: min=0.0000, max=0.2171, mean=0.0077, std=0.0118
+Adjacency matrix stats: min=0.0000, max=0.2159, mean=0.0077, std=0.0121
+[Epoch 35] CE: 1.4599 | GLoss: 4.5626 | Total: 3.6318Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 278
+* accuracy: 68.1%
+* error: 31.9%
+* macro_f1: 65.5%
+* ECE: 5.87
+* ACE: 5.22
+Adjacency matrix stats: min=0.0000, max=0.2242, mean=0.0077, std=0.0124
+Adjacency matrix stats: min=0.0000, max=0.2320, mean=0.0077, std=0.0119
+Adjacency matrix stats: min=0.0000, max=0.2101, mean=0.0077, std=0.0112
+Adjacency matrix stats: min=0.0000, max=0.2401, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.1797, mean=0.0077, std=0.0114
+epoch [37/50] batch [5/12] time 0.648 (0.941) data 0.000 (0.259) loss 3.5810 (3.6271) lr 2.0611e-02 eta 0:02:33
+Adjacency matrix stats: min=0.0000, max=0.2040, mean=0.0077, std=0.0114
+Adjacency matrix stats: min=0.0000, max=0.2109, mean=0.0077, std=0.0119
+Adjacency matrix stats: min=0.0000, max=0.1736, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.2416, mean=0.0077, std=0.0117
+Adjacency matrix stats: min=0.0000, max=0.1812, mean=0.0077, std=0.0111
+epoch [37/50] batch [10/12] time 0.645 (0.794) data 0.000 (0.129) loss 3.5467 (3.6124) lr 2.0611e-02 eta 0:02:05
+Adjacency matrix stats: min=0.0000, max=0.1994, mean=0.0077, std=0.0105
+Adjacency matrix stats: min=0.0000, max=0.1945, mean=0.0077, std=0.0103
+[Epoch 36] CE: 1.4073 | GLoss: 4.5624 | Total: 3.6159Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 277
+* accuracy: 67.9%
+* error: 32.1%
+* macro_f1: 65.3%
+* ECE: 6.08
+* ACE: 5.44
+Adjacency matrix stats: min=0.0000, max=0.2073, mean=0.0077, std=0.0123
+Adjacency matrix stats: min=0.0000, max=0.2491, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.2074, mean=0.0077, std=0.0114
+Adjacency matrix stats: min=0.0000, max=0.2010, mean=0.0077, std=0.0114
+Adjacency matrix stats: min=0.0000, max=0.1675, mean=0.0077, std=0.0107
+epoch [38/50] batch [5/12] time 0.695 (1.030) data 0.000 (0.310) loss 3.6904 (3.6128) lr 1.8129e-02 eta 0:02:35
+Adjacency matrix stats: min=0.0000, max=0.2416, mean=0.0077, std=0.0121
+Adjacency matrix stats: min=0.0000, max=0.2226, mean=0.0077, std=0.0113
+Adjacency matrix stats: min=0.0000, max=0.2114, mean=0.0077, std=0.0112
+Adjacency matrix stats: min=0.0000, max=0.1647, mean=0.0077, std=0.0105
+Adjacency matrix stats: min=0.0000, max=0.2183, mean=0.0077, std=0.0120
+epoch [38/50] batch [10/12] time 0.648 (0.833) data 0.000 (0.155) loss 3.6243 (3.6197) lr 1.8129e-02 eta 0:02:01
+Adjacency matrix stats: min=0.0000, max=0.1967, mean=0.0077, std=0.0123
+Adjacency matrix stats: min=0.0000, max=0.2066, mean=0.0077, std=0.0122
+[Epoch 37] CE: 1.4161 | GLoss: 4.5651 | Total: 3.6204Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 279
+* accuracy: 68.4%
+* error: 31.6%
+* macro_f1: 65.7%
+* ECE: 5.80
+* ACE: 4.95
+Adjacency matrix stats: min=0.0000, max=0.2405, mean=0.0077, std=0.0123
+Adjacency matrix stats: min=0.0000, max=0.2164, mean=0.0077, std=0.0118
+Adjacency matrix stats: min=0.0000, max=0.2059, mean=0.0077, std=0.0107
+Adjacency matrix stats: min=0.0000, max=0.2012, mean=0.0077, std=0.0108
+Adjacency matrix stats: min=0.0000, max=0.2344, mean=0.0077, std=0.0117
+epoch [39/50] batch [5/12] time 0.667 (1.074) data 0.001 (0.400) loss 3.5873 (3.6375) lr 1.5773e-02 eta 0:02:29
+Adjacency matrix stats: min=0.0000, max=0.2166, mean=0.0077, std=0.0117
+Adjacency matrix stats: min=0.0000, max=0.2021, mean=0.0077, std=0.0115
+Adjacency matrix stats: min=0.0000, max=0.2364, mean=0.0077, std=0.0127
+Adjacency matrix stats: min=0.0000, max=0.1980, mean=0.0077, std=0.0120
+Adjacency matrix stats: min=0.0000, max=0.2043, mean=0.0077, std=0.0114
+epoch [39/50] batch [10/12] time 0.663 (0.883) data 0.000 (0.200) loss 3.6234 (3.6246) lr 1.5773e-02 eta 0:01:58
+Adjacency matrix stats: min=0.0000, max=0.2285, mean=0.0077, std=0.0118
+Adjacency matrix stats: min=0.0000, max=0.1638, mean=0.0077, std=0.0105
+[Epoch 38] CE: 1.4374 | GLoss: 4.5630 | Total: 3.6253Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 277
+* accuracy: 67.9%
+* error: 32.1%
+* macro_f1: 65.2%
+* ECE: 6.56
+* ACE: 5.93
+Adjacency matrix stats: min=0.0000, max=0.2089, mean=0.0077, std=0.0108
+Adjacency matrix stats: min=0.0000, max=0.1896, mean=0.0077, std=0.0114
+Adjacency matrix stats: min=0.0000, max=0.1897, mean=0.0077, std=0.0123
+Adjacency matrix stats: min=0.0000, max=0.2065, mean=0.0077, std=0.0110
+Adjacency matrix stats: min=0.0000, max=0.1822, mean=0.0077, std=0.0115
+epoch [40/50] batch [5/12] time 0.661 (0.943) data 0.000 (0.265) loss 3.6204 (3.6535) lr 1.3552e-02 eta 0:01:59
+Adjacency matrix stats: min=0.0000, max=0.2047, mean=0.0077, std=0.0106
+Adjacency matrix stats: min=0.0000, max=0.1802, mean=0.0077, std=0.0116
+Adjacency matrix stats: min=0.0000, max=0.1951, mean=0.0077, std=0.0119
+Adjacency matrix stats: min=0.0000, max=0.1930, mean=0.0077, std=0.0121
+Adjacency matrix stats: min=0.0000, max=0.1806, mean=0.0077, std=0.0111
+epoch [40/50] batch [10/12] time 0.587 (0.777) data 0.000 (0.133) loss 3.6234 (3.6409) lr 1.3552e-02 eta 0:01:34
+Adjacency matrix stats: min=0.0000, max=0.1870, mean=0.0077, std=0.0119
+Adjacency matrix stats: min=0.0000, max=0.1982, mean=0.0077, std=0.0112
+[Epoch 39] CE: 1.4632 | GLoss: 4.5600 | Total: 3.6310Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 277
+* accuracy: 67.9%
+* error: 32.1%
+* macro_f1: 65.2%
+* ECE: 6.47
+* ACE: 5.92
+Adjacency matrix stats: min=0.0000, max=0.2034, mean=0.0077, std=0.0113
+Adjacency matrix stats: min=0.0000, max=0.2334, mean=0.0077, std=0.0119
+Adjacency matrix stats: min=0.0000, max=0.2089, mean=0.0077, std=0.0113
+Adjacency matrix stats: min=0.0000, max=0.2146, mean=0.0077, std=0.0110
+Adjacency matrix stats: min=0.0000, max=0.2041, mean=0.0077, std=0.0112
+epoch [41/50] batch [5/12] time 0.647 (0.970) data 0.000 (0.291) loss 3.6218 (3.6261) lr 1.1474e-02 eta 0:01:51
+Adjacency matrix stats: min=0.0000, max=0.2365, mean=0.0077, std=0.0106
+Adjacency matrix stats: min=0.0000, max=0.2381, mean=0.0077, std=0.0116
+Adjacency matrix stats: min=0.0000, max=0.2325, mean=0.0077, std=0.0118
+Adjacency matrix stats: min=0.0000, max=0.2511, mean=0.0077, std=0.0118
+Adjacency matrix stats: min=0.0000, max=0.1849, mean=0.0077, std=0.0111
+epoch [41/50] batch [10/12] time 0.577 (0.796) data 0.000 (0.146) loss 3.6203 (3.6242) lr 1.1474e-02 eta 0:01:27
+Adjacency matrix stats: min=0.0000, max=0.2081, mean=0.0077, std=0.0115
+Adjacency matrix stats: min=0.0000, max=0.2361, mean=0.0077, std=0.0126
+[Epoch 40] CE: 1.4486 | GLoss: 4.5622 | Total: 3.6281Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 278
+* accuracy: 68.1%
+* error: 31.9%
+* macro_f1: 65.5%
+* ECE: 5.69
+* ACE: 5.18
+Adjacency matrix stats: min=0.0000, max=0.2089, mean=0.0077, std=0.0111
+Adjacency matrix stats: min=0.0000, max=0.2442, mean=0.0077, std=0.0118
+Adjacency matrix stats: min=0.0000, max=0.2313, mean=0.0077, std=0.0115
+Adjacency matrix stats: min=0.0000, max=0.2584, mean=0.0077, std=0.0114
+Adjacency matrix stats: min=0.0000, max=0.2044, mean=0.0077, std=0.0118
+epoch [42/50] batch [5/12] time 0.643 (0.996) data 0.000 (0.290) loss 3.5453 (3.6445) lr 9.5492e-03 eta 0:01:42
+Adjacency matrix stats: min=0.0000, max=0.1953, mean=0.0077, std=0.0114
+Adjacency matrix stats: min=0.0000, max=0.2142, mean=0.0077, std=0.0122
+Adjacency matrix stats: min=0.0000, max=0.2156, mean=0.0077, std=0.0112
+Adjacency matrix stats: min=0.0000, max=0.2041, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.1637, mean=0.0077, std=0.0107
+epoch [42/50] batch [10/12] time 0.574 (0.790) data 0.000 (0.145) loss 3.6040 (3.6313) lr 9.5492e-03 eta 0:01:17
+Adjacency matrix stats: min=0.0000, max=0.1859, mean=0.0077, std=0.0118
+Adjacency matrix stats: min=0.0000, max=0.2238, mean=0.0077, std=0.0110
+[Epoch 41] CE: 1.4925 | GLoss: 4.5559 | Total: 3.6369Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 277
+* accuracy: 67.9%
+* error: 32.1%
+* macro_f1: 65.3%
+* ECE: 6.00
+* ACE: 5.90
+Adjacency matrix stats: min=0.0000, max=0.1869, mean=0.0077, std=0.0104
+Adjacency matrix stats: min=0.0000, max=0.2352, mean=0.0077, std=0.0115
+Adjacency matrix stats: min=0.0000, max=0.2054, mean=0.0077, std=0.0115
+Adjacency matrix stats: min=0.0000, max=0.2064, mean=0.0077, std=0.0111
+Adjacency matrix stats: min=0.0000, max=0.2472, mean=0.0077, std=0.0120
+epoch [43/50] batch [5/12] time 0.660 (0.960) data 0.000 (0.283) loss 3.6181 (3.6233) lr 7.7836e-03 eta 0:01:27
+Adjacency matrix stats: min=0.0000, max=0.2090, mean=0.0077, std=0.0114
+Adjacency matrix stats: min=0.0000, max=0.2179, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.2044, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.2184, mean=0.0077, std=0.0119
+Adjacency matrix stats: min=0.0000, max=0.1608, mean=0.0077, std=0.0107
+epoch [43/50] batch [10/12] time 0.580 (0.795) data 0.000 (0.141) loss 3.6764 (3.6238) lr 7.7836e-03 eta 0:01:08
+Adjacency matrix stats: min=0.0000, max=0.2576, mean=0.0077, std=0.0116
+Adjacency matrix stats: min=0.0000, max=0.2606, mean=0.0076, std=0.0117
+[Epoch 42] CE: 1.4413 | GLoss: 4.5664 | Total: 3.6289Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 277
+* accuracy: 67.9%
+* error: 32.1%
+* macro_f1: 65.3%
+* ECE: 6.00
+* ACE: 5.89
+Adjacency matrix stats: min=0.0000, max=0.2184, mean=0.0077, std=0.0108
+Adjacency matrix stats: min=0.0000, max=0.1891, mean=0.0077, std=0.0110
+Adjacency matrix stats: min=0.0000, max=0.2144, mean=0.0077, std=0.0118
+Adjacency matrix stats: min=0.0000, max=0.2282, mean=0.0077, std=0.0116
+Adjacency matrix stats: min=0.0000, max=0.1964, mean=0.0077, std=0.0114
+epoch [44/50] batch [5/12] time 0.655 (0.995) data 0.000 (0.319) loss 3.6491 (3.6394) lr 6.1847e-03 eta 0:01:18
+Adjacency matrix stats: min=0.0000, max=0.2236, mean=0.0077, std=0.0112
+Adjacency matrix stats: min=0.0000, max=0.2063, mean=0.0077, std=0.0111
+Adjacency matrix stats: min=0.0000, max=0.2241, mean=0.0077, std=0.0120
+Adjacency matrix stats: min=0.0000, max=0.2161, mean=0.0077, std=0.0111
+Adjacency matrix stats: min=0.0000, max=0.1904, mean=0.0077, std=0.0115
+epoch [44/50] batch [10/12] time 0.816 (0.840) data 0.000 (0.160) loss 3.6831 (3.6419) lr 6.1847e-03 eta 0:01:02
+Adjacency matrix stats: min=0.0000, max=0.2386, mean=0.0077, std=0.0119
+Adjacency matrix stats: min=0.0000, max=0.2066, mean=0.0077, std=0.0114
+[Epoch 43] CE: 1.4503 | GLoss: 4.5679 | Total: 3.6326Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 278
+* accuracy: 68.1%
+* error: 31.9%
+* macro_f1: 65.4%
+* ECE: 5.44
+* ACE: 5.64
+Adjacency matrix stats: min=0.0000, max=0.2086, mean=0.0077, std=0.0113
+Adjacency matrix stats: min=0.0000, max=0.2135, mean=0.0077, std=0.0116
+Adjacency matrix stats: min=0.0000, max=0.2294, mean=0.0077, std=0.0108
+Adjacency matrix stats: min=0.0000, max=0.1882, mean=0.0077, std=0.0113
+Adjacency matrix stats: min=0.0000, max=0.2098, mean=0.0077, std=0.0108
+epoch [45/50] batch [5/12] time 0.650 (0.991) data 0.000 (0.322) loss 3.6238 (3.6436) lr 4.7586e-03 eta 0:01:06
+Adjacency matrix stats: min=0.0000, max=0.2272, mean=0.0077, std=0.0118
+Adjacency matrix stats: min=0.0000, max=0.2554, mean=0.0077, std=0.0120
+Adjacency matrix stats: min=0.0000, max=0.1690, mean=0.0077, std=0.0115
+Adjacency matrix stats: min=0.0000, max=0.1902, mean=0.0077, std=0.0108
+Adjacency matrix stats: min=0.0000, max=0.2402, mean=0.0077, std=0.0119
+epoch [45/50] batch [10/12] time 0.646 (0.820) data 0.000 (0.161) loss 3.6313 (3.6357) lr 4.7586e-03 eta 0:00:50
+Adjacency matrix stats: min=0.0000, max=0.2482, mean=0.0077, std=0.0114
+Adjacency matrix stats: min=0.0000, max=0.2263, mean=0.0077, std=0.0122
+[Epoch 44] CE: 1.4541 | GLoss: 4.5612 | Total: 3.6291Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 277
+* accuracy: 67.9%
+* error: 32.1%
+* macro_f1: 65.1%
+* ECE: 5.89
+* ACE: 5.88
+Adjacency matrix stats: min=0.0000, max=0.2387, mean=0.0077, std=0.0113
+Adjacency matrix stats: min=0.0000, max=0.2579, mean=0.0077, std=0.0120
+Adjacency matrix stats: min=0.0000, max=0.1929, mean=0.0077, std=0.0117
+Adjacency matrix stats: min=0.0000, max=0.2086, mean=0.0077, std=0.0121
+Adjacency matrix stats: min=0.0000, max=0.2196, mean=0.0077, std=0.0112
+epoch [46/50] batch [5/12] time 0.655 (0.951) data 0.000 (0.265) loss 3.7106 (3.6402) lr 3.5112e-03 eta 0:00:52
+Adjacency matrix stats: min=0.0000, max=0.2224, mean=0.0077, std=0.0113
+Adjacency matrix stats: min=0.0000, max=0.1991, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.1849, mean=0.0076, std=0.0097
+Adjacency matrix stats: min=0.0000, max=0.2170, mean=0.0077, std=0.0114
+Adjacency matrix stats: min=0.0000, max=0.1835, mean=0.0077, std=0.0112
+epoch [46/50] batch [10/12] time 0.644 (0.797) data 0.000 (0.132) loss 3.5626 (3.6359) lr 3.5112e-03 eta 0:00:39
+Adjacency matrix stats: min=0.0000, max=0.2012, mean=0.0077, std=0.0114
+Adjacency matrix stats: min=0.0000, max=0.2462, mean=0.0077, std=0.0116
+[Epoch 45] CE: 1.4482 | GLoss: 4.5672 | Total: 3.6315Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 278
+* accuracy: 68.1%
+* error: 31.9%
+* macro_f1: 65.5%
+* ECE: 5.65
+* ACE: 5.64
+Adjacency matrix stats: min=0.0000, max=0.2130, mean=0.0077, std=0.0117
+Adjacency matrix stats: min=0.0000, max=0.2480, mean=0.0077, std=0.0123
+Adjacency matrix stats: min=0.0000, max=0.2211, mean=0.0077, std=0.0118
+Adjacency matrix stats: min=0.0000, max=0.2015, mean=0.0077, std=0.0118
+Adjacency matrix stats: min=0.0000, max=0.2146, mean=0.0077, std=0.0108
+epoch [47/50] batch [5/12] time 0.573 (0.973) data 0.000 (0.313) loss 3.6281 (3.6124) lr 2.4472e-03 eta 0:00:41
+Adjacency matrix stats: min=0.0000, max=0.1795, mean=0.0077, std=0.0120
+Adjacency matrix stats: min=0.0000, max=0.2236, mean=0.0077, std=0.0116
+Adjacency matrix stats: min=0.0000, max=0.2452, mean=0.0077, std=0.0116
+Adjacency matrix stats: min=0.0000, max=0.2205, mean=0.0077, std=0.0114
+Adjacency matrix stats: min=0.0000, max=0.1903, mean=0.0077, std=0.0116
+epoch [47/50] batch [10/12] time 0.570 (0.775) data 0.000 (0.157) loss 3.6321 (3.6180) lr 2.4472e-03 eta 0:00:29
+Adjacency matrix stats: min=0.0000, max=0.1953, mean=0.0077, std=0.0104
+Adjacency matrix stats: min=0.0000, max=0.1866, mean=0.0077, std=0.0110
+[Epoch 46] CE: 1.4434 | GLoss: 4.5618 | Total: 3.6263Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 277
+* accuracy: 67.9%
+* error: 32.1%
+* macro_f1: 65.3%
+* ECE: 5.79
+* ACE: 5.89
+Adjacency matrix stats: min=0.0000, max=0.2062, mean=0.0077, std=0.0120
+Adjacency matrix stats: min=0.0000, max=0.1958, mean=0.0077, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.2095, mean=0.0077, std=0.0111
+Adjacency matrix stats: min=0.0000, max=0.2026, mean=0.0077, std=0.0117
+Adjacency matrix stats: min=0.0000, max=0.1941, mean=0.0077, std=0.0113
+epoch [48/50] batch [5/12] time 0.575 (1.015) data 0.000 (0.413) loss 3.6874 (3.6128) lr 1.5708e-03 eta 0:00:31
+Adjacency matrix stats: min=0.0000, max=0.1820, mean=0.0077, std=0.0117
+Adjacency matrix stats: min=0.0000, max=0.2376, mean=0.0077, std=0.0115
+Adjacency matrix stats: min=0.0000, max=0.2181, mean=0.0077, std=0.0121
+Adjacency matrix stats: min=0.0000, max=0.2228, mean=0.0077, std=0.0115
+Adjacency matrix stats: min=0.0000, max=0.2242, mean=0.0077, std=0.0113
+epoch [48/50] batch [10/12] time 0.586 (0.813) data 0.000 (0.206) loss 3.6071 (3.6299) lr 1.5708e-03 eta 0:00:21
+Adjacency matrix stats: min=0.0000, max=0.2464, mean=0.0077, std=0.0117
+Adjacency matrix stats: min=0.0000, max=0.1748, mean=0.0077, std=0.0106
+[Epoch 47] CE: 1.4454 | GLoss: 4.5626 | Total: 3.6275Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 277
+* accuracy: 67.9%
+* error: 32.1%
+* macro_f1: 65.3%
+* ECE: 5.81
+* ACE: 5.90
+Adjacency matrix stats: min=0.0000, max=0.2276, mean=0.0077, std=0.0126
+Adjacency matrix stats: min=0.0000, max=0.2626, mean=0.0077, std=0.0121
+Adjacency matrix stats: min=0.0000, max=0.2217, mean=0.0077, std=0.0110
+Adjacency matrix stats: min=0.0000, max=0.1899, mean=0.0077, std=0.0106
+Adjacency matrix stats: min=0.0000, max=0.2032, mean=0.0077, std=0.0120
+epoch [49/50] batch [5/12] time 0.645 (0.941) data 0.000 (0.258) loss 3.5522 (3.6055) lr 8.8564e-04 eta 0:00:17
+Adjacency matrix stats: min=0.0000, max=0.2085, mean=0.0077, std=0.0112
+Adjacency matrix stats: min=0.0000, max=0.2625, mean=0.0077, std=0.0116
+Adjacency matrix stats: min=0.0000, max=0.1924, mean=0.0077, std=0.0111
+Adjacency matrix stats: min=0.0000, max=0.2424, mean=0.0077, std=0.0111
+Adjacency matrix stats: min=0.0000, max=0.2193, mean=0.0077, std=0.0114
+epoch [49/50] batch [10/12] time 0.575 (0.789) data 0.000 (0.129) loss 3.7067 (3.6321) lr 8.8564e-04 eta 0:00:11
+Adjacency matrix stats: min=0.0000, max=0.1656, mean=0.0076, std=0.0109
+Adjacency matrix stats: min=0.0000, max=0.2529, mean=0.0077, std=0.0123
+[Epoch 48] CE: 1.4402 | GLoss: 4.5631 | Total: 3.6263Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 278
+* accuracy: 68.1%
+* error: 31.9%
+* macro_f1: 65.5%
+* ECE: 5.52
+* ACE: 5.64
+Adjacency matrix stats: min=0.0000, max=0.2282, mean=0.0077, std=0.0112
+Adjacency matrix stats: min=0.0000, max=0.1811, mean=0.0077, std=0.0117
+Adjacency matrix stats: min=0.0000, max=0.1723, mean=0.0077, std=0.0106
+Adjacency matrix stats: min=0.0000, max=0.2116, mean=0.0077, std=0.0115
+Adjacency matrix stats: min=0.0000, max=0.2408, mean=0.0077, std=0.0110
+epoch [50/50] batch [5/12] time 0.569 (0.923) data 0.000 (0.326) loss 3.6291 (3.6213) lr 3.9426e-04 eta 0:00:06
+Adjacency matrix stats: min=0.0000, max=0.2280, mean=0.0077, std=0.0113
+Adjacency matrix stats: min=0.0000, max=0.1985, mean=0.0077, std=0.0115
+Adjacency matrix stats: min=0.0000, max=0.2909, mean=0.0077, std=0.0115
+Adjacency matrix stats: min=0.0000, max=0.2157, mean=0.0077, std=0.0117
+Adjacency matrix stats: min=0.0000, max=0.2035, mean=0.0077, std=0.0114
+epoch [50/50] batch [10/12] time 0.566 (0.748) data 0.000 (0.163) loss 3.5869 (3.6251) lr 3.9426e-04 eta 0:00:01
+Adjacency matrix stats: min=0.0000, max=0.2001, mean=0.0077, std=0.0110
+Adjacency matrix stats: min=0.0000, max=0.2217, mean=0.0077, std=0.0114
+[Epoch 49] CE: 1.4246 | GLoss: 4.5644 | Total: 3.6224Number of batch losses: 12
+Evaluate on the *val* set
+=> result
+* total: 408
+* correct: 279
+* accuracy: 68.4%
+* error: 31.6%
+* macro_f1: 65.7%
+* ECE: 5.31
+* ACE: 4.94
+Checkpoint saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model.pth.tar-50
+Loss curves saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/loss_curves_over_epochs.png
+Finish training
+Deploy the model with the best val performance
+Loading weights to prompt_learner from "output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/prompt_learner/model-best.pth.tar" (epoch = 31)
+Evaluate on the *test* set
+=> result
+* total: 2,463
+* correct: 1,727
+* accuracy: 70.1%
+* error: 29.9%
+* macro_f1: 66.0%
+* ECE: 5.06
+* ACE: 5.08
+Elapsed: 0:09:17
+Ended
+
+[Final] Learned prompt vocab matches:
+
+============================================================
+Learned Prompts - Top-1 BPE Vocabulary Matches
+============================================================
+Prompt Token 0: 'rinka ' (ID: 47316, Similarity: 0.1885)
+Prompt Token 1: 'lud' (ID: 14288, Similarity: 0.2095)
+Prompt Token 2: 'le' (ID: 534, Similarity: 0.1875)
+Prompt Token 3: ', ' (ID: 267, Similarity: 0.2235)
+Prompt Token 4: 'h' (ID: 71, Similarity: 0.1872)
+Prompt Token 5: '�' (ID: 1741, Similarity: 0.2118)
+Prompt Token 6: 'tan' (ID: 2123, Similarity: 0.1709)
+Prompt Token 7: 'ted' (ID: 4841, Similarity: 0.1751)
+Prompt Token 8: 'comp ' (ID: 11679, Similarity: 0.1919)
+Prompt Token 9: 'rements ' (ID: 12667, Similarity: 0.2168)
+Prompt Token 10: 'compart' (ID: 30072, Similarity: 0.1922)
+Prompt Token 11: 'cites ' (ID: 34490, Similarity: 0.2454)
+Prompt Token 12: 'curriculum ' (ID: 17947, Similarity: 0.2014)
+Prompt Token 13: 'use' (ID: 4419, Similarity: 0.1927)
+Prompt Token 14: 'moil ' (ID: 30349, Similarity: 0.1980)
+Prompt Token 15: 'colorful ' (ID: 11444, Similarity: 0.2413)
+============================================================
+
+Available tags: ['train/loss', 'train/lr', 'val/accuracy', 'val/error_rate', 'val/macro_f1', 'val/ece', 'val/ace', 'test/accuracy', 'test/error_rate', 'test/macro_f1', 'test/ece', 'test/ace']
+Loss curve saved to output/oxford_flowers/CoOp/vit_b16_ep200_16shots/nctx16_cscFalse_ctpend/seed3/ce+gloss_20260426_012003/loss_curve.png

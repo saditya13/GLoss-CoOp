@@ -16,7 +16,7 @@ fi
 DATA=/home/aditya/CoOp/Data
 TRAINER=CoOp
 SIGMA=4.5
-DATASETS=(caltech101 dtd eurosat fgvc_aircraft food101 oxford_flowers oxford_pets ucf101)  # <-- your 4 datasets here
+DATASETS=(dtd eurosat food101 oxford_flowers oxford_pets ucf101)  # <-- your 4 datasets here
 
 echo "=========================================="
 echo "CFG=${CFG}, CTP=${CTP}, NCTX=${NCTX}, SHOTS=${SHOTS}, CSC=${CSC}"
@@ -36,11 +36,11 @@ do
     bash ./scripts/coop/main.sh ${DATASET} ${CFG} ${CTP} ${NCTX} ${SHOTS} ${CSC} scl 
 
     echo "--- Running gloss (sigma=${SIGMA}) ---"
-    bash ./scripts/coop/main.sh ${DATASET} ${CFG} ${CTP} ${NCTX} ${SHOTS} ${CSC} ce+gloss ${SIGMA}
+    bash ./scripts/coop/main.sh ${DATASET} ${CFG} ${CTP} ${NCTX} ${SHOTS} ${CSC} gloss ${SIGMA}
     
-    echo "--- Running gloss ---"
+    echo "--- Running CE+SCL ---"
     bash ./scripts/coop/main.sh ${DATASET} ${CFG} ${CTP} ${NCTX} ${SHOTS} ${CSC} ce+scl
 
-    echo "--- Running gloss (sigma=${SIGMA}) ---"
-    bash ./scripts/coop/main.sh ${DATASET} ${CFG} ${CTP} ${NCTX} ${SHOTS} ${CSC} gloss ${SIGMA}
+    echo "--- Running CE+gloss (sigma=${SIGMA}) ---"
+    bash ./scripts/coop/main.sh ${DATASET} ${CFG} ${CTP} ${NCTX} ${SHOTS} ${CSC} ce+gloss ${SIGMA}
 done
